@@ -218,7 +218,31 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 ::-webkit-scrollbar-thumb{background:var(--s4);border-radius:3px}
 ::-webkit-scrollbar-thumb:hover{background:var(--border2)}
 
-/* ANIMATIONS */
+/* ── PICKUP SEMANAL ── */
+.pu-week-selector{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.pu-week-btn{padding:4px 10px;border:1px solid var(--border);border-radius:20px;background:#fff;font-size:11px;font-family:'IBM Plex Mono',monospace;cursor:pointer;color:var(--sub);transition:all .15s}
+.pu-week-btn:hover{border-color:#0284c7;color:#0284c7}
+.pu-week-btn.active{background:#0284c7;border-color:#0284c7;color:#fff}
+.pu-metric-btn{padding:4px 12px;border:1px solid var(--border);border-radius:20px;background:#fff;font-size:11px;cursor:pointer;color:var(--sub);transition:all .15s}
+.pu-metric-btn.active{background:#1e2535;border-color:#1e2535;color:#fff}
+.pu-table{width:100%;border-collapse:collapse;font-size:12px}
+.pu-table th{padding:7px 10px;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;color:var(--sub);background:#f8f9fa;border-bottom:2px solid var(--border);white-space:nowrap}
+.pu-table th:first-child{text-align:left;min-width:130px}
+.pu-table td{padding:7px 10px;text-align:right;border-bottom:1px solid var(--border);font-size:12px;white-space:nowrap}
+.pu-table td:first-child{text-align:left;font-weight:500}
+.pu-table tr:last-child td{border-bottom:none}
+.pu-table tr:hover td{background:#f8faff}
+.pu-table .total-row td{font-weight:700;background:#f8f9fa;border-top:2px solid var(--border)}
+.pu-cell-pos{color:#059669}
+.pu-cell-neg{color:#e11d48}
+.pu-cell-cur{background:#fffbeb!important;font-weight:600}
+/* Trend chart */
+.trend-grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:4px}
+.trend-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px 20px}
+.trend-card-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px;display:flex;align-items:center;gap:6px}
+.trend-card-sub{font-size:10px;color:var(--sub);margin-bottom:12px}
+.trend-svg{width:100%;height:120px;overflow:visible}
+@media(max-width:1300px){.trend-grid{grid-template-columns:1fr}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .anim{animation:fadeUp .35s ease both}
 .kpi:nth-child(1){animation-delay:.03s}.kpi:nth-child(2){animation-delay:.06s}.kpi:nth-child(3){animation-delay:.09s}.kpi:nth-child(4){animation-delay:.12s}.kpi:nth-child(5){animation-delay:.15s}.kpi:nth-child(6){animation-delay:.18s}
@@ -251,6 +275,7 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
     <span class="sb-label" style="color:rgba(255,255,255,.25);display:block;padding:0 8px 8px">Vistas</span>
     <button class="nav-btn active" onclick="setView('overview',this)"><span class="nav-icon">◈</span> Overview</button>
     <button class="nav-btn" onclick="setView('junta',this)"><span class="nav-icon">⬡</span> Junta Semanal</button>
+    <button class="nav-btn" onclick="setView('pickup',this)"><span class="nav-icon">↗</span> Pickup Semanal</button>
     <button class="nav-btn" onclick="setView('tabla',this)"><span class="nav-icon">≡</span> Detalle</button>
   </div>
   <div class="live-pill"><div class="live-dot"></div><span id="sb-date">—</span></div>
@@ -271,6 +296,7 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
       <div class="view-tabs">
         <button class="vtab active" onclick="setView('overview',null,this)">Overview</button>
         <button class="vtab" onclick="setView('junta',null,this)">Junta Semanal</button>
+        <button class="vtab" onclick="setView('pickup',null,this)">Pickup Semanal</button>
         <button class="vtab" onclick="setView('tabla',null,this)">Detalle</button>
       </div>
     </div>
@@ -377,11 +403,63 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
     <!-- JUNTA SEMANAL -->
     <div class="view" id="view-junta">
       <div class="section-row">Resumen por Hotel</div>
+      <!-- Hotel filter -->
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+        <span style="font-size:11px;color:var(--sub);font-weight:600;letter-spacing:.04em">HOTELES:</span>
+        <button class="pu-week-btn active" id="jh-todos" onclick="
+          activeJuntaHotels=new Set(HOTELS_ALL_LIST);
+          document.querySelectorAll('#junta-hotel-filter .pu-week-btn').forEach(b=>b.classList.add('active'));
+          document.getElementById('jh-todos').classList.add('active');
+          renderJunta();">Todos</button>
+        <button class="pu-week-btn" id="jh-ninguno" onclick="
+          activeJuntaHotels=new Set();
+          document.querySelectorAll('#junta-hotel-filter .pu-week-btn').forEach(b=>b.classList.remove('active'));
+          renderJunta();">Ninguno</button>
+        <span style="width:1px;height:20px;background:var(--border);display:inline-block"></span>
+        <div id="junta-hotel-filter" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+      </div>
       <div class="card anim" style="overflow-x:auto">
         <div class="card-title" style="margin-bottom:2px">Hoteles — Revenue · ADR · Ocupación</div>
         <div class="card-sub">Acumulado del período seleccionado · LY · OTB · BDGT · FCST</div>
         <table class="dtbl" id="junta-tbl" style="margin-top:12px"></table>
       </div>
+    </div>
+
+    <!-- PICKUP SEMANAL -->
+    <div class="view" id="view-pickup">
+      <div class="section-row">Pickup Semanal — Incremental por Hotel</div>
+      <!-- Hotel filter -->
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+        <span style="font-size:11px;color:var(--sub);font-weight:600;letter-spacing:.04em">HOTELES:</span>
+        <button class="pu-week-btn active" onclick="
+          activePUHotels=new Set(HOTELS_PU);
+          document.querySelectorAll('#pu-hotel-filter .pu-week-btn').forEach(b=>b.classList.add('active'));
+          renderPickup();">Todos</button>
+        <button class="pu-week-btn" onclick="
+          activePUHotels=new Set();
+          document.querySelectorAll('#pu-hotel-filter .pu-week-btn').forEach(b=>b.classList.remove('active'));
+          renderPickup();">Ninguno</button>
+        <span style="width:1px;height:20px;background:var(--border);display:inline-block"></span>
+        <div id="pu-hotel-filter" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+      </div>
+      <div class="card anim" style="margin-bottom:16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px">
+          <div>
+            <div class="card-title" style="margin-bottom:2px">Pickup Incremental Semanal</div>
+            <div class="card-sub">Lo vendido cada semana · selecciona métrica</div>
+          </div>
+          <div style="display:flex;gap:6px">
+            <button class="pu-metric-btn active" id="pum-rev" onclick="setPUMetric('rev')">Revenue</button>
+            <button class="pu-metric-btn" id="pum-rn" onclick="setPUMetric('rn')">Room Nights</button>
+            <button class="pu-metric-btn" id="pum-adr" onclick="setPUMetric('adr')">ADR</button>
+          </div>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="pu-table" id="pu-weekly-table"></table>
+        </div>
+      </div>
+      <div class="section-row">Tendencia por Hotel</div>
+      <div class="trend-grid" id="pu-trend-grid"></div>
     </div>
 
     <!-- TABLA -->
@@ -816,9 +894,33 @@ function renderTabla(){
   </tbody>`;
 }
 
+const HOTELS_ALL_LIST=['Amomoxtli','Anticavilla','Boca de Agua','Casona','El Santuario','MDS','Numu','Santa Fé','Tropicana'];
+let activeJuntaHotels=new Set(HOTELS_ALL_LIST);
+
+function toggleJuntaHotel(h){
+  if(activeJuntaHotels.has(h)) activeJuntaHotels.delete(h);
+  else activeJuntaHotels.add(h);
+  const id='jh-'+h.replace(/[\s']/g,'_');
+  document.getElementById(id)?.classList.toggle('active', activeJuntaHotels.has(h));
+  renderJunta();
+}
+
 function renderJunta(){
+  // init hotel filter buttons once
+  const filterEl=document.getElementById('junta-hotel-filter');
+  if(filterEl&&!filterEl.dataset.init){
+    filterEl.dataset.init='1';
+    filterEl.innerHTML=HOTELS_ALL_LIST.map(h=>{
+      const col=H_COLORS[h]||'#94a3b8';
+      const id='jh-'+h.replace(/[\s']/g,'_');
+      return`<button id="${id}" class="pu-week-btn active" onclick="toggleJuntaHotel('${h.replace(/'/g,"\\'")}')">
+        <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${col};margin-right:4px;vertical-align:middle"></span>${h}
+      </button>`;
+    }).join('');
+  }
+
   const el=document.getElementById('junta-tbl');if(!el)return;
-  const HOTELS=['Amomoxtli','Anticavilla','Boca de Agua','Casona','El Santuario','MDS','Numu','Santa Fé','Tropicana'];
+  const HOTELS=HOTELS_ALL_LIST.filter(h=>activeJuntaHotels.has(h));
   const mos=Array.from(activeMos);
   const sep='border-left:2px solid var(--border2);';
   const rows=HOTELS.map(h=>{
@@ -833,9 +935,8 @@ function renderJunta(){
     return{h,col,lyRev,lyADR,lyOcc,otbRev,otbADR,otbOcc,bdgtRev,bdgtADR,bdgtOcc,fcstRev,fcstADR,fcstOcc,vsLY};
   }).filter(Boolean);
 
-  // totales con ADR ponderado por revenue/RN
-  const HOTELS_ALL=['Amomoxtli','Anticavilla','Boca de Agua','Casona','El Santuario','MDS','Numu','Santa Fé','Tropicana'];
-  const allHD=HOTELS_ALL.flatMap(h=>RAW.filter(r=>r.h===h&&(mos.length===0||mos.includes(r.mo))));
+  // totals over selected hotels only
+  const allHD=HOTELS.flatMap(h=>RAW.filter(r=>r.h===h&&(mos.length===0||mos.includes(r.mo))));
   const tot={
     lyRev:sm(allHD,'lyRev'), lyADR:av(allHD,'lyADR'), lyOcc:av(allHD,'lyOcc'),
     otbRev:sm(allHD,'otbRev'), otbADR:av(allHD.filter(d=>d.otbADR>0),'otbADR'), otbOcc:av(allHD,'otbOcc'),
@@ -880,11 +981,216 @@ function renderJunta(){
   </tbody>`;
 }
 
+/* ── PICKUP SEMANAL DATA ── */
+const PU_WEEKS=[
+  {id:'W53',label:'29 Dic–4 Ene'},
+  {id:'W01',label:'05–11 Ene'},
+  {id:'W02',label:'12–18 Ene'},
+  {id:'W03',label:'19–25 Ene'},
+  {id:'W04',label:'26 Ene–1 Feb'},
+  {id:'W05',label:'02–08 Feb'},
+  {id:'W06',label:'09–15 Feb'},
+  {id:'W07',label:'16–22 Feb'},
+  {id:'W08',label:'23 Feb–1 Mar'},
+];
+const PU_RAW={
+  rev:{
+    'Amomoxtli':   [648487,1114878,1241176,1109430,1214321,966370,1292340,1257433,756579],
+    'Anticavilla': [146594,324603,182531,356207,477161,492017,132611,254401,147105],
+    'Boca de Agua':[364358,419691,366929,451308,688422,400285,410090,269971,125370],
+    'Casona':      [1061919,1152365,1586135,1186923,1222776,578214,887760,969474,-5277],
+    'El Santuario':[1698284,1593095,2286002,2639614,2453822,731838,924843,1489216,1050046],
+    'MDS':         [384759,518908,641196,418784,322696,178717,302615,470695,235120],
+    'Numu':        [1132866,1587319,2050318,1385891,2268174,532578,1448014,952602,-14209],
+    'Santa Fé':    [472832,1171651,467913,573047,448918,682597,1994082,803850,408674],
+    'Tropicana':   [-500746,900963,890570,1313258,846075,678380,898370,670487,493268],
+  },
+  rn:{
+    'Amomoxtli':   [84,194,159,145,148,106,178,160,99],
+    'Anticavilla': [22,52,29,35,63,88,37,23,22],
+    'Boca de Agua':[56,51,65,83,61,60,77,39,37],
+    'Casona':      [135,137,177,142,151,64,107,122,-8],
+    'El Santuario':[322,352,447,570,416,109,157,262,163],
+    'MDS':         [97,126,197,104,83,53,65,122,57],
+    'Numu':        [172,214,278,200,279,154,192,143,-10],
+    'Santa Fé':    [154,391,180,162,149,241,910,269,142],
+    'Tropicana':   [-60,194,236,403,241,222,266,200,175],
+  },
+  adr:{
+    'Amomoxtli':   [7720,5747,7806,7651,8205,9117,7260,7859,7642],
+    'Anticavilla': [6663,6242,6294,6984,7574,5591,5766,6876,6687],
+    'Boca de Agua':[6506,8229,6552,7398,8294,6671,5326,2783,3388],
+    'Casona':      [7866,8411,8961,8359,8098,9035,8297,7947,660],
+    'El Santuario':[5274,4526,5114,4631,5899,6714,5891,5684,6442],
+    'MDS':         [3967,4118,3255,4027,3888,4964,4656,3858,4125],
+    'Numu':        [6586,7417,7375,6929,8130,3458,7542,6662,1421],
+    'Santa Fé':    [3070,2997,2888,3184,3013,2832,2191,2988,2878],
+    'Tropicana':   [8346,4644,3774,3259,3511,3056,3377,3352,2819],
+  }
+};
+const HOTELS_PU=['Amomoxtli','Anticavilla','Boca de Agua','Casona','El Santuario','MDS','Numu','Santa Fé','Tropicana'];
+let curPUMetric='rev';
+let activePUHotels=new Set(HOTELS_PU);
+
+function setPUMetric(m){
+  curPUMetric=m;
+  document.querySelectorAll('.pu-metric-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('pum-'+m).classList.add('active');
+  renderPickup();
+}
+
+function togglePUHotel(h){
+  if(activePUHotels.has(h)) activePUHotels.delete(h);
+  else activePUHotels.add(h);
+  const id='puh-'+h.replace(/[\s']/g,'_');
+  document.getElementById(id)?.classList.toggle('active', activePUHotels.has(h));
+  renderPickup();
+}
+
+function fmtPU(v,metric){
+  if(metric==='rev') return(v>=0?'':'-')+'$'+Math.abs(Math.round(v/1000))+'K';
+  if(metric==='adr') return'$'+v.toLocaleString();
+  return v.toLocaleString();
+}
+
+function renderPickup(){
+  // render hotel filter buttons
+  const filterEl=document.getElementById('pu-hotel-filter');
+  if(filterEl&&!filterEl.dataset.init){
+    filterEl.dataset.init='1';
+    filterEl.innerHTML=HOTELS_PU.map(h=>{
+      const col=H_COLORS[h]||'#94a3b8';
+      const id='puh-'+h.replace(/[\s']/g,'_');
+      return`<button id="${id}" class="pu-week-btn active" onclick="togglePUHotel('${h.replace(/'/g,"\\'")}')">
+        <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${col};margin-right:4px;vertical-align:middle"></span>${h}
+      </button>`;
+    }).join('');
+  }
+
+  const el=document.getElementById('pu-weekly-table');if(!el)return;
+  const data=PU_RAW[curPUMetric];
+  const weeks=PU_WEEKS;
+  const nw=weeks.length;
+  const hoteles=HOTELS_PU.filter(h=>activePUHotels.has(h));
+
+  const thead=`<thead><tr>
+    <th>Hotel</th>
+    ${weeks.map(w=>`<th>${w.label}<br><span style="color:var(--dim);font-size:9px">${w.id}</span></th>`).reverse().join('')}
+  </tr></thead>`;
+
+  const rowsHTML=hoteles.map(h=>{
+    const vals=data[h]||new Array(nw).fill(0);
+    const col=H_COLORS[h]||'#94a3b8';
+    const cells=vals.map((v,i)=>{
+      const isCur=i===nw-1;
+      const cls=v>0?'pu-cell-pos':v<0?'pu-cell-neg':'';
+      return`<td class="${cls}${isCur?' pu-cell-cur':''}">${v===0?'—':fmtPU(v,curPUMetric)}</td>`;
+    }).reverse().join('');
+    return`<tr>
+      <td><span style="display:inline-flex;align-items:center;gap:6px">
+        <span style="width:8px;height:8px;border-radius:50%;background:${col};flex-shrink:0"></span>${h}
+      </span></td>
+      ${cells}
+    </tr>`;
+  }).join('');
+
+  el.innerHTML=`${thead}<tbody>${rowsHTML}</tbody>`;
+  renderTrends();
+}
+
+function renderTrends(){
+  const grid=document.getElementById('pu-trend-grid');if(!grid)return;
+  const data=PU_RAW[curPUMetric];
+  const weeks=PU_WEEKS;
+  const metricLabel={'rev':'Revenue','rn':'Room Nights','adr':'ADR'}[curPUMetric];
+  const hoteles=HOTELS_PU.filter(h=>activePUHotels.has(h));
+
+  // tooltip div (shared)
+  if(!document.getElementById('pu-tooltip')){
+    const tt=document.createElement('div');
+    tt.id='pu-tooltip';
+    tt.style.cssText='position:fixed;background:#1e2535;color:#fff;font-size:11px;font-family:IBM Plex Mono,monospace;padding:7px 11px;border-radius:7px;pointer-events:none;opacity:0;transition:opacity .15s;z-index:9999;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.25)';
+    document.body.appendChild(tt);
+  }
+  const tt=document.getElementById('pu-tooltip');
+
+  grid.innerHTML=hoteles.map(h=>{
+    const vals=data[h]||[];
+    const col=H_COLORS[h]||'#94a3b8';
+    const mx=Math.max(...vals.map(Math.abs),1);
+    const W=800,H=110,pad=20;
+    const pts=vals.map((v,i)=>{
+      const x=pad+(i/(vals.length-1))*(W-pad*2);
+      const y=H/2-(v/mx)*(H/2-8);
+      return{x,y,v,w:weeks[i]};
+    });
+    const polyline=pts.map(p=>`${p.x},${p.y}`).join(' ');
+    const areaPath=`M${pts[0].x},${H/2} `+pts.map(p=>`L${p.x},${p.y}`).join(' ')+` L${pts[pts.length-1].x},${H/2} Z`;
+    const last=pts[pts.length-1];
+    const lastVal=vals[vals.length-1];
+    const lastColor=lastVal>=0?'#059669':'#e11d48';
+    const trend=vals[vals.length-1]>=vals[vals.length-2]?'↑':'↓';
+    const trendCol=vals[vals.length-1]>=vals[vals.length-2]?'#059669':'#e11d48';
+    const zeroLine=`<line x1="${pad}" y1="${H/2}" x2="${W-pad}" y2="${H/2}" stroke="#e2e5ea" stroke-width="1" stroke-dasharray="3,3"/>`;
+    const labels=weeks.map((w,i)=>{
+      const x=pad+(i/(vals.length-1))*(W-pad*2);
+      return`<text x="${x}" y="${H+16}" text-anchor="middle" font-size="9" fill="#94a3b8">${w.id}</text>`;
+    }).join('');
+
+    // invisible hit areas for tooltip
+    const hitAreas=pts.map((p,i)=>`<circle cx="${p.x}" cy="${p.y}" r="16" fill="transparent"
+      data-label="${weeks[i].label}" data-wid="${weeks[i].id}" data-val="${fmtPU(p.v,curPUMetric)}" data-hotel="${h}"
+      class="pu-hit"/>`).join('');
+
+    // visible dots on all points
+    const dots=pts.map((p,i)=>{
+      const c=p.v>0?col:p.v<0?'#e11d48':'#94a3b8';
+      return`<circle cx="${p.x}" cy="${p.y}" r="${i===pts.length-1?4:3}" fill="${c}" stroke="#fff" stroke-width="1.5"/>`;
+    }).join('');
+
+    return`<div class="trend-card">
+      <div class="trend-card-title">
+        <span style="width:9px;height:9px;border-radius:50%;background:${col};display:inline-block"></span>
+        ${h}
+        <span style="margin-left:auto;font-size:11px;color:${trendCol};font-weight:700">${trend} ${fmtPU(lastVal,curPUMetric)}</span>
+      </div>
+      <div class="trend-card-sub">${metricLabel} · pickup incremental semanal</div>
+      <svg class="trend-svg" viewBox="0 0 ${W} ${H+22}" style="cursor:crosshair">
+        <defs>
+          <linearGradient id="grad-${h.replace(/[\s']/g,'')}" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="${col}" stop-opacity="0.2"/>
+            <stop offset="100%" stop-color="${col}" stop-opacity="0.02"/>
+          </linearGradient>
+        </defs>
+        ${zeroLine}
+        <path d="${areaPath}" fill="url(#grad-${h.replace(/[\s']/g,'')})" />
+        <polyline points="${polyline}" fill="none" stroke="${col}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+        ${labels}${dots}${hitAreas}
+      </svg>
+    </div>`;
+  }).join('');
+
+  // attach tooltip events after render
+  document.querySelectorAll('.pu-hit').forEach(el=>{
+    el.addEventListener('mouseenter',e=>{
+      const d=e.target.dataset;
+      tt.innerHTML=`<span style="opacity:.6">${d.hotel}</span><br><b>${d.label}</b> <span style="opacity:.5">${d.wid}</span><br><span style="font-size:13px;font-weight:700">${d.val}</span>`;
+      tt.style.opacity='1';
+    });
+    el.addEventListener('mousemove',e=>{
+      tt.style.left=(e.clientX+14)+'px';
+      tt.style.top=(e.clientY-10)+'px';
+    });
+    el.addEventListener('mouseleave',()=>{tt.style.opacity='0';});
+  });
+}
+
 function renderAll(){
   renderKPIs();
-  document.getElementById('kpi-strip').style.display=(curView==='tabla'||curView==='junta')?'none':'grid';
+  document.getElementById('kpi-strip').style.display=(curView==='tabla'||curView==='junta'||curView==='pickup')?'none':'grid';
   if(curView==='overview'){renderRev();renderOcc();renderHM();renderADRChart('adr-chart-ov');renderRevPARChart('revpar-chart-ov');}
   else if(curView==='junta'){renderJunta();}
+  else if(curView==='pickup'){renderPickup();}
   else if(curView==='tabla'){renderTabla();}
 }
 
@@ -894,11 +1200,11 @@ function setView(v,navBtn,tabBtn){
   document.getElementById('view-'+v).classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.vtab').forEach(b=>b.classList.remove('active'));
-  document.getElementById('kpi-strip').style.display=(v==='tabla'||v==='junta')?'none':'grid';
-  const idx={overview:0,junta:1,tabla:2};
+  document.getElementById('kpi-strip').style.display=(v==='tabla'||v==='junta'||v==='pickup')?'none':'grid';
+  const idx={overview:0,junta:1,pickup:2,tabla:3};
   document.querySelectorAll('.nav-btn')[idx[v]]?.classList.add('active');
   document.querySelectorAll('.vtab')[idx[v]]?.classList.add('active');
-  const t={overview:'Overview General',junta:'Junta Semanal',tabla:'Tabla Detalle'};
+  const t={overview:'Overview General',junta:'Junta Semanal',pickup:'Pickup Semanal',tabla:'Tabla Detalle'};
   document.getElementById('tb-title').textContent=t[v];
   renderAll();
 }
@@ -914,6 +1220,10 @@ function setHotel(h,btn){
   const col=H_COLORS[h]||'#d97706';
   document.getElementById('tb-dot').style.background=col;
   document.getElementById('tb-hotel').textContent=h==='all'?'Todas las propiedades · 9 hoteles':h+' · Revenue 2025→2026';
+  // sync pickup hotel filter
+  if(h==='all') activePUHotels=new Set(HOTELS_PU);
+  else activePUHotels=new Set([h]);
+  syncPUHotelButtons();
   renderAll()
 }
 
@@ -931,7 +1241,18 @@ function setHotelFilter(h){
   const col=H_COLORS[h]||'#d97706';
   document.getElementById('tb-dot').style.background=col;
   document.getElementById('tb-hotel').textContent=h==='all'?'Todas las propiedades · 9 hoteles':h+' · Revenue 2025→2026';
+  // sync pickup hotel filter
+  if(h==='all') activePUHotels=new Set(HOTELS_PU);
+  else activePUHotels=new Set([h]);
+  syncPUHotelButtons();
   renderAll()
+}
+
+function syncPUHotelButtons(){
+  document.querySelectorAll('#pu-hotel-filter .pu-week-btn').forEach(b=>{
+    const hname=b.textContent.trim().replace(/^\s*●\s*/,'');
+    b.classList.toggle('active', activePUHotels.has(hname));
+  });
 }
 
 document.getElementById('sb-date').textContent=new Date().toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'});
