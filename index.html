@@ -268,7 +268,6 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
     <div class="tb-right">
       <div id="month-active-badge"></div>
       <span id="data-status" style="font-size:11px;color:#94a3b8;margin-right:8px"></span>
-      <button onclick="loadData()" title="Recargar datos" style="background:none;border:1px solid var(--border);border-radius:6px;padding:4px 8px;cursor:pointer;font-size:13px;color:#64748b;margin-right:8px" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='none'">↻ Actualizar</button>
       <div class="view-tabs">
         <button class="vtab active" onclick="setView('overview',null,this)">Overview</button>
         <button class="vtab" onclick="setView('junta',null,this)">Junta Semanal</button>
@@ -416,8 +415,7 @@ async function loadData(){
     statusEl.textContent='✓ Datos actualizados · '+now.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
     statusEl.style.color='#059669';
   }catch(e){
-    statusEl.textContent='⚠ Usando datos locales · '+e.message;
-    statusEl.style.color='#e11d48';
+    statusEl.textContent='';
   }
   renderAll();
 }
@@ -452,11 +450,11 @@ const RAW=[
 {mo:'Mar',h:'Tropicana',lyRN:1138,lyADR:4141,lyOcc:52,lyRev:4712675,otbRN:1427,otbADR:3904,otbOcc:66,otbRev:5570295,puRev:520985,bdgtRN:1550,bdgtADR:4050,bdgtOcc:71,bdgtRev:6277500,fcstRN:1550,fcstADR:4000,fcstOcc:71,fcstRev:6200000},
 {mo:'Apr',h:'Amomoxtli',lyRN:692,lyADR:6859,lyOcc:68,lyRev:4746130,otbRN:394,otbADR:6301,otbOcc:39,otbRev:2482594,puRev:13375,bdgtRN:750,bdgtADR:6750,bdgtOcc:74,bdgtRev:5062500,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Apr',h:'Anticavilla',lyRN:207,lyADR:4626,lyOcc:43,lyRev:957645,otbRN:49,otbADR:4991,otbOcc:10,otbRev:244559,puRev:-47,bdgtRN:237,bdgtADR:5141,bdgtOcc:49,bdgtRev:1218417,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Apr',h:'Boca de Agua',lyRN:291,lyADR:7248,lyOcc:44,lyRev:2109151,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:-854400,bdgtRN:350,bdgtADR:7300,bdgtOcc:53,bdgtRev:2555000,fcstRN:300,fcstADR:8500,fcstOcc:45,fcstRev:2550000},
+{mo:'Apr',h:'Boca de Agua',lyRN:291,lyADR:7248,lyOcc:44,lyRev:2109151,otbRN:300,otbADR:9000,otbOcc:45,otbRev:2700000,puRev:1845600,bdgtRN:350,bdgtADR:7300,bdgtOcc:53,bdgtRev:2555000,fcstRN:300,fcstADR:8500,fcstOcc:45,fcstRev:2550000},
 {mo:'Apr',h:'Casona',lyRN:364,lyADR:7461,lyOcc:38,lyRev:2715712,otbRN:443,otbADR:6854,otbOcc:46,otbRev:3036322,puRev:-39828,bdgtRN:531,bdgtADR:7600,bdgtOcc:55,bdgtRev:4035600,fcstRN:560,fcstADR:7700,fcstOcc:58,fcstRev:4312000},
 {mo:'Apr',h:'El Santuario',lyRN:927,lyADR:6015,lyOcc:23,lyRev:5575561,otbRN:289,otbADR:4740,otbOcc:7,otbRev:1369860,puRev:327639,bdgtRN:1200,bdgtADR:4900,bdgtOcc:30,bdgtRev:5880000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Apr',h:'MDS',lyRN:343,lyADR:4200,lyOcc:23,lyRev:1440489,otbRN:152,otbADR:4510,otbOcc:10,otbRev:685520,puRev:22388,bdgtRN:430,bdgtADR:4100,bdgtOcc:29,bdgtRev:1763000,fcstRN:430,fcstADR:4100,fcstOcc:29,fcstRev:1763000},
-{mo:'Apr',h:'Numu',lyRN:717,lyADR:7589,lyOcc:54,lyRev:5441442,otbRN:540,otbADR:7463,otbOcc:41,otbRev:4030020,puRev:-266364,bdgtRN:720,bdgtADR:7900,bdgtOcc:55,bdgtRev:5688000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Apr',h:'Numu',lyRN:717,lyADR:7589,lyOcc:54,lyRev:5441442,otbRN:540,otbADR:7463,otbOcc:41,otbRev:4030020,puRev:-266364,bdgtRN:720,bdgtADR:7900,bdgtOcc:55,bdgtRev:5688000,fcstRN:693,fcstADR:0,fcstOcc:53,fcstRev:0},
 {mo:'Apr',h:'Santa Fé',lyRN:1332,lyADR:2666,lyOcc:73,lyRev:3551599,otbRN:498,otbADR:2582,otbOcc:27,otbRev:1285836,puRev:21342,bdgtRN:1300,bdgtADR:3020,bdgtOcc:71,bdgtRev:3926000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Apr',h:'Tropicana',lyRN:820,lyADR:3651,lyOcc:39,lyRev:2994189,otbRN:644,otbADR:3386,otbOcc:31,otbRev:2180262,puRev:278817,bdgtRN:1103,bdgtADR:3648,bdgtOcc:53,bdgtRev:4023744,fcstRN:1100,fcstADR:3600,fcstOcc:52,fcstRev:3960000},
 {mo:'May',h:'Amomoxtli',lyRN:706,lyADR:6488,lyOcc:67,lyRev:4580845,otbRN:182,otbADR:6012,otbOcc:17,otbRev:1094184,puRev:46284,bdgtRN:750,bdgtADR:6600,bdgtOcc:71,bdgtRev:4950000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
