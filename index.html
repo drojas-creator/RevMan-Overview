@@ -237,12 +237,12 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .pu-cell-neg{color:#e11d48}
 .pu-cell-cur{background:#fffbeb!important;font-weight:600}
 /* Trend chart */
-.trend-grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:4px}
+.trend-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:4px}
 .trend-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px 20px}
 .trend-card-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px;display:flex;align-items:center;gap:6px}
 .trend-card-sub{font-size:10px;color:var(--sub);margin-bottom:12px}
 .trend-svg{width:100%;height:120px;overflow:visible}
-@media(max-width:1300px){.trend-grid{grid-template-columns:1fr}}
+@media(max-width:1300px){.trend-grid{grid-template-columns:repeat(2,1fr)}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .anim{animation:fadeUp .35s ease both}
 .kpi:nth-child(1){animation-delay:.03s}.kpi:nth-child(2){animation-delay:.06s}.kpi:nth-child(3){animation-delay:.09s}.kpi:nth-child(4){animation-delay:.12s}.kpi:nth-child(5){animation-delay:.15s}.kpi:nth-child(6){animation-delay:.18s}
@@ -273,10 +273,11 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
   </div>
   <div class="sb-nav">
     <span class="sb-label" style="color:rgba(255,255,255,.25);display:block;padding:0 8px 8px">Vistas</span>
+    <button class="nav-btn" onclick="setView('exec',this)"><span class="nav-icon">⬡</span> Resumen Semanal</button>
     <button class="nav-btn active" onclick="setView('overview',this)"><span class="nav-icon">◈</span> Overview</button>
-    <button class="nav-btn" onclick="setView('junta',this)"><span class="nav-icon">⬡</span> Junta Semanal</button>
     <button class="nav-btn" onclick="setView('pickup',this)"><span class="nav-icon">↗</span> Pickup Semanal</button>
     <button class="nav-btn" onclick="setView('tabla',this)"><span class="nav-icon">≡</span> Detalle</button>
+    <button class="nav-btn" onclick="setView('pace',this)"><span class="nav-icon">⏱</span> OTB Pace</button>
   </div>
   <div class="live-pill"><div class="live-dot"></div><span id="sb-date">—</span></div>
 </aside>
@@ -294,10 +295,11 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
       <div id="month-active-badge"></div>
       <span id="data-status" style="font-size:11px;color:#94a3b8;margin-right:8px"></span>
       <div class="view-tabs">
+        <button class="vtab" onclick="setView('exec',null,this)">Resumen Semanal</button>
         <button class="vtab active" onclick="setView('overview',null,this)">Overview</button>
-        <button class="vtab" onclick="setView('junta',null,this)">Junta Semanal</button>
         <button class="vtab" onclick="setView('pickup',null,this)">Pickup Semanal</button>
         <button class="vtab" onclick="setView('tabla',null,this)">Detalle</button>
+        <button class="vtab" onclick="setView('pace',null,this)">OTB Pace</button>
       </div>
     </div>
   </div>
@@ -400,30 +402,7 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
       </div>
     </div>
 
-    <!-- JUNTA SEMANAL -->
-    <div class="view" id="view-junta">
-      <div class="section-row">Resumen por Hotel</div>
-      <!-- Hotel filter -->
-      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px">
-        <span style="font-size:11px;color:var(--sub);font-weight:600;letter-spacing:.04em">HOTELES:</span>
-        <button class="pu-week-btn active" id="jh-todos" onclick="
-          activeJuntaHotels=new Set(HOTELS_ALL_LIST);
-          document.querySelectorAll('#junta-hotel-filter .pu-week-btn').forEach(b=>b.classList.add('active'));
-          document.getElementById('jh-todos').classList.add('active');
-          renderJunta();">Todos</button>
-        <button class="pu-week-btn" id="jh-ninguno" onclick="
-          activeJuntaHotels=new Set();
-          document.querySelectorAll('#junta-hotel-filter .pu-week-btn').forEach(b=>b.classList.remove('active'));
-          renderJunta();">Ninguno</button>
-        <span style="width:1px;height:20px;background:var(--border);display:inline-block"></span>
-        <div id="junta-hotel-filter" style="display:flex;gap:6px;flex-wrap:wrap"></div>
-      </div>
-      <div class="card anim" style="overflow-x:auto">
-        <div class="card-title" style="margin-bottom:2px">Hoteles — Revenue · ADR · Ocupación</div>
-        <div class="card-sub">Acumulado del período seleccionado · LY · OTB · BDGT · FCST</div>
-        <table class="dtbl" id="junta-tbl" style="margin-top:12px"></table>
-      </div>
-    </div>
+
 
     <!-- PICKUP SEMANAL -->
     <div class="view" id="view-pickup">
@@ -460,6 +439,97 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
       </div>
       <div class="section-row">Tendencia por Hotel</div>
       <div class="trend-grid" id="pu-trend-grid"></div>
+    </div>
+
+    <!-- RESUMEN EJECUTIVO -->
+    <div class="view" id="view-exec">
+
+      <!-- FILTRO HOTELES EJECUTIVO -->
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+        <span style="font-size:11px;color:var(--sub);font-weight:600;letter-spacing:.04em">HOTELES:</span>
+        <button class="pu-week-btn active" id="exh-todos" onclick="execHotelFilter('all')">Todos</button>
+        <button class="pu-week-btn" id="exh-ninguno" onclick="execHotelFilter('none')">Ninguno</button>
+        <span style="width:1px;height:20px;background:var(--border);display:inline-block"></span>
+        <div id="exec-hotel-filter" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+      </div>
+
+      <!-- TABLA POSICIÓN -->
+      <div class="card" style="overflow-x:auto;margin-bottom:18px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+          <div>
+            <div class="card-title" style="margin-bottom:2px">📊 Posición del Portfolio</div>
+            <div class="card-sub">LY 2025 · OTB 2026 · Budget · Forecast · Acumulado período</div>
+          </div>
+        </div>
+        <table class="dtbl" id="exec-junta-tbl"></table>
+      </div>
+
+      <!-- PICKUP -->
+      <div class="card" style="margin-bottom:18px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+          <div>
+            <div class="card-title" style="margin-bottom:2px">📈 Pick Up WoW</div>
+            <div class="card-sub">Promedio diario · últimas semanas</div>
+          </div>
+          <div style="display:flex;gap:6px">
+            <button class="pu-metric-btn active" id="epum-rev" onclick="setExecMetric('rev')">Revenue</button>
+            <button class="pu-metric-btn" id="epum-rn" onclick="setExecMetric('rn')">Rm Nights</button>
+            <button class="pu-metric-btn" id="epum-adr" onclick="setExecMetric('adr')">ADR</button>
+          </div>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="pu-table" id="exec-pu-table"></table>
+        </div>
+      </div>
+
+      <!-- SPARKLINES -->
+      <div class="section-row">Tendencia Pickup por Propiedad</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px" id="exec-spark-grid"></div>
+    </div>
+
+
+    <!-- OTB PACE -->
+    <div class="view" id="view-pace">
+      <div class="section-row">Evolución OTB Semanal</div>
+
+      <!-- Pace hotel filter -->
+      <div id="pace-hotel-filter" style="display:flex;flex-wrap:wrap;gap:6px;padding:0 0 16px">
+        <button id="pch-todos" class="pu-week-btn active" onclick="paceHotelFilter('all')" style="padding:5px 12px;font-size:11px">Todos</button>
+        <button id="pch-ninguno" class="pu-week-btn" onclick="paceHotelFilter('none')" style="padding:5px 12px;font-size:11px">Ninguno</button>
+      </div>
+
+      <!-- Controls row -->
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px">
+        <div style="display:flex;gap:4px">
+          <button class="pu-week-btn active" id="pace-metric-rev" onclick="setPaceMetric('rev')">Revenue</button>
+          <button class="pu-week-btn" id="pace-metric-rn" onclick="setPaceMetric('rn')">Room Nights</button>
+          <button class="pu-week-btn" id="pace-metric-adr" onclick="setPaceMetric('adr')">ADR</button>
+          <button class="pu-week-btn" id="pace-metric-occ" onclick="setPaceMetric('occ')">Occ %</button>
+        </div>
+        <select id="pace-month-sel" onchange="renderPace()" style="font-size:12px;padding:5px 10px;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text);cursor:pointer">
+          <option value="all">Todos los meses</option>
+          <option value="Jan">Enero</option>
+          <option value="Feb">Febrero</option>
+          <option value="Mar">Marzo</option>
+          <option value="Apr">Abril</option>
+          <option value="May">Mayo</option>
+          <option value="Jun">Junio</option>
+          <option value="Jul">Julio</option>
+          <option value="Aug">Agosto</option>
+          <option value="Sep">Septiembre</option>
+          <option value="Oct">Octubre</option>
+          <option value="Nov">Noviembre</option>
+          <option value="Dec">Diciembre</option>
+        </select>
+      </div>
+
+      <!-- Pace table -->
+      <div class="card" style="overflow-x:auto">
+        <table class="dtbl" id="pace-table" style="font-size:11px"></table>
+      </div>
+
+      <!-- Pace trend charts per hotel -->
+      <div id="pace-charts" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px"></div>
     </div>
 
     <!-- TABLA -->
@@ -508,105 +578,105 @@ const RAW=[
 {mo:'Jan',h:'Numu',lyRN:570,lyADR:6955,lyOcc:42,lyRev:3964401,otbRN:657,otbADR:7321,otbOcc:48,otbRev:4809897,puRev:0,bdgtRN:610,bdgtADR:7300,bdgtOcc:45,bdgtRev:4453000,fcstRN:685,fcstADR:7400,fcstOcc:50,fcstRev:5069000},
 {mo:'Jan',h:'Santa Fé',lyRN:1371,lyADR:2860,lyOcc:73,lyRev:3920745,otbRN:1230,otbADR:3079,otbOcc:65,otbRev:3787022,puRev:0,bdgtRN:1240,bdgtADR:3050,bdgtOcc:66,bdgtRev:3782000,fcstRN:1250,fcstADR:3030,fcstOcc:66,fcstRev:3787500},
 {mo:'Jan',h:'Tropicana',lyRN:796,lyADR:3700,lyOcc:37,lyRev:2944942,otbRN:1454,otbADR:3675,otbOcc:67,otbRev:5343450,puRev:0,bdgtRN:1400,bdgtADR:3780,bdgtOcc:65,bdgtRev:5292000,fcstRN:1480,fcstADR:3800,fcstOcc:68,fcstRev:5624000},
-{mo:'Feb',h:'Amomoxtli',lyRN:714,lyADR:6487,lyOcc:72,lyRev:4631856,otbRN:652,otbADR:6700,otbOcc:66,otbRev:4368400,puRev:120096,bdgtRN:730,bdgtADR:6650,bdgtOcc:74,bdgtRev:4854500,fcstRN:750,fcstADR:6650,fcstOcc:76,fcstRev:4987500},
-{mo:'Feb',h:'Anticavilla',lyRN:238,lyADR:4843,lyOcc:51,lyRev:1152650,otbRN:186,otbADR:4851,otbOcc:40,otbRev:902286,puRev:75213,bdgtRN:250,bdgtADR:4990,bdgtOcc:54,bdgtRev:1247500,fcstRN:209,fcstADR:4675,fcstOcc:45,fcstRev:977075},
-{mo:'Feb',h:'Boca de Agua',lyRN:246,lyADR:7957,lyOcc:39,lyRev:1957378,otbRN:343,otbADR:6787,otbOcc:54,otbRev:2327941,puRev:18311,bdgtRN:440,bdgtADR:8000,bdgtOcc:69,bdgtRev:3520000,fcstRN:385,fcstADR:6680,fcstOcc:60,fcstRev:2571800},
-{mo:'Feb',h:'Casona',lyRN:543,lyADR:8419,lyOcc:59,lyRev:4571755,otbRN:638,otbADR:8663,otbOcc:69,otbRev:5526994,puRev:-29372,bdgtRN:640,bdgtADR:8650,bdgtOcc:69,bdgtRev:5536000,fcstRN:680,fcstADR:8620,fcstOcc:73,fcstRev:5861600},
-{mo:'Feb',h:'El Santuario',lyRN:1118,lyADR:5375,lyOcc:29,lyRev:6009011,otbRN:1009,otbADR:5407,otbOcc:26,otbRev:5456107,puRev:279557,bdgtRN:1580,bdgtADR:5100,bdgtOcc:41,bdgtRev:8058000,fcstRN:1300,fcstADR:5050,fcstOcc:33,fcstRev:6565000},
-{mo:'Feb',h:'MDS',lyRN:380,lyADR:4077,lyOcc:26,lyRev:1549305,otbRN:507,otbADR:3450,otbOcc:35,otbRev:1749150,puRev:25065,bdgtRN:450,bdgtADR:4200,bdgtOcc:31,bdgtRev:1890000,fcstRN:510,fcstADR:3500,fcstOcc:35,fcstRev:1785000},
-{mo:'Feb',h:'Numu',lyRN:671,lyADR:7326,lyOcc:53,lyRev:4915619,otbRN:779,otbADR:7338,otbOcc:61,otbRev:5716302,puRev:-220230,bdgtRN:700,bdgtADR:8100,bdgtOcc:55,bdgtRev:5670000,fcstRN:833,fcstADR:8018,fcstOcc:65,fcstRev:6678994},
-{mo:'Feb',h:'Santa Fé',lyRN:1223,lyADR:2628,lyOcc:69,lyRev:3213906,otbRN:1093,otbADR:2872,otbOcc:62,otbRev:3139096,puRev:77704,bdgtRN:1280,bdgtADR:3080,bdgtOcc:72,bdgtRev:3942400,fcstRN:1200,fcstADR:2700,fcstOcc:68,fcstRev:3240000},
-{mo:'Feb',h:'Tropicana',lyRN:735,lyADR:3669,lyOcc:36,lyRev:2696736,otbRN:1452,otbADR:3941,otbOcc:72,otbRev:5721606,puRev:382251,bdgtRN:1450,bdgtADR:3700,bdgtOcc:71,bdgtRev:5365000,fcstRN:1530,fcstADR:3620,fcstOcc:75,fcstRev:5538600},
-{mo:'Mar',h:'Amomoxtli',lyRN:860,lyADR:6571,lyOcc:82,lyRev:5650728,otbRN:493,otbADR:6563,otbOcc:47,otbRev:3235559,puRev:141127,bdgtRN:880,bdgtADR:6770,bdgtOcc:83,bdgtRev:5957600,fcstRN:610,fcstADR:6600,fcstOcc:58,fcstRev:4026000},
-{mo:'Mar',h:'Anticavilla',lyRN:192,lyADR:5106,lyOcc:39,lyRev:980434,otbRN:108,otbADR:5413,otbOcc:22,otbRev:584604,puRev:18361,bdgtRN:233,bdgtADR:5060,bdgtOcc:47,bdgtRev:1178980,fcstRN:196,fcstADR:5200,fcstOcc:40,fcstRev:1019200},
-{mo:'Mar',h:'Boca de Agua',lyRN:307,lyADR:6882,lyOcc:45,lyRev:2112624,otbRN:197,otbADR:7246,otbOcc:29,otbRev:1427462,puRev:48101,bdgtRN:480,bdgtADR:7900,bdgtOcc:70,bdgtRev:3792000,fcstRN:250,fcstADR:7200,fcstOcc:37,fcstRev:1800000},
-{mo:'Mar',h:'Casona',lyRN:631,lyADR:8055,lyOcc:64,lyRev:5082689,otbRN:545,otbADR:7720,otbOcc:55,otbRev:4207400,puRev:-471560,bdgtRN:717,bdgtADR:8200,bdgtOcc:72,bdgtRev:5879400,fcstRN:600,fcstADR:7900,fcstOcc:60,fcstRev:4740000},
-{mo:'Mar',h:'El Santuario',lyRN:1522,lyADR:5326,lyOcc:37,lyRev:8105989,otbRN:907,otbADR:5042,otbOcc:22,otbRev:4573094,puRev:977434,bdgtRN:1800,bdgtADR:5300,bdgtOcc:43,bdgtRev:9540000,fcstRN:1800,fcstADR:5300,fcstOcc:43,fcstRev:9540000},
-{mo:'Mar',h:'MDS',lyRN:476,lyADR:4020,lyOcc:31,lyRev:1913306,otbRN:312,otbADR:4272,otbOcc:20,otbRev:1332864,puRev:150501,bdgtRN:524,bdgtADR:4200,bdgtOcc:34,bdgtRev:2200800,fcstRN:460,fcstADR:4100,fcstOcc:30,fcstRev:1886000},
-{mo:'Mar',h:'Numu',lyRN:616,lyADR:7724,lyOcc:45,lyRev:4758003,otbRN:680,otbADR:6611,otbOcc:50,otbRev:4495480,puRev:-237080,bdgtRN:760,bdgtADR:8200,bdgtOcc:56,bdgtRev:6232000,fcstRN:760,fcstADR:8200,fcstOcc:56,fcstRev:6232000},
-{mo:'Mar',h:'Santa Fé',lyRN:1279,lyADR:2467,lyOcc:68,lyRev:3155007,otbRN:1375,otbADR:2330,otbOcc:73,otbRev:3203750,puRev:24103,bdgtRN:1370,bdgtADR:3090,bdgtOcc:72,bdgtRev:4233300,fcstRN:1580,fcstADR:2700,fcstOcc:84,fcstRev:4266000},
-{mo:'Mar',h:'Tropicana',lyRN:1138,lyADR:4141,lyOcc:52,lyRev:4712675,otbRN:1427,otbADR:3904,otbOcc:66,otbRev:5570295,puRev:520985,bdgtRN:1550,bdgtADR:4050,bdgtOcc:71,bdgtRev:6277500,fcstRN:1550,fcstADR:4000,fcstOcc:71,fcstRev:6200000},
-{mo:'Apr',h:'Amomoxtli',lyRN:692,lyADR:6859,lyOcc:68,lyRev:4746130,otbRN:394,otbADR:6301,otbOcc:39,otbRev:2482594,puRev:13375,bdgtRN:750,bdgtADR:6750,bdgtOcc:74,bdgtRev:5062500,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Apr',h:'Anticavilla',lyRN:207,lyADR:4626,lyOcc:43,lyRev:957645,otbRN:49,otbADR:4991,otbOcc:10,otbRev:244559,puRev:-47,bdgtRN:237,bdgtADR:5141,bdgtOcc:49,bdgtRev:1218417,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Apr',h:'Boca de Agua',lyRN:291,lyADR:7248,lyOcc:44,lyRev:2109151,otbRN:300,otbADR:9000,otbOcc:45,otbRev:2700000,puRev:1845600,bdgtRN:350,bdgtADR:7300,bdgtOcc:53,bdgtRev:2555000,fcstRN:300,fcstADR:8500,fcstOcc:45,fcstRev:2550000},
-{mo:'Apr',h:'Casona',lyRN:364,lyADR:7461,lyOcc:38,lyRev:2715712,otbRN:443,otbADR:6854,otbOcc:46,otbRev:3036322,puRev:-39828,bdgtRN:531,bdgtADR:7600,bdgtOcc:55,bdgtRev:4035600,fcstRN:560,fcstADR:7700,fcstOcc:58,fcstRev:4312000},
-{mo:'Apr',h:'El Santuario',lyRN:927,lyADR:6015,lyOcc:23,lyRev:5575561,otbRN:289,otbADR:4740,otbOcc:7,otbRev:1369860,puRev:327639,bdgtRN:1200,bdgtADR:4900,bdgtOcc:30,bdgtRev:5880000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Apr',h:'MDS',lyRN:343,lyADR:4200,lyOcc:23,lyRev:1440489,otbRN:152,otbADR:4510,otbOcc:10,otbRev:685520,puRev:22388,bdgtRN:430,bdgtADR:4100,bdgtOcc:29,bdgtRev:1763000,fcstRN:430,fcstADR:4100,fcstOcc:29,fcstRev:1763000},
-{mo:'Apr',h:'Numu',lyRN:717,lyADR:7589,lyOcc:54,lyRev:5441442,otbRN:540,otbADR:7463,otbOcc:41,otbRev:4030020,puRev:-266364,bdgtRN:720,bdgtADR:7900,bdgtOcc:55,bdgtRev:5688000,fcstRN:693,fcstADR:0,fcstOcc:53,fcstRev:0},
-{mo:'Apr',h:'Santa Fé',lyRN:1332,lyADR:2666,lyOcc:73,lyRev:3551599,otbRN:498,otbADR:2582,otbOcc:27,otbRev:1285836,puRev:21342,bdgtRN:1300,bdgtADR:3020,bdgtOcc:71,bdgtRev:3926000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Apr',h:'Tropicana',lyRN:820,lyADR:3651,lyOcc:39,lyRev:2994189,otbRN:644,otbADR:3386,otbOcc:31,otbRev:2180262,puRev:278817,bdgtRN:1103,bdgtADR:3648,bdgtOcc:53,bdgtRev:4023744,fcstRN:1100,fcstADR:3600,fcstOcc:52,fcstRev:3960000},
-{mo:'May',h:'Amomoxtli',lyRN:706,lyADR:6488,lyOcc:67,lyRev:4580845,otbRN:182,otbADR:6012,otbOcc:17,otbRev:1094184,puRev:46284,bdgtRN:750,bdgtADR:6600,bdgtOcc:71,bdgtRev:4950000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'May',h:'Anticavilla',lyRN:174,lyADR:5073,lyOcc:35,lyRev:882723,otbRN:14,otbADR:5029,otbOcc:3,otbRev:70406,puRev:70406,bdgtRN:188,bdgtADR:5010,bdgtOcc:38,bdgtRev:941880,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'May',h:'Boca de Agua',lyRN:200,lyADR:5652,lyOcc:29,lyRev:1130438,otbRN:96,otbADR:8900,otbOcc:14,otbRev:854400,puRev:854400,bdgtRN:270,bdgtADR:5900,bdgtOcc:40,bdgtRev:1593000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'May',h:'Casona',lyRN:456,lyADR:6701,lyOcc:46,lyRev:3055818,otbRN:142,otbADR:6752,otbOcc:14,otbRev:958784,puRev:-110200,bdgtRN:580,bdgtADR:7350,bdgtOcc:58,bdgtRev:4263000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'May',h:'El Santuario',lyRN:1153,lyADR:5698,lyOcc:28,lyRev:6569607,otbRN:18,otbADR:4083,otbOcc:0,otbRev:73494,puRev:73494,bdgtRN:1300,bdgtADR:5000,bdgtOcc:31,bdgtRev:6500000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'May',h:'MDS',lyRN:351,lyADR:4000,lyOcc:23,lyRev:1404021,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:430,bdgtADR:4100,bdgtOcc:28,bdgtRev:1763000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'May',h:'Numu',lyRN:678,lyADR:8354,lyOcc:50,lyRev:5663874,otbRN:321,otbADR:6477,otbOcc:24,otbRev:2079117,puRev:151947,bdgtRN:710,bdgtADR:8400,bdgtOcc:52,bdgtRev:5964000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'May',h:'Santa Fé',lyRN:1145,lyADR:2280,lyOcc:61,lyRev:2610770,otbRN:92,otbADR:2577,otbOcc:5,otbRev:237084,puRev:67628,bdgtRN:1200,bdgtADR:2850,bdgtOcc:63,bdgtRev:3420000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'May',h:'Tropicana',lyRN:654,lyADR:4330,lyOcc:30,lyRev:2832110,otbRN:457,otbADR:4033,otbOcc:21,otbRev:1843081,puRev:172181,bdgtRN:1100,bdgtADR:4260,bdgtOcc:51,bdgtRev:4686000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Feb',h:'Amomoxtli',lyRN:714,lyADR:6487,lyOcc:72,lyRev:4631856,otbRN:652,otbADR:6700,otbOcc:66,otbRev:4368400,puRev:0,bdgtRN:730,bdgtADR:6650,bdgtOcc:74,bdgtRev:4854500,fcstRN:750,fcstADR:6650,fcstOcc:76,fcstRev:4987500},
+{mo:'Feb',h:'Anticavilla',lyRN:238,lyADR:4843,lyOcc:51,lyRev:1152650,otbRN:186,otbADR:4851,otbOcc:40,otbRev:902286,puRev:0,bdgtRN:250,bdgtADR:4990,bdgtOcc:54,bdgtRev:1247500,fcstRN:209,fcstADR:4675,fcstOcc:45,fcstRev:977075},
+{mo:'Feb',h:'Boca de Agua',lyRN:246,lyADR:7957,lyOcc:39,lyRev:1957378,otbRN:343,otbADR:6787,otbOcc:54,otbRev:2327941,puRev:0,bdgtRN:440,bdgtADR:8000,bdgtOcc:69,bdgtRev:3520000,fcstRN:385,fcstADR:6680,fcstOcc:60,fcstRev:2571800},
+{mo:'Feb',h:'Casona',lyRN:543,lyADR:8419,lyOcc:59,lyRev:4571755,otbRN:638,otbADR:8663,otbOcc:69,otbRev:5526994,puRev:0,bdgtRN:640,bdgtADR:8650,bdgtOcc:69,bdgtRev:5536000,fcstRN:680,fcstADR:8620,fcstOcc:73,fcstRev:5861600},
+{mo:'Feb',h:'El Santuario',lyRN:1118,lyADR:5375,lyOcc:29,lyRev:6009011,otbRN:1009,otbADR:5407,otbOcc:26,otbRev:5456107,puRev:0,bdgtRN:1580,bdgtADR:5100,bdgtOcc:41,bdgtRev:8058000,fcstRN:1300,fcstADR:5050,fcstOcc:33,fcstRev:6565000},
+{mo:'Feb',h:'MDS',lyRN:380,lyADR:4077,lyOcc:26,lyRev:1549305,otbRN:507,otbADR:3450,otbOcc:35,otbRev:1749150,puRev:0,bdgtRN:450,bdgtADR:4200,bdgtOcc:31,bdgtRev:1890000,fcstRN:510,fcstADR:3500,fcstOcc:35,fcstRev:1785000},
+{mo:'Feb',h:'Numu',lyRN:671,lyADR:7326,lyOcc:53,lyRev:4915619,otbRN:779,otbADR:7338,otbOcc:61,otbRev:5716302,puRev:13236,bdgtRN:700,bdgtADR:8100,bdgtOcc:55,bdgtRev:5670000,fcstRN:833,fcstADR:8018,fcstOcc:65,fcstRev:6678994},
+{mo:'Feb',h:'Santa Fé',lyRN:1223,lyADR:2628,lyOcc:69,lyRev:3213906,otbRN:1093,otbADR:2884,otbOcc:62,otbRev:3152332,puRev:13236,bdgtRN:1280,bdgtADR:3080,bdgtOcc:72,bdgtRev:3942400,fcstRN:1200,fcstADR:2700,fcstOcc:68,fcstRev:3240000},
+{mo:'Feb',h:'Tropicana',lyRN:735,lyADR:3669,lyOcc:36,lyRev:2696736,otbRN:1452,otbADR:3941,otbOcc:72,otbRev:5721606,puRev:0,bdgtRN:1450,bdgtADR:3700,bdgtOcc:71,bdgtRev:5365000,fcstRN:1530,fcstADR:3620,fcstOcc:75,fcstRev:5538600},
+{mo:'Mar',h:'Amomoxtli',lyRN:860,lyADR:6571,lyOcc:82,lyRev:5650728,otbRN:580,otbADR:6531,otbOcc:55,otbRev:3787980,puRev:552421,bdgtRN:880,bdgtADR:6770,bdgtOcc:83,bdgtRev:5957600,fcstRN:610,fcstADR:6600,fcstOcc:58,fcstRev:4026000},
+{mo:'Mar',h:'Anticavilla',lyRN:192,lyADR:5106,lyOcc:39,lyRev:980434,otbRN:128,otbADR:5294,otbOcc:26,otbRev:677632,puRev:93028,bdgtRN:233,bdgtADR:5060,bdgtOcc:47,bdgtRev:1178980,fcstRN:196,fcstADR:5200,fcstOcc:40,fcstRev:1019200},
+{mo:'Mar',h:'Boca de Agua',lyRN:307,lyADR:6882,lyOcc:45,lyRev:2112624,otbRN:193,otbADR:7584,otbOcc:28,otbRev:1463712,puRev:36250,bdgtRN:480,bdgtADR:7900,bdgtOcc:70,bdgtRev:3792000,fcstRN:250,fcstADR:7200,fcstOcc:37,fcstRev:1800000},
+{mo:'Mar',h:'Casona',lyRN:631,lyADR:8055,lyOcc:64,lyRev:5082689,otbRN:580,otbADR:7964,otbOcc:58,otbRev:4619120,puRev:411720,bdgtRN:717,bdgtADR:8200,bdgtOcc:72,bdgtRev:5879400,fcstRN:640,fcstADR:7900,fcstOcc:65,fcstRev:5056000},
+{mo:'Mar',h:'El Santuario',lyRN:1522,lyADR:5326,lyOcc:37,lyRev:8105989,otbRN:1006,otbADR:5056,otbOcc:24,otbRev:5086336,puRev:513242,bdgtRN:1800,bdgtADR:5300,bdgtOcc:43,bdgtRev:9540000,fcstRN:1300,fcstADR:5100,fcstOcc:31,fcstRev:6630000},
+{mo:'Mar',h:'MDS',lyRN:476,lyADR:4020,lyOcc:31,lyRev:1913306,otbRN:377,otbADR:4090,otbOcc:24,otbRev:1541930,puRev:209066,bdgtRN:524,bdgtADR:4200,bdgtOcc:34,bdgtRev:2200800,fcstRN:460,fcstADR:4100,fcstOcc:30,fcstRev:1886000},
+{mo:'Mar',h:'Numu',lyRN:616,lyADR:7724,lyOcc:45,lyRev:4758003,otbRN:696,otbADR:6594,otbOcc:51,otbRev:4589424,puRev:93944,bdgtRN:760,bdgtADR:8400,bdgtOcc:56,bdgtRev:6384000,fcstRN:758,fcstADR:6966,fcstOcc:56,fcstRev:5280228},
+{mo:'Mar',h:'Santa Fé',lyRN:1279,lyADR:2467,lyOcc:68,lyRev:3155007,otbRN:1405,otbADR:2433,otbOcc:74,otbRev:3417972,puRev:214222,bdgtRN:1370,bdgtADR:3090,bdgtOcc:72,bdgtRev:4233300,fcstRN:1600,fcstADR:2400,fcstOcc:85,fcstRev:3840000},
+{mo:'Mar',h:'Tropicana',lyRN:1138,lyADR:4141,lyOcc:52,lyRev:4712675,otbRN:1461,otbADR:3904,otbOcc:67,otbRev:5703014,puRev:132719,bdgtRN:1550,bdgtADR:4050,bdgtOcc:71,bdgtRev:6277500,fcstRN:1550,fcstADR:4000,fcstOcc:71,fcstRev:6200000},
+{mo:'Apr',h:'Amomoxtli',lyRN:692,lyADR:6859,lyOcc:68,lyRev:4746130,otbRN:410,otbADR:6343,otbOcc:40,otbRev:2600630,puRev:118036,bdgtRN:750,bdgtADR:6750,bdgtOcc:74,bdgtRev:5062500,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Apr',h:'Anticavilla',lyRN:207,lyADR:4626,lyOcc:43,lyRev:957645,otbRN:49,otbADR:4991,otbOcc:10,otbRev:244559,puRev:0,bdgtRN:237,bdgtADR:5141,bdgtOcc:49,bdgtRev:1218417,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Apr',h:'Boca de Agua',lyRN:291,lyADR:7248,lyOcc:44,lyRev:2109151,otbRN:98,otbADR:8891,otbOcc:15,otbRev:871318,puRev:871318,bdgtRN:350,bdgtADR:7300,bdgtOcc:53,bdgtRev:2555000,fcstRN:300,fcstADR:8500,fcstOcc:45,fcstRev:2550000},
+{mo:'Apr',h:'Casona',lyRN:364,lyADR:7461,lyOcc:38,lyRev:2715712,otbRN:514,otbADR:6836,otbOcc:54,otbRev:3513766,puRev:477444,bdgtRN:531,bdgtADR:7600,bdgtOcc:55,bdgtRev:4035600,fcstRN:560,fcstADR:7700,fcstOcc:58,fcstRev:4312000},
+{mo:'Apr',h:'El Santuario',lyRN:927,lyADR:6015,lyOcc:23,lyRev:5575561,otbRN:410,otbADR:4501,otbOcc:10,otbRev:1845410,puRev:475550,bdgtRN:1200,bdgtADR:4900,bdgtOcc:30,bdgtRev:5880000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Apr',h:'MDS',lyRN:343,lyADR:4200,lyOcc:23,lyRev:1440489,otbRN:165,otbADR:4531,otbOcc:11,otbRev:747615,puRev:62095,bdgtRN:430,bdgtADR:4100,bdgtOcc:29,bdgtRev:1763000,fcstRN:430,fcstADR:4100,fcstOcc:29,fcstRev:1763000},
+{mo:'Apr',h:'Numu',lyRN:717,lyADR:7589,lyOcc:54,lyRev:5441442,otbRN:534,otbADR:7435,otbOcc:40,otbRev:3970290,puRev:-59730,bdgtRN:720,bdgtADR:7900,bdgtOcc:55,bdgtRev:5688000,fcstRN:665,fcstADR:8046,fcstOcc:50,fcstRev:5350590},
+{mo:'Apr',h:'Santa Fé',lyRN:1332,lyADR:2666,lyOcc:73,lyRev:3551599,otbRN:601,otbADR:2716,otbOcc:33,otbRev:1632508,puRev:346672,bdgtRN:1300,bdgtADR:3020,bdgtOcc:71,bdgtRev:3926000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Apr',h:'Tropicana',lyRN:820,lyADR:3651,lyOcc:39,lyRev:2994189,otbRN:680,otbADR:3404,otbOcc:32,otbRev:2314720,puRev:134458,bdgtRN:1103,bdgtADR:3648,bdgtOcc:53,bdgtRev:4023744,fcstRN:1100,fcstADR:3600,fcstOcc:52,fcstRev:3960000},
+{mo:'May',h:'Amomoxtli',lyRN:706,lyADR:6488,lyOcc:67,lyRev:4580845,otbRN:257,otbADR:6044,otbOcc:24,otbRev:1553308,puRev:459124,bdgtRN:750,bdgtADR:6600,bdgtOcc:71,bdgtRev:4950000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'May',h:'Anticavilla',lyRN:174,lyADR:5073,lyOcc:35,lyRev:882723,otbRN:14,otbADR:5029,otbOcc:3,otbRev:70406,puRev:0,bdgtRN:188,bdgtADR:5010,bdgtOcc:38,bdgtRev:941880,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'May',h:'Boca de Agua',lyRN:200,lyADR:5652,lyOcc:29,lyRev:1130438,otbRN:36,otbADR:7323,otbOcc:5,otbRev:263628,puRev:-590772,bdgtRN:270,bdgtADR:5900,bdgtOcc:40,bdgtRev:1593000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'May',h:'Casona',lyRN:456,lyADR:6701,lyOcc:46,lyRev:3055818,otbRN:157,otbADR:6766,otbOcc:16,otbRev:1062243,puRev:103459,bdgtRN:580,bdgtADR:7350,bdgtOcc:58,bdgtRev:4263000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'May',h:'El Santuario',lyRN:1153,lyADR:5698,lyOcc:28,lyRev:6569607,otbRN:28,otbADR:4960,otbOcc:1,otbRev:138880,puRev:65386,bdgtRN:1300,bdgtADR:5000,bdgtOcc:31,bdgtRev:6500000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'May',h:'MDS',lyRN:351,lyADR:4000,lyOcc:23,lyRev:1404021,otbRN:42,otbADR:4432,otbOcc:3,otbRev:186144,puRev:186144,bdgtRN:430,bdgtADR:4100,bdgtOcc:28,bdgtRev:1763000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'May',h:'Numu',lyRN:678,lyADR:8354,lyOcc:50,lyRev:5663874,otbRN:390,otbADR:5996,otbOcc:29,otbRev:2338440,puRev:259323,bdgtRN:710,bdgtADR:8400,bdgtOcc:52,bdgtRev:5964000,fcstRN:650,fcstADR:7362,fcstOcc:48,fcstRev:4785300},
+{mo:'May',h:'Santa Fé',lyRN:1145,lyADR:2280,lyOcc:61,lyRev:2610770,otbRN:106,otbADR:2633,otbOcc:6,otbRev:279056,puRev:41972,bdgtRN:1200,bdgtADR:2850,bdgtOcc:63,bdgtRev:3420000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'May',h:'Tropicana',lyRN:654,lyADR:4330,lyOcc:30,lyRev:2832110,otbRN:464,otbADR:4052,otbOcc:21,otbRev:1879896,puRev:36815,bdgtRN:1100,bdgtADR:4260,bdgtOcc:51,bdgtRev:4686000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Jun',h:'Amomoxtli',lyRN:716,lyADR:6014,lyOcc:70,lyRev:4305702,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:740,bdgtADR:6200,bdgtOcc:73,bdgtRev:4588000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Jun',h:'Anticavilla',lyRN:144,lyADR:4689,lyOcc:30,lyRev:675158,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:189,bdgtADR:4961,bdgtOcc:39,bdgtRev:937629,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Jun',h:'Boca de Agua',lyRN:153,lyADR:6619,lyOcc:23,lyRev:1012684,otbRN:32,otbADR:7238,otbOcc:5,otbRev:231616,puRev:231616,bdgtRN:240,bdgtADR:5900,bdgtOcc:36,bdgtRev:1416000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Jun',h:'Casona',lyRN:412,lyADR:5649,lyOcc:43,lyRev:2327375,otbRN:18,otbADR:13923,otbOcc:2,otbRev:250614,puRev:76076,bdgtRN:815,bdgtADR:13500,bdgtOcc:85,bdgtRev:11002500,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Jun',h:'Boca de Agua',lyRN:153,lyADR:6619,lyOcc:23,lyRev:1012684,otbRN:16,otbADR:7288,otbOcc:2,otbRev:116608,puRev:-115008,bdgtRN:240,bdgtADR:5900,bdgtOcc:36,bdgtRev:1416000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Jun',h:'Casona',lyRN:412,lyADR:5649,lyOcc:43,lyRev:2327375,otbRN:16,otbADR:14369,otbOcc:2,otbRev:229906,puRev:-20708,bdgtRN:815,bdgtADR:13500,bdgtOcc:85,bdgtRev:11002500,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Jun',h:'El Santuario',lyRN:1092,lyADR:5156,lyOcc:27,lyRev:5630337,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:1210,bdgtADR:5200,bdgtOcc:30,bdgtRev:6292000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Jun',h:'MDS',lyRN:212,lyADR:4105,lyOcc:14,lyRev:870168,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:320,bdgtADR:4150,bdgtOcc:21,bdgtRev:1328000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Jun',h:'Numu',lyRN:549,lyADR:5927,lyOcc:42,lyRev:3253878,otbRN:117,otbADR:6508,otbOcc:9,otbRev:761436,puRev:761436,bdgtRN:660,bdgtADR:7000,bdgtOcc:50,bdgtRev:4620000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Jun',h:'Santa Fé',lyRN:694,lyADR:2397,lyOcc:38,lyRev:1663664,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:1090,bdgtADR:3090,bdgtOcc:60,bdgtRev:3368100,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Jun',h:'Tropicana',lyRN:306,lyADR:2532,lyOcc:15,lyRev:774766,otbRN:80,otbADR:2627,otbOcc:4,otbRev:210160,puRev:54480,bdgtRN:920,bdgtADR:3100,bdgtOcc:44,bdgtRev:2852000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Jun',h:'Numu',lyRN:549,lyADR:5927,lyOcc:42,lyRev:3253878,otbRN:151,otbADR:6579,otbOcc:11,otbRev:993429,puRev:231993,bdgtRN:660,bdgtADR:7000,bdgtOcc:50,bdgtRev:4620000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Jun',h:'Santa Fé',lyRN:694,lyADR:2397,lyOcc:38,lyRev:1663664,otbRN:38,otbADR:2574,otbOcc:2,otbRev:97800,puRev:97800,bdgtRN:1090,bdgtADR:3090,bdgtOcc:60,bdgtRev:3368100,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Jun',h:'Tropicana',lyRN:306,lyADR:2532,lyOcc:15,lyRev:774766,otbRN:87,otbADR:2572,otbOcc:4,otbRev:223721,puRev:13561,bdgtRN:920,bdgtADR:3100,bdgtOcc:44,bdgtRev:2852000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Jul',h:'Amomoxtli',lyRN:746,lyADR:6089,lyOcc:71,lyRev:4542105,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:750,bdgtADR:6050,bdgtOcc:71,bdgtRev:4537500,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Jul',h:'Anticavilla',lyRN:194,lyADR:4800,lyOcc:39,lyRev:931167,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:206,bdgtADR:4936,bdgtOcc:42,bdgtRev:1016816,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Jul',h:'Boca de Agua',lyRN:247,lyADR:5198,lyOcc:36,lyRev:1283973,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:240,bdgtADR:5900,bdgtOcc:35,bdgtRev:1416000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Jul',h:'Casona',lyRN:257,lyADR:6058,lyOcc:26,lyRev:1556869,otbRN:9,otbADR:8856,otbOcc:1,otbRev:125307,puRev:4473,bdgtRN:600,bdgtADR:9405,bdgtOcc:60,bdgtRev:5643000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Jul',h:'Casona',lyRN:257,lyADR:6058,lyOcc:26,lyRev:1556869,otbRN:4,otbADR:6977,otbOcc:0,otbRev:57476,puRev:-67831,bdgtRN:600,bdgtADR:9405,bdgtOcc:60,bdgtRev:5643000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Jul',h:'El Santuario',lyRN:667,lyADR:5217,lyOcc:16,lyRev:3479483,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:1030,bdgtADR:5300,bdgtOcc:25,bdgtRev:5459000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Jul',h:'MDS',lyRN:293,lyADR:3757,lyOcc:19,lyRev:1100714,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:380,bdgtADR:3900,bdgtOcc:25,bdgtRev:1482000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Jul',h:'Numu',lyRN:453,lyADR:5889,lyOcc:33,lyRev:2667503,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:490,bdgtADR:6500,bdgtOcc:36,bdgtRev:3185000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Jul',h:'Santa Fé',lyRN:1134,lyADR:2553,lyOcc:60,lyRev:2894645,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:1150,bdgtADR:3200,bdgtOcc:61,bdgtRev:3680000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Jul',h:'Tropicana',lyRN:562,lyADR:2841,lyOcc:26,lyRev:1596773,otbRN:60,otbADR:2368,otbOcc:3,otbRev:142080,puRev:27998,bdgtRN:1055,bdgtADR:2913,bdgtOcc:49,bdgtRev:3073215,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Jul',h:'Santa Fé',lyRN:1134,lyADR:2553,lyOcc:60,lyRev:2894645,otbRN:63,otbADR:2321,otbOcc:3,otbRev:146254,puRev:146254,bdgtRN:1150,bdgtADR:3200,bdgtOcc:61,bdgtRev:3680000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Jul',h:'Tropicana',lyRN:562,lyADR:2841,lyOcc:26,lyRev:1596773,otbRN:62,otbADR:2387,otbOcc:3,otbRev:147963,puRev:5883,bdgtRN:1055,bdgtADR:2913,bdgtOcc:49,bdgtRev:3073215,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Aug',h:'Amomoxtli',lyRN:776,lyADR:6132,lyOcc:74,lyRev:4758502,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:790,bdgtADR:6200,bdgtOcc:75,bdgtRev:4898000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Aug',h:'Anticavilla',lyRN:127,lyADR:4951,lyOcc:26,lyRev:628810,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:160,bdgtADR:5149,bdgtOcc:32,bdgtRev:823840,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Aug',h:'Boca de Agua',lyRN:405,lyADR:4918,lyOcc:59,lyRev:1991628,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:290,bdgtADR:6000,bdgtOcc:43,bdgtRev:1740000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Aug',h:'Casona',lyRN:284,lyADR:6121,lyOcc:29,lyRev:1738421,otbRN:4,otbADR:7430,otbOcc:0,otbRev:29720,puRev:-1696,bdgtRN:360,bdgtADR:6500,bdgtOcc:36,bdgtRev:2340000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Aug',h:'Casona',lyRN:284,lyADR:6121,lyOcc:29,lyRev:1738421,otbRN:4,otbADR:7430,otbOcc:0,otbRev:29721,puRev:1,bdgtRN:360,bdgtADR:6500,bdgtOcc:36,bdgtRev:2340000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Aug',h:'El Santuario',lyRN:783,lyADR:5420,lyOcc:19,lyRev:4243860,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:1050,bdgtADR:5300,bdgtOcc:25,bdgtRev:5565000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Aug',h:'MDS',lyRN:343,lyADR:3734,lyOcc:22,lyRev:1280762,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:330,bdgtADR:3900,bdgtOcc:21,bdgtRev:1287000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Aug',h:'Numu',lyRN:584,lyADR:6281,lyOcc:43,lyRev:3668139,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:500,bdgtADR:6300,bdgtOcc:37,bdgtRev:3150000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Aug',h:'Santa Fé',lyRN:993,lyADR:2493,lyOcc:53,lyRev:2475062,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:1040,bdgtADR:3001,bdgtOcc:55,bdgtRev:3121040,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Aug',h:'Tropicana',lyRN:245,lyADR:2693,lyOcc:11,lyRev:659883,otbRN:31,otbADR:1850,otbOcc:1,otbRev:57350,puRev:8840,bdgtRN:744,bdgtADR:2843,bdgtOcc:34,bdgtRev:2115192,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Aug',h:'Santa Fé',lyRN:993,lyADR:2493,lyOcc:53,lyRev:2475062,otbRN:111,otbADR:2322,otbOcc:6,otbRev:257778,puRev:257778,bdgtRN:1040,bdgtADR:3001,bdgtOcc:55,bdgtRev:3121040,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Aug',h:'Tropicana',lyRN:245,lyADR:2693,lyOcc:11,lyRev:659883,otbRN:29,otbADR:1906,otbOcc:1,otbRev:55260,puRev:-2091,bdgtRN:744,bdgtADR:2843,bdgtOcc:34,bdgtRev:2115192,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Sep',h:'Amomoxtli',lyRN:633,lyADR:6292,lyOcc:62,lyRev:3982526,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:640,bdgtADR:6400,bdgtOcc:63,bdgtRev:4096000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Sep',h:'Anticavilla',lyRN:185,lyADR:4838,lyOcc:39,lyRev:895110,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:192,bdgtADR:4900,bdgtOcc:40,bdgtRev:940800,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Sep',h:'Boca de Agua',lyRN:152,lyADR:4087,lyOcc:24,lyRev:621203,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:280,bdgtADR:6000,bdgtOcc:44,bdgtRev:1680000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Sep',h:'Casona',lyRN:409,lyADR:6651,lyOcc:43,lyRev:2720087,otbRN:11,otbADR:7454,otbOcc:1,otbRev:81994,puRev:59438,bdgtRN:486,bdgtADR:6714,bdgtOcc:51,bdgtRev:3263004,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Sep',h:'Casona',lyRN:409,lyADR:6651,lyOcc:43,lyRev:2720087,otbRN:11,otbADR:7455,otbOcc:1,otbRev:82003,puRev:9,bdgtRN:486,bdgtADR:6714,bdgtOcc:51,bdgtRev:3263004,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Sep',h:'El Santuario',lyRN:848,lyADR:5127,lyOcc:21,lyRev:4347696,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:1400,bdgtADR:5100,bdgtOcc:35,bdgtRev:7140000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Sep',h:'MDS',lyRN:266,lyADR:3926,lyOcc:18,lyRev:1044414,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:390,bdgtADR:4000,bdgtOcc:26,bdgtRev:1560000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Sep',h:'Numu',lyRN:638,lyADR:6354,lyOcc:48,lyRev:4054145,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:690,bdgtADR:6700,bdgtOcc:52,bdgtRev:4623000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Sep',h:'Santa Fé',lyRN:397,lyADR:2212,lyOcc:22,lyRev:878164,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:960,bdgtADR:2900,bdgtOcc:52,bdgtRev:2784000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Sep',h:'Tropicana',lyRN:336,lyADR:2517,lyOcc:16,lyRev:845794,otbRN:21,otbADR:1129,otbOcc:1,otbRev:23699,puRev:13934,bdgtRN:600,bdgtADR:2784,bdgtOcc:29,bdgtRev:1670400,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Sep',h:'Santa Fé',lyRN:397,lyADR:2212,lyOcc:22,lyRev:878164,otbRN:34,otbADR:2872,otbOcc:2,otbRev:97659,puRev:97659,bdgtRN:960,bdgtADR:2900,bdgtOcc:52,bdgtRev:2784000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Sep',h:'Tropicana',lyRN:336,lyADR:2517,lyOcc:16,lyRev:845794,otbRN:21,otbADR:1129,otbOcc:1,otbRev:23699,puRev:0,bdgtRN:600,bdgtADR:2784,bdgtOcc:29,bdgtRev:1670400,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Oct',h:'Amomoxtli',lyRN:684,lyADR:6718,lyOcc:65,lyRev:4595064,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:750,bdgtADR:6600,bdgtOcc:71,bdgtRev:4950000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Oct',h:'Anticavilla',lyRN:215,lyADR:4690,lyOcc:43,lyRev:1008415,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:230,bdgtADR:4696,bdgtOcc:46,bdgtRev:1080080,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Oct',h:'Boca de Agua',lyRN:194,lyADR:4543,lyOcc:30,lyRev:881332,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:330,bdgtADR:6300,bdgtOcc:51,bdgtRev:2079000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Oct',h:'Casona',lyRN:739,lyADR:7564,lyOcc:74,lyRev:5589678,otbRN:29,otbADR:7204,otbOcc:3,otbRev:208916,puRev:-11919,bdgtRN:740,bdgtADR:9017,bdgtOcc:75,bdgtRev:6672580,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Oct',h:'Casona',lyRN:739,lyADR:7564,lyOcc:74,lyRev:5589678,otbRN:29,otbADR:7204,otbOcc:3,otbRev:208921,puRev:5,bdgtRN:740,bdgtADR:9017,bdgtOcc:75,bdgtRev:6672580,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Oct',h:'El Santuario',lyRN:1096,lyADR:4917,lyOcc:26,lyRev:5388933,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:1650,bdgtADR:5200,bdgtOcc:40,bdgtRev:8580000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Oct',h:'MDS',lyRN:444,lyADR:3816,lyOcc:29,lyRev:1694295,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:570,bdgtADR:4300,bdgtOcc:37,bdgtRev:2451000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Oct',h:'Numu',lyRN:681,lyADR:8090,lyOcc:50,lyRev:5508956,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:750,bdgtADR:8300,bdgtOcc:55,bdgtRev:6225000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Oct',h:'Santa Fé',lyRN:644,lyADR:2158,lyOcc:34,lyRev:1389829,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:1067,bdgtADR:3390,bdgtOcc:56,bdgtRev:3617130,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Oct',h:'Tropicana',lyRN:583,lyADR:2508,lyOcc:27,lyRev:1462071,otbRN:26,otbADR:2738,otbOcc:1,otbRev:71188,puRev:-7475,bdgtRN:1200,bdgtADR:3250,bdgtOcc:55,bdgtRev:3900000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Oct',h:'Santa Fé',lyRN:644,lyADR:2158,lyOcc:34,lyRev:1389829,otbRN:50,otbADR:3032,otbOcc:3,otbRev:151619,puRev:151619,bdgtRN:1067,bdgtADR:3390,bdgtOcc:56,bdgtRev:3617130,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Oct',h:'Tropicana',lyRN:583,lyADR:2508,lyOcc:27,lyRev:1462071,otbRN:32,otbADR:2572,otbOcc:1,otbRev:82288,puRev:11100,bdgtRN:1200,bdgtADR:3250,bdgtOcc:55,bdgtRev:3900000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Nov',h:'Amomoxtli',lyRN:757,lyADR:6622,lyOcc:74,lyRev:5012491,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:730,bdgtADR:6850,bdgtOcc:72,bdgtRev:5000500,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Nov',h:'Anticavilla',lyRN:242,lyADR:4882,lyOcc:50,lyRev:1181335,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:260,bdgtADR:4794,bdgtOcc:54,bdgtRev:1246440,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Nov',h:'Boca de Agua',lyRN:285,lyADR:5787,lyOcc:43,lyRev:1649272,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:450,bdgtADR:7500,bdgtOcc:68,bdgtRev:3375000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Nov',h:'Casona',lyRN:696,lyADR:7047,lyOcc:73,lyRev:4904406,otbRN:24,otbADR:7470,otbOcc:3,otbRev:179280,puRev:14241,bdgtRN:744,bdgtADR:8202,bdgtOcc:78,bdgtRev:6102288,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Nov',h:'Casona',lyRN:696,lyADR:7047,lyOcc:73,lyRev:4904406,otbRN:24,otbADR:7470,otbOcc:3,otbRev:179283,puRev:3,bdgtRN:744,bdgtADR:8202,bdgtOcc:78,bdgtRev:6102288,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Nov',h:'El Santuario',lyRN:1642,lyADR:5004,lyOcc:41,lyRev:8216683,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:1600,bdgtADR:5300,bdgtOcc:40,bdgtRev:8480000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Nov',h:'MDS',lyRN:522,lyADR:3645,lyOcc:35,lyRev:1902476,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:680,bdgtADR:4300,bdgtOcc:45,bdgtRev:2924000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Nov',h:'Numu',lyRN:768,lyADR:8773,lyOcc:58,lyRev:6737626,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:860,bdgtADR:8700,bdgtOcc:65,bdgtRev:7482000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Nov',h:'Santa Fé',lyRN:1289,lyADR:2464,lyOcc:70,lyRev:3176096,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:1290,bdgtADR:3680,bdgtOcc:70,bdgtRev:4747200,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Nov',h:'Tropicana',lyRN:1083,lyADR:3356,lyOcc:52,lyRev:3634635,otbRN:82,otbADR:3219,otbOcc:4,otbRev:263958,puRev:-2532,bdgtRN:1450,bdgtADR:3960,bdgtOcc:69,bdgtRev:5742000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Nov',h:'Santa Fé',lyRN:1289,lyADR:2464,lyOcc:70,lyRev:3176096,otbRN:105,otbADR:3131,otbOcc:6,otbRev:328769,puRev:328769,bdgtRN:1290,bdgtADR:3680,bdgtOcc:70,bdgtRev:4747200,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Nov',h:'Tropicana',lyRN:1083,lyADR:3356,lyOcc:52,lyRev:3634635,otbRN:216,otbADR:3589,otbOcc:10,otbRev:775224,puRev:511266,bdgtRN:1450,bdgtADR:3960,bdgtOcc:69,bdgtRev:5742000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Dec',h:'Amomoxtli',lyRN:661,lyADR:7219,lyOcc:63,lyRev:4771700,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:770,bdgtADR:6980,bdgtOcc:73,bdgtRev:5374600,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Dec',h:'Anticavilla',lyRN:191,lyADR:5123,lyOcc:39,lyRev:978482,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:270,bdgtADR:5100,bdgtOcc:54,bdgtRev:1377000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Dec',h:'Boca de Agua',lyRN:345,lyADR:8208,lyOcc:51,lyRev:2831760,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:410,bdgtADR:10800,bdgtOcc:60,bdgtRev:4428000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Dec',h:'Casona',lyRN:632,lyADR:6982,lyOcc:64,lyRev:4412725,otbRN:5,otbADR:8109,otbOcc:1,otbRev:40545,puRev:-2320,bdgtRN:680,bdgtADR:7550,bdgtOcc:69,bdgtRev:5134000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Dec',h:'Casona',lyRN:632,lyADR:6982,lyOcc:64,lyRev:4412725,otbRN:5,otbADR:8110,otbOcc:1,otbRev:40550,puRev:5,bdgtRN:680,bdgtADR:7550,bdgtOcc:69,bdgtRev:5134000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Dec',h:'El Santuario',lyRN:945,lyADR:5335,lyOcc:23,lyRev:5041103,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:1450,bdgtADR:6000,bdgtOcc:35,bdgtRev:8700000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Dec',h:'MDS',lyRN:346,lyADR:3828,lyOcc:22,lyRev:1324602,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:470,bdgtADR:4350,bdgtOcc:30,bdgtRev:2044500,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Dec',h:'Numu',lyRN:750,lyADR:8852,lyOcc:55,lyRev:6638625,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:720,bdgtADR:9800,bdgtOcc:53,bdgtRev:7056000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Dec',h:'Santa Fé',lyRN:1319,lyADR:3046,lyOcc:70,lyRev:4017674,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:1300,bdgtADR:3900,bdgtOcc:69,bdgtRev:5070000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Dec',h:'Tropicana',lyRN:1374,lyADR:3929,lyOcc:63,lyRev:5398487,otbRN:128,otbADR:3719,otbOcc:6,otbRev:475968,puRev:45468,bdgtRN:1480,bdgtADR:4230,bdgtOcc:68,bdgtRev:6260400,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0}
+{mo:'Dec',h:'Santa Fé',lyRN:1319,lyADR:3046,lyOcc:70,lyRev:4017674,otbRN:36,otbADR:3231,otbOcc:2,otbRev:116303,puRev:116303,bdgtRN:1300,bdgtADR:3900,bdgtOcc:69,bdgtRev:5070000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Dec',h:'Tropicana',lyRN:1374,lyADR:3929,lyOcc:63,lyRev:5398487,otbRN:139,otbADR:3904,otbOcc:6,otbRev:542587,puRev:66619,bdgtRN:1480,bdgtADR:4230,bdgtOcc:68,bdgtRev:6260400,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -775,7 +845,7 @@ function renderHM(){
   }).join('')}`
 }
 
-function renderPace(){
+function renderPaceBar(){
   const bm=byMonth(),mx=Math.max(...bm.flatMap(d=>[d.lyRN,d.otbRN,d.fcstRN||d.bdgtRN]),1);
   const el=document.getElementById('pace-chart');if(!el)return;
   el.innerHTML=bm.map(d=>{const ref=d.fcstRN||d.bdgtRN;return`<div class="bar-row"><span class="bar-m">${d.mo}</span><div class="bar-tracks"><div class="bar-track"><div class="bar-fill" style="width:${(d.lyRN/mx*100).toFixed(1)}%;background:#cbd5e1"></div></div><div class="bar-track"><div class="bar-fill" style="width:${(d.otbRN/mx*100).toFixed(1)}%;background:#0284c7;opacity:.85"></div></div><div class="bar-track"><div class="bar-fill" style="width:${(ref/mx*100).toFixed(1)}%;background:#d97706;opacity:.8"></div></div></div><span class="bar-val">${d.otbRN}</span></div>`}).join('')
@@ -950,32 +1020,34 @@ function renderJunta(){
       <th style="min-width:130px"></th>
       <th colspan="3" style="text-align:center;color:#94a3b8;background:#f8f9fa;padding-bottom:4px">LY 2025</th>
       <th colspan="4" style="text-align:center;color:#0284c7;background:#eff8ff;padding-bottom:4px;${sep}">OTB 2026</th>
-      <th colspan="3" style="text-align:center;color:#475569;background:#f8f9fa;padding-bottom:4px;${sep}">BDGT</th>
+      <th colspan="4" style="text-align:center;color:#475569;background:#f8f9fa;padding-bottom:4px;${sep}">BDGT</th>
       <th colspan="3" style="text-align:center;color:#d97706;background:#fffbeb;padding-bottom:4px;${sep}">FCST</th>
     </tr>
     <tr>
       <th>Hotel</th>
       <th>Rev</th><th>ADR</th><th>Occ</th>
       <th style="${sep}">Rev</th><th>ADR</th><th>Occ</th><th style="font-size:10px;color:#64748b">vs LY</th>
-      <th style="${sep}">Rev</th><th>ADR</th><th>Occ</th>
+      <th style="${sep}">Rev</th><th>ADR</th><th>Occ</th><th style="font-size:10px;color:#64748b">OTB/BDGT</th>
       <th style="${sep}">Rev</th><th>ADR</th><th>Occ</th>
     </tr>
   </thead>
   <tbody>
-    ${rows.map(r=>{const p=r.vsLY>=0;return`<tr>
+    ${rows.map(r=>{const p=r.vsLY>=0;const ach=r.bdgtRev?((r.otbRev/r.bdgtRev)*100):0;const achP=ach>=100;return`<tr>
       <td><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:${r.col};flex-shrink:0"></span>${r.h}</span></td>
       <td>${fmtM(r.lyRev)}</td><td>${fmtA(r.lyADR)}</td><td>${r.lyOcc.toFixed(0)}%</td>
       <td style="color:#0284c7;${sep}">${fmtM(r.otbRev)}</td><td style="color:#0284c7">${fmtA(r.otbADR)}</td><td style="color:#0284c7">${r.otbOcc.toFixed(0)}%</td>
-      <td><span style="font-size:11px;font-weight:600;color:${p?'#059669':'#e11d48'}">${p?'+':''}${r.vsLY.toFixed(1)}%</span></td>
+      <td><span style="font-size:10px;font-weight:600;color:${p?'#059669':'#e11d48'}">${p?'+':''}${r.vsLY.toFixed(1)}%</span></td>
       <td style="${sep}">${fmtM(r.bdgtRev)}</td><td>${fmtA(r.bdgtADR)}</td><td>${r.bdgtOcc.toFixed(0)}%</td>
+      <td><span style="font-size:10px;font-weight:600;color:${achP?'#059669':'#e11d48'}">${r.bdgtRev?ach.toFixed(1)+'%':'—'}</span></td>
       <td style="color:#d97706;${sep}">${fmtM(r.fcstRev)}</td><td style="color:#d97706">${fmtA(r.fcstADR)}</td><td style="color:#d97706">${r.fcstOcc.toFixed(0)}%</td>
     </tr>`;}).join('')}
     <tr class="total-row">
       <td>TOTAL PORTFOLIO</td>
       <td>${fmtM(tot.lyRev)}</td><td>${fmtA(tot.lyADR)}</td><td>${tot.lyOcc.toFixed(0)}%</td>
       <td style="${sep}">${fmtM(tot.otbRev)}</td><td>${fmtA(tot.otbADR)}</td><td>${tot.otbOcc.toFixed(0)}%</td>
-      <td><span style="font-size:11px;font-weight:700;color:${totVsLY>=0?'#059669':'#e11d48'}">${totVsLY>=0?'+':''}${totVsLY.toFixed(1)}%</span></td>
+      <td><span style="font-size:10px;font-weight:700;color:${totVsLY>=0?'#059669':'#e11d48'}">${totVsLY>=0?'+':''}${totVsLY.toFixed(1)}%</span></td>
       <td style="${sep}">${fmtM(tot.bdgtRev)}</td><td>${fmtA(tot.bdgtADR)}</td><td>${tot.bdgtOcc.toFixed(0)}%</td>
+      <td>${(()=>{const ach=tot.bdgtRev?((tot.otbRev/tot.bdgtRev)*100):0;const p=ach>=100;return`<span style="font-size:10px;font-weight:700;color:${p?'#059669':'#e11d48'}">${tot.bdgtRev?ach.toFixed(1)+'%':'—'}</span>`})()}</td>
       <td style="${sep}">${fmtM(tot.fcstRev)}</td><td>${fmtA(tot.fcstADR)}</td><td>${tot.fcstOcc.toFixed(0)}%</td>
     </tr>
   </tbody>`;
@@ -992,43 +1064,451 @@ const PU_WEEKS=[
   {id:'W06',label:'09–15 Feb'},
   {id:'W07',label:'16–22 Feb'},
   {id:'W08',label:'23 Feb–1 Mar'},
+  {id:'W09',label:'02–08 Mar'},
 ];
 const PU_RAW={
   rev:{
-    'Amomoxtli':   [648487,1114878,1241176,1109430,1214321,966370,1292340,1257433,756579],
-    'Anticavilla': [146594,324603,182531,356207,477161,492017,132611,254401,147105],
-    'Boca de Agua':[364358,419691,366929,451308,688422,400285,410090,269971,125370],
-    'Casona':      [1061919,1152365,1586135,1186923,1222776,578214,887760,969474,-5277],
-    'El Santuario':[1698284,1593095,2286002,2639614,2453822,731838,924843,1489216,1050046],
-    'MDS':         [384759,518908,641196,418784,322696,178717,302615,470695,235120],
-    'Numu':        [1132866,1587319,2050318,1385891,2268174,532578,1448014,952602,-14209],
-    'Santa Fé':    [472832,1171651,467913,573047,448918,682597,1994082,803850,408674],
-    'Tropicana':   [-500746,900963,890570,1313258,846075,678380,898370,670487,493268],
+    'Amomoxtli':   [92641,159268,177311,158490,173474,138053,184620,179633,108083,0],
+    'Anticavilla': [20942,46372,26076,50887,68166,70288,18944,36343,21015,19271],
+    'Boca de Agua':[52051,59956,52418,64473,98346,57184,58584,38567,17910,56269],
+    'Casona':      [151703,164624,226591,169560,174682,82602,126823,138496,-13946,60120],
+    'El Santuario':[242612,227585,326572,377088,350546,104548,132120,212745,150007,287710],
+    'MDS':         [54966,74130,91599,59826,46099,25531,43231,67242,33589,52482],
+    'Numu':        [161838,226760,292903,197984,324025,76083,206859,136086,-2030,187722],
+    'Santa Fé':    [67547,167379,66845,81864,64131,97514,284869,114836,58382,77327],
+    'Tropicana':   [-71535,128709,127224,187608,120868,96911,128339,95784,70467,64533],
   },
   rn:{
-    'Amomoxtli':   [84,194,159,145,148,106,178,160,99],
-    'Anticavilla': [22,52,29,35,63,88,37,23,22],
-    'Boca de Agua':[56,51,65,83,61,60,77,39,37],
-    'Casona':      [135,137,177,142,151,64,107,122,-8],
-    'El Santuario':[322,352,447,570,416,109,157,262,163],
-    'MDS':         [97,126,197,104,83,53,65,122,57],
-    'Numu':        [172,214,278,200,279,154,192,143,-10],
-    'Santa Fé':    [154,391,180,162,149,241,910,269,142],
-    'Tropicana':   [-60,194,236,403,241,222,266,200,175],
+    'Amomoxtli':   [12,28,23,21,21,15,15,23,14,0],
+    'Anticavilla': [3,7,4,7,7,4,9,5,3,3],
+    'Boca de Agua':[8,8,8,9,12,9,11,4,5,10],
+    'Casona':      [19,20,25,22,20,15,9,17,-1,8],
+    'El Santuario':[46,50,46,64,59,16,22,37,23,55],
+    'MDS':         [14,18,28,15,12,9,7,8,8,14],
+    'Numu':        [25,31,40,29,22,22,27,20,-1,12],
+    'Santa Fé':    [22,56,23,26,21,34,130,38,20,26],
+    'Tropicana':   [-9,34,28,58,32,34,38,25,29,17],
   },
   adr:{
-    'Amomoxtli':   [7720,5747,7806,7651,8205,9117,7260,7859,7642],
-    'Anticavilla': [6663,6242,6294,6984,7574,5591,5766,6876,6687],
-    'Boca de Agua':[6506,8229,6552,7398,8294,6671,5326,2783,3388],
-    'Casona':      [7866,8411,8961,8359,8098,9035,8297,7947,660],
-    'El Santuario':[5274,4526,5114,4631,5899,6714,5891,5684,6442],
-    'MDS':         [3967,4118,3255,4027,3888,4964,4656,3858,4125],
-    'Numu':        [6586,7417,7375,6929,8130,3458,7542,6662,1421],
-    'Santa Fé':    [3070,2997,2888,3184,3013,2832,2191,2988,2878],
-    'Tropicana':   [8346,4644,3774,3259,3511,3056,3377,3352,2819],
+    'Amomoxtli':   [7720,5747,7806,7651,8205,9117,7260,7859,7642,0],
+    'Anticavilla': [6663,6242,6294,6984,7574,5591,5766,6876,6687,6745],
+    'Boca de Agua':[6506,8229,6552,7398,8294,6671,5326,2783,3388,5879],
+    'Casona':      [7866,8411,8961,8359,8098,9035,8297,7947,12203,7383],
+    'El Santuario':[5274,4526,5114,4631,5899,6714,5891,5684,6442,5191],
+    'MDS':         [3967,4118,3255,4027,3888,4964,4656,3858,4125,3711],
+    'Numu':        [6586,7417,7375,6929,8130,3458,7542,6662,1421,15644],
+    'Santa Fé':    [3070,2997,2888,3184,3013,2832,2191,2988,2878,2942],
+    'Tropicana':   [8346,4644,3774,3259,3511,3056,3377,3352,2819,3894],
   }
 };
 const HOTELS_PU=['Amomoxtli','Anticavilla','Boca de Agua','Casona','El Santuario','MDS','Numu','Santa Fé','Tropicana'];
+
+/* ── OTB PACE DATA ── */
+// 10 weekly snapshots oldest→newest: 05/01, 12/01, 19/01, 26/01, 02/02, 09/02, 16/02, 23/02, 02/03 (same as 02/03 col)
+const PACE_WEEKS=['05/01','12/01','19/01','26/01','02/02','09/02','16/02','23/02','02/03','09/03'];
+
+// Structure: PACE_RAW[month][hotel] = array of {rn,adr,occ,rev} per snapshot week (oldest first, 9 snapshots)
+// Months: Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec
+// Hotels: 9 (excl. Perla, La Coleccion which are always 0)
+const PACE_RAW={
+  Jan:{
+    'Amomoxtli':[{rn:432,adr:6518,occ:41,rev:2815815},{rn:484,adr:6620,occ:46,rev:3203848},{rn:533,adr:6652,occ:51,rev:3545633},{rn:575,adr:6644,occ:55,rev:3820300},{rn:592,adr:6664,occ:56,rev:3945153},{rn:592,adr:6664,occ:56,rev:3945153},{rn:592,adr:6664,occ:56,rev:3945153},{rn:592,adr:6664,occ:56,rev:3945153},{rn:592,adr:6664,occ:56,rev:3945153},{rn:592,adr:6664,occ:56,rev:3945153}],
+    'Anticavilla':[{rn:56,adr:5196,occ:11,rev:290959},{rn:80,adr:5106,occ:16,rev:408515},{rn:103,adr:4846,occ:21,rev:499168},{rn:119,adr:4870,occ:24,rev:579530},{rn:132,adr:4868,occ:27,rev:642576},{rn:132,adr:4868,occ:27,rev:642576},{rn:132,adr:4868,occ:27,rev:642576},{rn:132,adr:4868,occ:27,rev:642576},{rn:132,adr:4868,occ:27,rev:642576},{rn:132,adr:4868,occ:27,rev:642576}],
+    'Boca de Agua':[{rn:247,adr:7197,occ:36,rev:1777555},{rn:294,adr:6418,occ:43,rev:1886892},{rn:287,adr:7122,occ:42,rev:2044014},{rn:305,adr:7113,occ:45,rev:2169465},{rn:317,adr:6757,occ:46,rev:2141969},{rn:317,adr:6757,occ:46,rev:2141969},{rn:317,adr:6757,occ:46,rev:2141969},{rn:317,adr:6757,occ:46,rev:2141969},{rn:317,adr:6757,occ:46,rev:2141969},{rn:317,adr:6757,occ:46,rev:2141969}],
+    'Casona':[{rn:432,adr:6518,occ:41,rev:2815815},{rn:625,adr:7557,occ:63,rev:4723313},{rn:695,adr:7590,occ:70,rev:5274772},{rn:693,adr:7545,occ:70,rev:5228685},{rn:675,adr:7487,occ:68,rev:5053725},{rn:675,adr:7487,occ:68,rev:5053725},{rn:675,adr:7487,occ:68,rev:5053725},{rn:675,adr:7487,occ:68,rev:5053725},{rn:675,adr:7487,occ:68,rev:5053725},{rn:675,adr:7487,occ:68,rev:5053725}],
+    'El Santuario':[{rn:716,adr:5181,occ:17,rev:3709374},{rn:1021,adr:4822,occ:25,rev:4923721},{rn:1105,adr:4839,occ:27,rev:5346907},{rn:1151,adr:4767,occ:28,rev:5486817},{rn:1293,adr:4916,occ:31,rev:6356634},{rn:1293,adr:4916,occ:31,rev:6356634},{rn:1293,adr:4916,occ:31,rev:6356634},{rn:1293,adr:4916,occ:31,rev:6356634},{rn:1293,adr:4916,occ:31,rev:6356634},{rn:1293,adr:4916,occ:31,rev:6356634}],
+    'MDS':[{rn:203,adr:3785,occ:13,rev:768357},{rn:256,adr:3748,occ:17,rev:959580},{rn:416,adr:3388,occ:27,rev:1409583},{rn:461,adr:3341,occ:30,rev:1540201},{rn:486,adr:3368,occ:31,rev:1636848},{rn:486,adr:3368,occ:31,rev:1636848},{rn:486,adr:3368,occ:31,rev:1636848},{rn:486,adr:3368,occ:31,rev:1636848},{rn:486,adr:3368,occ:31,rev:1636848},{rn:486,adr:3368,occ:31,rev:1636848}],
+    'Numu':[{rn:593,adr:7107,occ:43,rev:4214617},{rn:615,adr:7296,occ:45,rev:4486757},{rn:661,adr:7409,occ:48,rev:4897475},{rn:676,adr:7292,occ:50,rev:4929392},{rn:657,adr:7321,occ:48,rev:4809897},{rn:657,adr:7321,occ:48,rev:4809897},{rn:657,adr:7321,occ:48,rev:4809897},{rn:657,adr:7321,occ:48,rev:4809897},{rn:657,adr:7321,occ:48,rev:4809897},{rn:657,adr:7321,occ:48,rev:4809897}],
+    'Santa Fé':[{rn:986,adr:2987,occ:52,rev:2945182},{rn:1102,adr:2753,occ:58,rev:3033806},{rn:1155,adr:3030,occ:61,rev:3499650},{rn:1212,adr:3078,occ:64,rev:3730536},{rn:1230,adr:3079,occ:65,rev:3787022},{rn:1230,adr:3079,occ:65,rev:3787022},{rn:1230,adr:3079,occ:65,rev:3787022},{rn:1230,adr:3079,occ:65,rev:3787022},{rn:1230,adr:3079,occ:65,rev:3787022},{rn:1230,adr:3079,occ:65,rev:3787022}],
+    'Tropicana':[{rn:1214,adr:3819,occ:56,rev:4635987},{rn:1289,adr:3978,occ:59,rev:5126998},{rn:1367,adr:3869,occ:63,rev:5288287},{rn:1455,adr:3811,occ:67,rev:5545005},{rn:1454,adr:3885,occ:67,rev:5648790},{rn:1454,adr:3885,occ:67,rev:5648790},{rn:1454,adr:3675,occ:67,rev:5343450},{rn:1454,adr:3675,occ:67,rev:5343450},{rn:1454,adr:3675,occ:67,rev:5343450},{rn:1454,adr:3675,occ:67,rev:5343450}],
+  },
+  Feb:{
+    'Amomoxtli':[{rn:386,adr:6613,occ:39,rev:2552672},{rn:416,adr:6530,occ:42,rev:2716447},{rn:436,adr:6475,occ:44,rev:2823043},{rn:495,adr:6515,occ:50,rev:3224925},{rn:567,adr:6559,occ:58,rev:3718806},{rn:611,adr:6797,occ:62,rev:4152967},{rn:621,adr:6726,occ:63,rev:4176846},{rn:632,adr:6722,occ:64,rev:4248304},{rn:652,adr:6700,occ:66,rev:4368400},{rn:652,adr:6700,occ:66,rev:4368400}],
+    'Anticavilla':[{rn:16,adr:5743,occ:3,rev:91884},{rn:18,adr:5615,occ:4,rev:101079},{rn:22,adr:5389,occ:5,rev:118558},{rn:40,adr:5289,occ:9,rev:211560},{rn:73,adr:5353,occ:16,rev:390769},{rn:140,adr:4810,occ:30,rev:673400},{rn:150,adr:4791,occ:32,rev:718650},{rn:173,adr:4781,occ:37,rev:827073},{rn:186,adr:4851,occ:40,rev:902286},{rn:186,adr:4851,occ:40,rev:902286}],
+    'Boca de Agua':[{rn:223,adr:5971,occ:35,rev:1331439},{rn:254,adr:6026,occ:40,rev:1530604},{rn:277,adr:6003,occ:43,rev:1662831},{rn:292,adr:5985,occ:46,rev:1747620},{rn:351,adr:5813,occ:55,rev:2040363},{rn:341,adr:6352,occ:53,rev:2166032},{rn:345,adr:6457,occ:54,rev:2227665},{rn:355,adr:6506,occ:56,rev:2309630},{rn:343,adr:6787,occ:54,rev:2327941},{rn:343,adr:6787,occ:54,rev:2327941}],
+    'Casona':[{rn:461,adr:8592,occ:50,rev:3961055},{rn:549,adr:8721,occ:59,rev:4787620},{rn:573,adr:8702,occ:62,rev:4986464},{rn:620,adr:8733,occ:67,rev:5414460},{rn:640,adr:8631,occ:69,rev:5523840},{rn:592,adr:9092,occ:64,rev:5382304},{rn:648,adr:8416,occ:70,rev:5453568},{rn:661,adr:8406,occ:71,rev:5556366},{rn:638,adr:8663,occ:69,rev:5526994},{rn:638,adr:8663,occ:69,rev:5526994}],
+    'El Santuario':[{rn:418,adr:4269,occ:11,rev:1784488},{rn:422,adr:4993,occ:11,rev:2106924},{rn:526,adr:4780,occ:14,rev:2514459},{rn:792,adr:4665,occ:20,rev:3694680},{rn:878,adr:5046,occ:23,rev:4430388},{rn:924,adr:5029,occ:24,rev:4646916},{rn:971,adr:5033,occ:25,rev:4887043},{rn:950,adr:5449,occ:24,rev:5176550},{rn:1009,adr:5407,occ:26,rev:5456107},{rn:1009,adr:5407,occ:26,rev:5456107}],
+    'MDS':[{rn:274,adr:3267,occ:19,rev:895243},{rn:259,adr:3264,occ:18,rev:845288},{rn:278,adr:3347,occ:19,rev:930397},{rn:260,adr:3529,occ:18,rev:917540},{rn:364,adr:3472,occ:25,rev:1263808},{rn:384,adr:3446,occ:26,rev:1323325},{rn:422,adr:3482,occ:29,rev:1469404},{rn:495,adr:3483,occ:34,rev:1724085},{rn:507,adr:3450,occ:35,rev:1749150},{rn:507,adr:3450,occ:35,rev:1749150}],
+    'Numu':[{rn:687,adr:6448,occ:54,rev:4429968},{rn:697,adr:6989,occ:55,rev:4871640},{rn:661,adr:7113,occ:52,rev:4701911},{rn:682,adr:6966,occ:53,rev:4750812},{rn:758,adr:7444,occ:59,rev:5642552},{rn:781,adr:7254,occ:61,rev:5665374},{rn:803,adr:7339,occ:63,rev:5893217},{rn:812,adr:7311,occ:64,rev:5936532},{rn:779,adr:7338,occ:61,rev:5716302},{rn:779,adr:7338,occ:61,rev:5716302}],
+    'Santa Fé':[{rn:619,adr:2401,occ:35,rev:1486219},{rn:676,adr:2694,occ:38,rev:1821144},{rn:773,adr:2711,occ:44,rev:2095603},{rn:834,adr:2755,occ:47,rev:2297670},{rn:894,adr:2672,occ:51,rev:2388768},{rn:1021,adr:2675,occ:58,rev:2730685},{rn:1102,adr:2683,occ:62,rev:2956666},{rn:1081,adr:2832,occ:61,rev:3061392},{rn:1093,adr:2872,occ:62,rev:3139096},{rn:1093,adr:2884,occ:62,rev:3152332}],
+    'Tropicana':[{rn:1248,adr:3247,occ:61,rev:4052637},{rn:1239,adr:3811,occ:61,rev:4721829},{rn:1183,adr:3756,occ:58,rev:4442757},{rn:1212,adr:3756,occ:60,rev:4551666},{rn:1288,adr:3737,occ:63,rev:4813256},{rn:1339,adr:3690,occ:66,rev:4940910},{rn:1434,adr:3640,occ:71,rev:5219760},{rn:1446,adr:3693,occ:71,rev:5339355},{rn:1452,adr:3941,occ:72,rev:5721606},{rn:1452,adr:3941,occ:72,rev:5721606}],
+  },
+  Mar:{
+    'Amomoxtli':[{rn:189,adr:6385,occ:18,rev:1206678},{rn:225,adr:6375,occ:21,rev:1434375},{rn:259,adr:6548,occ:25,rev:1695880},{rn:276,adr:6573,occ:26,rev:1814148},{rn:308,adr:6579,occ:29,rev:2026446},{rn:333,adr:6494,occ:32,rev:2162502},{rn:436,adr:6443,occ:41,rev:2809148},{rn:472,adr:6556,occ:45,rev:3094432},{rn:493,adr:6563,occ:47,rev:3235559},{rn:580,adr:6531,occ:55,rev:3787980}],
+    'Anticavilla':[{rn:46,adr:5540,occ:9,rev:254860},{rn:64,adr:5394,occ:13,rev:345230},{rn:60,adr:5324,occ:12,rev:319412},{rn:76,adr:5455,occ:15,rev:414580},{rn:74,adr:5462,occ:15,rev:404188},{rn:95,adr:5439,occ:19,rev:516706},{rn:101,adr:5399,occ:20,rev:545299},{rn:105,adr:5393,occ:21,rev:566243},{rn:108,adr:5413,occ:22,rev:584604},{rn:128,adr:5294,occ:26,rev:677632}],
+    'Boca de Agua':[{rn:90,adr:6306,occ:13,rev:567518},{rn:95,adr:6169,occ:14,rev:586055},{rn:95,adr:6285,occ:14,rev:597075},{rn:110,adr:6723,occ:16,rev:739530},{rn:124,adr:6696,occ:18,rev:830304},{rn:132,adr:6936,occ:19,rev:915552},{rn:157,adr:11362,occ:23,rev:1783834},{rn:177,adr:7793,occ:26,rev:1379361},{rn:197,adr:7246,occ:29,rev:1427462},{rn:193,adr:7584,occ:28,rev:1463712}],
+    'Casona':[{rn:247,adr:7197,occ:36,rev:1777555},{rn:258,adr:8023,occ:26,rev:2069862},{rn:323,adr:8057,occ:33,rev:2602388},{rn:364,adr:8060,occ:37,rev:2933840},{rn:421,adr:8047,occ:42,rev:3387787},{rn:467,adr:8233,occ:47,rev:3845012},{rn:503,adr:8110,occ:51,rev:4079330},{rn:572,adr:8180,occ:58,rev:4678960},{rn:545,adr:7720,occ:55,rev:4207400},{rn:580,adr:7964,occ:58,rev:4619120}],
+    'El Santuario':[{rn:79,adr:4428,occ:2,rev:349817},{rn:129,adr:4543,occ:3,rev:586096},{rn:359,adr:4690,occ:9,rev:1683566},{rn:458,adr:4631,occ:11,rev:2120998},{rn:554,adr:4762,occ:13,rev:2638148},{rn:581,adr:4796,occ:14,rev:2786203},{rn:672,adr:4844,occ:16,rev:3255168},{rn:740,adr:4859,occ:18,rev:3595660},{rn:907,adr:5042,occ:22,rev:4573094},{rn:1006,adr:5056,occ:24,rev:5086336}],
+    'MDS':[{rn:161,adr:4281,occ:10,rev:689313},{rn:203,adr:4213,occ:13,rev:855192},{rn:231,adr:4264,occ:15,rev:985088},{rn:242,adr:4328,occ:16,rev:1047376},{rn:254,adr:4313,occ:16,rev:1095502},{rn:260,adr:4310,occ:17,rev:1120517},{rn:259,adr:4327,occ:17,rev:1120693},{rn:273,adr:4331,occ:18,rev:1182363},{rn:312,adr:4272,occ:20,rev:1332864},{rn:377,adr:4090,occ:24,rev:1541930}],
+    'Numu':[{rn:470,adr:6460,occ:34,rev:3036379},{rn:535,adr:6649,occ:39,rev:3557397},{rn:591,adr:6711,occ:43,rev:3966041},{rn:617,adr:6568,occ:45,rev:4052456},{rn:651,adr:6642,occ:48,rev:4324202},{rn:662,adr:6690,occ:49,rev:4428853},{rn:691,adr:6526,occ:51,rev:4509466},{rn:720,adr:6573,occ:53,rev:4732560},{rn:680,adr:6611,occ:50,rev:4495480},{rn:696,adr:6594,occ:51,rev:4589424}],
+    'Santa Fé':[{rn:243,adr:2579,occ:13,rev:626697},{rn:330,adr:2778,occ:17,rev:916740},{rn:1057,adr:2252,occ:56,rev:2380364},{rn:1097,adr:2269,occ:58,rev:2489093},{rn:1140,adr:2291,occ:60,rev:2611740},{rn:1190,adr:2307,occ:63,rev:2745604},{rn:1211,adr:2364,occ:64,rev:2862804},{rn:1321,adr:2407,occ:70,rev:3179647},{rn:1375,adr:2330,occ:73,rev:3203750},{rn:1405,adr:2433,occ:74,rev:3417972}],
+    'Tropicana':[{rn:1095,adr:3929,occ:50,rev:4302288},{rn:1049,adr:3904,occ:48,rev:4094772},{rn:1096,adr:3922,occ:51,rev:4298512},{rn:1221,adr:3867,occ:56,rev:4720997},{rn:1182,adr:3885,occ:54,rev:4592070},{rn:1240,adr:3780,occ:57,rev:4687200},{rn:1322,adr:3693,occ:61,rev:4881485},{rn:1361,adr:3710,occ:63,rev:5049310},{rn:1427,adr:3904,occ:66,rev:5570295},{rn:1461,adr:3904,occ:67,rev:5703014}],
+  },
+  Apr:{
+    'Amomoxtli':[{rn:297,adr:5903,occ:29,rev:1753322},{rn:313,adr:5991,occ:31,rev:1875189},{rn:323,adr:6023,occ:32,rev:1945435},{rn:352,adr:5951,occ:35,rev:2094752},{rn:369,adr:6123,occ:36,rev:2259553},{rn:379,adr:6210,occ:37,rev:2353590},{rn:357,adr:6275,occ:35,rev:2240175},{rn:393,adr:6283,occ:39,rev:2469219},{rn:394,adr:6301,occ:39,rev:2482594},{rn:410,adr:6343,occ:40,rev:2600630}],
+    'Anticavilla':[{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:35,adr:5110,occ:7,rev:178850},{rn:47,adr:5044,occ:10,rev:237068},{rn:47,adr:5016,occ:10,rev:235752},{rn:49,adr:4992,occ:10,rev:244606},{rn:49,adr:4991,occ:10,rev:244559},{rn:49,adr:4991,occ:10,rev:244559}],
+    'Boca de Agua':[{rn:36,adr:6477,occ:5,rev:233157},{rn:48,adr:6760,occ:7,rev:324480},{rn:51,adr:6586,occ:8,rev:335886},{rn:61,adr:6948,occ:9,rev:423828},{rn:75,adr:7110,occ:11,rev:533250},{rn:79,adr:7327,occ:12,rev:578833},{rn:83,adr:7113,occ:13,rev:590379},{rn:96,adr:8900,occ:15,rev:854400},{rn:0,adr:0,occ:0,rev:0},{rn:98,adr:8891,occ:15,rev:871318}],
+    'Casona':[{rn:585,adr:7464,occ:59,rev:4366346},{rn:261,adr:6850,occ:27,rev:1787894},{rn:278,adr:6945,occ:29,rev:1930674},{rn:278,adr:6945,occ:29,rev:1930674},{rn:369,adr:7207,occ:38,rev:2659383},{rn:378,adr:7376,occ:39,rev:2788211},{rn:397,adr:7283,occ:41,rev:2891351},{rn:425,adr:7238,occ:44,rev:3076150},{rn:443,adr:6854,occ:46,rev:3036322},{rn:514,adr:6836,occ:54,rev:3513766}],
+    'El Santuario':[{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:192,adr:4489,occ:5,rev:861888},{rn:186,adr:4374,occ:5,rev:813650},{rn:211,adr:4702,occ:5,rev:992122},{rn:219,adr:4759,occ:5,rev:1042221},{rn:289,adr:4740,occ:7,rev:1369860},{rn:410,adr:4501,occ:10,rev:1845410}],
+    'MDS':[{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:109,adr:4639,occ:7,rev:505651},{rn:116,adr:4639,occ:8,rev:538151},{rn:134,adr:4631,occ:9,rev:620554},{rn:146,adr:4542,occ:10,rev:663132},{rn:152,adr:4510,occ:10,rev:685520},{rn:165,adr:4531,occ:11,rev:747615}],
+    'Numu':[{rn:319,adr:7142,occ:24,rev:2278339},{rn:358,adr:7343,occ:27,rev:2628919},{rn:401,adr:7364,occ:30,rev:2952932},{rn:435,adr:7327,occ:33,rev:3187245},{rn:0,adr:0,occ:0,rev:0},{rn:512,adr:7474,occ:39,rev:3826673},{rn:564,adr:7394,occ:43,rev:4170216},{rn:576,adr:7459,occ:44,rev:4296384},{rn:540,adr:7463,occ:41,rev:4030020},{rn:534,adr:7435,occ:40,rev:3970290}],
+    'Santa Fé':[{rn:119,adr:2779,occ:7,rev:330701},{rn:161,adr:2555,occ:9,rev:411355},{rn:292,adr:2668,occ:16,rev:779056},{rn:293,adr:2651,occ:16,rev:776743},{rn:310,adr:2649,occ:17,rev:821190},{rn:374,adr:2719,occ:20,rev:1016921},{rn:407,adr:2713,occ:22,rev:1104191},{rn:462,adr:2737,occ:25,rev:1264494},{rn:498,adr:2582,occ:27,rev:1285836},{rn:601,adr:2716,occ:33,rev:1632508}],
+    'Tropicana':[{rn:380,adr:3324,occ:18,rev:1263150},{rn:407,adr:3330,occ:19,rev:1355310},{rn:425,adr:3330,occ:20,rev:1415250},{rn:466,adr:3293,occ:22,rev:1534538},{rn:498,adr:3312,occ:24,rev:1649127},{rn:542,adr:3204,occ:26,rev:1736568},{rn:574,adr:3098,occ:27,rev:1777965},{rn:597,adr:3185,occ:28,rev:1901445},{rn:644,adr:3386,occ:31,rev:2180262},{rn:680,adr:3404,occ:32,rev:2314720}],
+  },
+  May:{
+    'Amomoxtli':[{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:135,adr:6244,occ:13,rev:842940},{rn:147,adr:6091,occ:14,rev:895377},{rn:175,adr:5988,occ:17,rev:1047900},{rn:182,adr:6012,occ:17,rev:1094184},{rn:257,adr:6044,occ:24,rev:1553308}],
+    'Anticavilla':[{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:5,adr:4129,occ:1,rev:20645},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:14,adr:5029,occ:3,rev:70406},{rn:14,adr:5029,occ:3,rev:70406}],
+    'Boca de Agua':[{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:96,adr:8900,occ:14,rev:854400},{rn:36,adr:7323,occ:5,rev:263628}],
+    'Casona':[{rn:0,adr:0,occ:0,rev:0},{rn:48,adr:7240,occ:5,rev:347529},{rn:73,adr:7103,occ:7,rev:518520},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:104,adr:8311,occ:10,rev:864306},{rn:119,adr:7458,occ:12,rev:887502},{rn:147,adr:7272,occ:15,rev:1068984},{rn:142,adr:6752,occ:14,rev:958784},{rn:157,adr:6766,occ:16,rev:1062243}],
+    'El Santuario':[{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:18,adr:4083,occ:0,rev:73494},{rn:28,adr:4960,occ:1,rev:138880}],
+    'MDS':[{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:42,adr:4432,occ:3,rev:186144}],
+    'Numu':[{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:251,adr:6659,occ:18,rev:1671447},{rn:268,adr:6591,occ:20,rev:1766388},{rn:294,adr:6555,occ:22,rev:1927170},{rn:321,adr:6477,occ:24,rev:2079117},{rn:390,adr:5996,occ:29,rev:2338440}],
+    'Santa Fé':[{rn:26,adr:2492,occ:1,rev:64792},{rn:26,adr:2492,occ:1,rev:64792},{rn:26,adr:2492,occ:1,rev:64792},{rn:29,adr:2479,occ:2,rev:71891},{rn:0,adr:0,occ:0,rev:0},{rn:417,adr:4089,occ:22,rev:1704905},{rn:65,adr:2450,occ:3,rev:159250},{rn:68,adr:2492,occ:4,rev:169456},{rn:92,adr:2577,occ:5,rev:237084},{rn:106,adr:2633,occ:6,rev:279056}],
+    'Tropicana':[{rn:630,adr:4475,occ:29,rev:2818995},{rn:355,adr:4348,occ:16,rev:1543363},{rn:358,adr:4348,occ:16,rev:1556405},{rn:390,adr:4200,occ:18,rev:1637805},{rn:406,adr:4181,occ:19,rev:1697486},{rn:417,adr:3978,occ:19,rev:1658826},{rn:421,adr:3885,occ:19,rev:1635585},{rn:434,adr:3850,occ:20,rev:1670900},{rn:457,adr:4033,occ:21,rev:1843081},{rn:464,adr:4052,occ:21,rev:1879896}],
+  },
+  Jun:{
+    'Amomoxtli':[{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0}],
+    'Anticavilla':[{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0}],
+    'Boca de Agua':[{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:32,adr:7238,occ:5,rev:231616},{rn:16,adr:7288,occ:2,rev:116608}],
+    'Casona':[{rn:0,adr:0,occ:0,rev:0},{rn:13,adr:13427,occ:1,rev:174550},{rn:13,adr:13427,occ:1,rev:174550},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:13,adr:13426,occ:1,rev:174538},{rn:13,adr:13426,occ:1,rev:174538},{rn:13,adr:13426,occ:1,rev:174538},{rn:18,adr:13923,occ:2,rev:250614},{rn:16,adr:14369,occ:2,rev:229906}],
+    'El Santuario':[{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0}],
+    'MDS':[{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0}],
+    'Numu':[{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:117,adr:6508,occ:9,rev:761436},{rn:151,adr:6579,occ:11,rev:993429}],
+    'Santa Fé':[{rn:13,adr:2369,occ:1,rev:30797},{rn:13,adr:2369,occ:1,rev:30797},{rn:13,adr:2369,occ:1,rev:30797},{rn:13,adr:2369,occ:1,rev:30797},{rn:0,adr:0,occ:0,rev:0},{rn:63,adr:2868,occ:3,rev:180653},{rn:20,adr:2272,occ:1,rev:45440},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:38,adr:2574,occ:2,rev:97800}],
+    'Tropicana':[{rn:52,adr:3132,occ:2,rev:162886},{rn:52,adr:3132,occ:2,rev:162886},{rn:49,adr:3219,occ:2,rev:157731},{rn:56,adr:3145,occ:3,rev:176120},{rn:56,adr:3053,occ:3,rev:170940},{rn:63,adr:2790,occ:3,rev:175770},{rn:67,adr:2555,occ:3,rev:171185},{rn:64,adr:2433,occ:3,rev:155680},{rn:80,adr:2627,occ:4,rev:210160},{rn:87,adr:2572,occ:4,rev:223721}],
+  },
+};
+
+
+/* ── PACE STATE ── */
+let curPaceMetric='rev';
+let activePaceHotels=new Set(HOTELS_ALL_LIST);
+
+// Build hotel filter buttons after DOM ready (called in init)
+function initPaceHotelFilter(){
+  const el=document.getElementById('pace-hotel-filter');
+  if(!el||el.dataset.init) return;
+  el.dataset.init='1';
+  HOTELS_ALL_LIST.forEach(h=>{
+    const b=document.createElement('button');
+    b.className='pu-week-btn active';
+    b.style.cssText='padding:5px 10px;font-size:11px;border-left:3px solid '+H_COLORS[h];
+    b.textContent=h;
+    b.onclick=()=>paceHotelFilter(h);
+    b.dataset.hotel=h;
+    el.appendChild(b);
+  });
+}
+
+function paceHotelFilter(action){
+  if(action==='all'){
+    activePaceHotels=new Set(HOTELS_ALL_LIST);
+    document.querySelectorAll('#pace-hotel-filter .pu-week-btn').forEach(b=>b.classList.add('active'));
+    document.getElementById('pch-todos').classList.add('active');
+    document.getElementById('pch-ninguno').classList.remove('active');
+  } else if(action==='none'){
+    activePaceHotels=new Set();
+    document.querySelectorAll('#pace-hotel-filter .pu-week-btn').forEach(b=>b.classList.remove('active'));
+    document.getElementById('pch-todos').classList.remove('active');
+    document.getElementById('pch-ninguno').classList.add('active');
+  } else {
+    if(activePaceHotels.has(action)) activePaceHotels.delete(action);
+    else activePaceHotels.add(action);
+    const btn=document.querySelector('#pace-hotel-filter [data-hotel="'+action+'"]');
+    if(btn) btn.classList.toggle('active', activePaceHotels.has(action));
+    const allActive=activePaceHotels.size===HOTELS_ALL_LIST.length;
+    document.getElementById('pch-todos').classList.toggle('active',allActive);
+    document.getElementById('pch-ninguno').classList.toggle('active',activePaceHotels.size===0);
+  }
+  renderPace();
+}
+
+function setPaceMetric(m){
+  curPaceMetric=m;
+  ['rev','rn','adr','occ'].forEach(x=>{
+    document.getElementById('pace-metric-'+x)?.classList.toggle('active',x===m);
+  });
+  renderPace();
+}
+
+function fmtPaceVal(v,m){
+  if(v===0||v===null||v===undefined) return '<span style="color:#94a3b8">—</span>';
+  if(m==='rev') return '$'+Math.round(v/1000).toLocaleString()+'K';
+  if(m==='adr') return '$'+Math.round(v).toLocaleString();
+  if(m==='occ') return v+'%';
+  return Math.round(v).toLocaleString();
+}
+
+function paceWoW(curr,prev,m){
+  if(!prev||prev===0||!curr||curr===0) return '';
+  const delta=curr-prev;
+  const pct=(delta/prev)*100;
+  const pos=delta>=0;
+  const color=pos?'#059669':'#e11d48';
+  if(m==='rev'){
+    const kd=Math.round(Math.abs(delta)/1000);
+    return '<span style="font-size:10px;color:'+color+'">'+(pos?'↑':'↓')+'$'+kd+'K</span>';
+  }
+  if(m==='occ'){
+    return '<span style="font-size:10px;color:'+color+'">'+(pos?'↑':'↓')+Math.abs(delta).toFixed(1)+'pp</span>';
+  }
+  return '<span style="font-size:10px;color:'+color+'">'+(pos?'↑':'↓')+Math.abs(pct).toFixed(1)+'%</span>';
+}
+
+const MONTH_KEYS=['Jan','Feb','Mar','Apr','May','Jun'];
+const MONTH_LABELS={Jan:'Enero',Feb:'Febrero',Mar:'Marzo',Apr:'Abril',May:'Mayo',Jun:'Junio',Jul:'Julio',Aug:'Agosto',Sep:'Septiembre',Oct:'Octubre',Nov:'Noviembre',Dec:'Diciembre'};
+
+function renderPace(){
+  initPaceHotelFilter();
+  const el=document.getElementById('pace-table');
+  if(!el) return;
+  const moSel=document.getElementById('pace-month-sel')?.value||'all';
+  const months=moSel==='all'?MONTH_KEYS:[moSel];
+  const hotels=[...activePaceHotels].filter(h=>HOTELS_ALL_LIST.includes(h));
+  const m=curPaceMetric;
+
+  // VERTICAL layout: rows = Semana × Mes, columns = Hotels
+  // Header: Semana | Mes | Hotel1 | Hotel2 | ...
+  const sepStyle='border-left:2px solid var(--border)';
+
+  let html='<thead><tr style="background:var(--card2);position:sticky;top:0;z-index:3">';
+  html+='<th style="min-width:72px;font-size:10px;font-weight:600">Semana</th>';
+  html+='<th style="min-width:68px;font-size:10px;color:#64748b">Mes</th>';
+  hotels.forEach((h,hi)=>{
+    html+='<th style="min-width:100px;font-size:10px;text-align:right;'+(hi>0?sepStyle:'')+'">';
+    html+='<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:'+H_COLORS[h]+';margin-right:5px;vertical-align:middle"></span>'+h+'</th>';
+  });
+  html+='</tr></thead><tbody>';
+
+  months.forEach((mo,moIdx)=>{
+    if(!PACE_RAW[mo]) return;
+    const moLabel=MONTH_LABELS[mo]||mo;
+    const isFirstMo=moIdx===0;
+
+    PACE_WEEKS.forEach((week,wi)=>{
+      const rowBg=wi%2===0?'':'background:var(--card2)';
+      html+='<tr style="'+rowBg+'">';
+
+      // Semana cell
+      html+='<td style="font-size:11px;font-weight:500;white-space:nowrap">'+week+'</td>';
+
+      // Mes cell — only show label on first week of each month block
+      html+='<td style="font-size:10px;color:#64748b;white-space:nowrap">'+(wi===0?moLabel:'')+'</td>';
+
+      hotels.forEach((h,hi)=>{
+        const series=PACE_RAW[mo]?.[h];
+        const s=series?.[wi];
+        const val=s?s[m]:0;
+        const prev=series&&wi>0?series[wi-1][m]:null;
+        const wow=prev!==null?paceWoW(val,prev,m):'';
+        const isLast=wi===PACE_WEEKS.length-1;
+        const latestStyle=isLast?'font-weight:600;':'';
+        html+='<td style="text-align:right;'+latestStyle+(hi>0?sepStyle:'')+'">';
+        html+=fmtPaceVal(val,m);
+        if(wow) html+='<br>'+wow;
+        html+='</td>';
+      });
+
+      html+='</tr>';
+    });
+
+    // Spacer row between months
+    if(moIdx < months.length-1){
+      html+='<tr style="height:6px;background:var(--bg)"><td colspan="'+(2+hotels.length)+'"></td></tr>';
+    }
+  });
+
+  html+='</tbody>';
+  el.innerHTML=html;
+
+  // Render trend charts
+  renderPaceCharts(months, hotels, m);
+}
+
+function drawPaceChart(canvas, seriesAgg, color, m, hoverIdx){
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width, H=canvas.height;
+  const padL=8,padR=8,padT=10,padB=20;
+  const chartW=W-padL-padR, chartH=H-padT-padB;
+  const n=seriesAgg.length;
+  const max=Math.max(...seriesAgg,1);
+
+  ctx.clearRect(0,0,W,H);
+
+  // Grid lines
+  ctx.strokeStyle='rgba(100,116,139,0.15)';
+  ctx.lineWidth=1;
+  [0.25,0.5,0.75,1].forEach(pct=>{
+    const y=padT+chartH*(1-pct);
+    ctx.beginPath();ctx.moveTo(padL,y);ctx.lineTo(W-padR,y);ctx.stroke();
+  });
+
+  const pts=seriesAgg.map((v,i)=>({
+    x:padL+(i/(n-1))*chartW,
+    y:padT+chartH*(1-(v/max))
+  }));
+
+  // Line
+  ctx.strokeStyle=color;
+  ctx.lineWidth=2;
+  ctx.beginPath();
+  pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
+  ctx.stroke();
+
+  // Fill
+  ctx.globalAlpha=0.12;
+  ctx.fillStyle=color;
+  ctx.beginPath();
+  ctx.moveTo(pts[0].x,padT+chartH);
+  pts.forEach(p=>ctx.lineTo(p.x,p.y));
+  ctx.lineTo(pts[n-1].x,padT+chartH);
+  ctx.closePath();
+  ctx.fill();
+  ctx.globalAlpha=1;
+
+  // Dots
+  pts.forEach((p,i)=>{
+    ctx.fillStyle=seriesAgg[i]>0?color:'#334155';
+    ctx.beginPath();ctx.arc(p.x,p.y,hoverIdx===i?5:3,0,Math.PI*2);ctx.fill();
+  });
+
+  // Week labels
+  ctx.fillStyle='#94a3b8';
+  ctx.font='9px IBM Plex Mono,monospace';
+  ctx.textAlign='center';
+  PACE_WEEKS.forEach((w,i)=>{
+    ctx.fillText(w.slice(0,5),padL+(i/(n-1))*chartW,H-4);
+  });
+
+  // Hover crosshair + tooltip
+  if(hoverIdx>=0 && hoverIdx<n){
+    const p=pts[hoverIdx];
+    const val=seriesAgg[hoverIdx];
+
+    // Vertical line
+    ctx.strokeStyle='rgba(148,163,184,0.4)';
+    ctx.lineWidth=1;
+    ctx.setLineDash([3,3]);
+    ctx.beginPath();ctx.moveTo(p.x,padT);ctx.lineTo(p.x,padT+chartH);ctx.stroke();
+    ctx.setLineDash([]);
+
+    if(val>0){
+      // Format value
+      let label;
+      if(m==='rev') label='$'+Math.round(val/1000).toLocaleString()+'K';
+      else if(m==='adr') label='$'+Math.round(val).toLocaleString();
+      else if(m==='occ') label=val+'%';
+      else label=Math.round(val).toLocaleString()+' RN';
+
+      // Tooltip box
+      ctx.font='bold 10px IBM Plex Sans,sans-serif';
+      const tw=ctx.measureText(label).width;
+      const boxW=tw+12, boxH=18;
+      let bx=p.x-boxW/2;
+      if(bx<2) bx=2;
+      if(bx+boxW>W-2) bx=W-boxW-2;
+      const by=Math.max(padT-2, p.y-boxH-6);
+
+      // Shadow
+      ctx.shadowColor='rgba(0,0,0,0.25)';
+      ctx.shadowBlur=6;
+      ctx.fillStyle='#1e293b';
+      ctx.beginPath();
+      ctx.roundRect(bx,by,boxW,boxH,4);
+      ctx.fill();
+      ctx.shadowBlur=0;
+
+      // Border
+      ctx.strokeStyle=color;
+      ctx.lineWidth=1.5;
+      ctx.beginPath();
+      ctx.roundRect(bx,by,boxW,boxH,4);
+      ctx.stroke();
+
+      // Text
+      ctx.fillStyle='#f1f5f9';
+      ctx.textAlign='center';
+      ctx.fillText(label,bx+boxW/2,by+12);
+
+      // Highlighted dot
+      ctx.fillStyle=color;
+      ctx.beginPath();ctx.arc(p.x,p.y,5,0,Math.PI*2);ctx.fill();
+      ctx.strokeStyle='#1e293b';
+      ctx.lineWidth=1.5;
+      ctx.beginPath();ctx.arc(p.x,p.y,5,0,Math.PI*2);ctx.stroke();
+    }
+  }
+}
+
+function renderPaceCharts(months, hotels, m){
+  const el=document.getElementById('pace-charts');
+  if(!el) return;
+  if(hotels.length===0){el.innerHTML='';return;}
+
+  el.innerHTML='';
+  hotels.forEach(h=>{
+    const card=document.createElement('div');
+    card.className='card';
+    card.style.cssText='padding:12px;position:relative';
+
+    const title=document.createElement('div');
+    title.className='card-title';
+    title.style.cssText='font-size:11px;margin-bottom:8px;color:'+H_COLORS[h];
+    title.textContent=h;
+    card.appendChild(title);
+
+    // Aggregate across selected months
+    const seriesAgg=PACE_WEEKS.map((_,wi)=>{
+      let total=0, count=0;
+      months.forEach(mo=>{
+        if(!PACE_RAW[mo]||!PACE_RAW[mo][h]) return;
+        const v=PACE_RAW[mo][h][wi][m];
+        if(v>0){total+=v;count++;}
+      });
+      return count>0?total:0;
+    });
+
+    const canvas=document.createElement('canvas');
+    const dpr=window.devicePixelRatio||1;
+    const CW=320, CH=110;
+    canvas.width=CW*dpr; canvas.height=CH*dpr;
+    canvas.style.width=CW+'px'; canvas.style.height=CH+'px';
+    canvas.getContext('2d').scale(dpr,dpr);
+    canvas.style.cssText+='display:block;cursor:crosshair';
+    card.appendChild(canvas);
+    el.appendChild(card);
+
+    // Initial draw (no hover)
+    drawPaceChart(canvas, seriesAgg, H_COLORS[h], m, -1);
+
+    // Hover logic
+    const padL=8, padR=8, padB=20;
+    const n=seriesAgg.length;
+
+    canvas.addEventListener('mousemove', e=>{
+      const rect=canvas.getBoundingClientRect();
+      const mouseX=e.clientX-rect.left;
+      const chartW=CW-padL-padR;
+      // Find closest point
+      let closest=-1, minDist=Infinity;
+      for(let i=0;i<n;i++){
+        const px=padL+(i/(n-1))*chartW;
+        const d=Math.abs(mouseX-px);
+        if(d<minDist){minDist=d;closest=i;}
+      }
+      if(minDist<(chartW/(n-1))*0.6){
+        drawPaceChart(canvas, seriesAgg, H_COLORS[h], m, closest);
+      } else {
+        drawPaceChart(canvas, seriesAgg, H_COLORS[h], m, -1);
+      }
+    });
+
+    canvas.addEventListener('mouseleave', ()=>{
+      drawPaceChart(canvas, seriesAgg, H_COLORS[h], m, -1);
+    });
+  });
+}
+
 let curPUMetric='rev';
 let activePUHotels=new Set(HOTELS_PU);
 
@@ -1128,9 +1608,13 @@ function renderTrends(){
     const areaPath=`M${pts[0].x},${H/2} `+pts.map(p=>`L${p.x},${p.y}`).join(' ')+` L${pts[pts.length-1].x},${H/2} Z`;
     const last=pts[pts.length-1];
     const lastVal=vals[vals.length-1];
+    const prevVal=vals[vals.length-2];
+    const wowDelta=lastVal-prevVal;
+    const wowPct=(prevVal!==0?((wowDelta/Math.abs(prevVal))*100):0);
     const lastColor=lastVal>=0?'#059669':'#e11d48';
-    const trend=vals[vals.length-1]>=vals[vals.length-2]?'↑':'↓';
-    const trendCol=vals[vals.length-1]>=vals[vals.length-2]?'#059669':'#e11d48';
+    const trend=wowDelta>=0?'↑':'↓';
+    const trendCol=wowDelta>=0?'#059669':'#e11d48';
+    const wowLabel=(wowDelta>=0?'+':'')+fmtPU(wowDelta,curPUMetric)+' vs W ant.';
     const zeroLine=`<line x1="${pad}" y1="${H/2}" x2="${W-pad}" y2="${H/2}" stroke="#e2e5ea" stroke-width="1" stroke-dasharray="3,3"/>`;
     const labels=weeks.map((w,i)=>{
       const x=pad+(i/(vals.length-1))*(W-pad*2);
@@ -1152,7 +1636,7 @@ function renderTrends(){
       <div class="trend-card-title">
         <span style="width:9px;height:9px;border-radius:50%;background:${col};display:inline-block"></span>
         ${h}
-        <span style="margin-left:auto;font-size:11px;color:${trendCol};font-weight:700">${trend} ${fmtPU(lastVal,curPUMetric)}</span>
+        <span style="margin-left:auto;font-size:11px;color:${trendCol};font-weight:700">${trend} ${wowLabel}</span>
       </div>
       <div class="trend-card-sub">${metricLabel} · pickup incremental semanal</div>
       <svg class="trend-svg" viewBox="0 0 ${W} ${H+22}" style="cursor:crosshair">
@@ -1187,11 +1671,12 @@ function renderTrends(){
 
 function renderAll(){
   renderKPIs();
-  document.getElementById('kpi-strip').style.display=(curView==='tabla'||curView==='junta'||curView==='pickup')?'none':'grid';
-  if(curView==='overview'){renderRev();renderOcc();renderHM();renderADRChart('adr-chart-ov');renderRevPARChart('revpar-chart-ov');}
-  else if(curView==='junta'){renderJunta();}
+  document.getElementById('kpi-strip').style.display=(curView==='tabla'||curView==='pickup'||curView==='exec'||curView==='pace')?'none':'grid';
+  if(curView==='overview'){renderRev();renderOcc();renderHM();renderADRChart('adr-chart-ov');renderRevPARChart('revpar-chart-ov');renderPaceBar();}
   else if(curView==='pickup'){renderPickup();}
   else if(curView==='tabla'){renderTabla();}
+  else if(curView==='exec'){renderExec();}
+  else if(curView==='pace'){renderPace();}
 }
 
 function setView(v,navBtn,tabBtn){
@@ -1200,13 +1685,326 @@ function setView(v,navBtn,tabBtn){
   document.getElementById('view-'+v).classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.vtab').forEach(b=>b.classList.remove('active'));
-  document.getElementById('kpi-strip').style.display=(v==='tabla'||v==='junta'||v==='pickup')?'none':'grid';
-  const idx={overview:0,junta:1,pickup:2,tabla:3};
+  document.getElementById('kpi-strip').style.display=(v==='tabla'||v==='pickup'||v==='exec'||v==='pace')?'none':'grid';
+  const hotelBar=document.querySelector('.hotel-bar');
+  if(hotelBar) hotelBar.style.display=v==='exec'?'none':'';
+  const idx={exec:0,overview:1,pickup:2,tabla:3,pace:4};
   document.querySelectorAll('.nav-btn')[idx[v]]?.classList.add('active');
   document.querySelectorAll('.vtab')[idx[v]]?.classList.add('active');
-  const t={overview:'Overview General',junta:'Junta Semanal',pickup:'Pickup Semanal',tabla:'Tabla Detalle'};
+  const t={overview:'Overview General',pickup:'Pickup Semanal',tabla:'Tabla Detalle',exec:'Resumen Semanal',pace:'OTB Pace'};
   document.getElementById('tb-title').textContent=t[v];
   renderAll();
+}
+
+/* ── EXEC METRIC STATE ── */
+let curExecMetric='rev';
+let activeExecHotels=new Set(HOTELS_ALL_LIST);
+
+function execHotelFilter(action){
+  if(action==='all'){
+    activeExecHotels=new Set(HOTELS_ALL_LIST);
+    document.querySelectorAll('#exec-hotel-filter .pu-week-btn').forEach(b=>b.classList.add('active'));
+    document.getElementById('exh-todos').classList.add('active');
+    document.getElementById('exh-ninguno').classList.remove('active');
+  } else if(action==='none'){
+    activeExecHotels=new Set();
+    document.querySelectorAll('#exec-hotel-filter .pu-week-btn').forEach(b=>b.classList.remove('active'));
+    document.getElementById('exh-todos').classList.remove('active');
+    document.getElementById('exh-ninguno').classList.add('active');
+  } else {
+    // toggle individual
+    if(activeExecHotels.has(action)) activeExecHotels.delete(action);
+    else activeExecHotels.add(action);
+    document.getElementById('exh-todos').classList.remove('active');
+    document.getElementById('exh-ninguno').classList.remove('active');
+    document.querySelectorAll('#exec-hotel-filter .pu-week-btn').forEach(b=>{
+      const hn=b.dataset.hotel;
+      b.classList.toggle('active', activeExecHotels.has(hn));
+    });
+  }
+  renderExec();
+}
+
+function initExecHotelFilter(){
+  const el=document.getElementById('exec-hotel-filter');
+  if(!el||el.children.length>0) return;
+  el.innerHTML=HOTELS_ALL_LIST.map(h=>{
+    const col=H_COLORS[h]||'#94a3b8';
+    return`<button class="pu-week-btn active" data-hotel="${h}" onclick="execHotelFilter('${h.replace(/'/g,"\\'")}')">
+      <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${col};margin-right:4px;vertical-align:middle"></span>${h}
+    </button>`;
+  }).join('');
+}
+
+function setExecMetric(m){
+  curExecMetric=m;
+  ['rev','rn','adr'].forEach(x=>{
+    const b=document.getElementById('epum-'+x);
+    if(b) b.classList.toggle('active',x===m);
+  });
+  renderExecPU();
+}
+
+/* ── RENDER RESUMEN EJECUTIVO ── */
+function renderExec(){
+  initExecHotelFilter();
+  renderExecJunta();
+  renderExecPU();
+  renderExecSparks();
+}
+
+function renderExecKPIs(){
+  const el=document.getElementById('exec-kpis');
+  if(!el) return;
+  const filtered=RAW.filter(r=>activeMos.has(r.mo));
+  const sum=(field)=>filtered.reduce((a,b)=>a+(b[field]||0),0);
+  const totLY=sum('lyRev'), totOTB=sum('otbRev'), totBDGT=sum('bdgtRev'), totFCST=sum('fcstRev');
+  const totLYRN=sum('lyRN'), totOTBRN=sum('otbRN');
+  const totLYADR=totLYRN?totLY/totLYRN:0, totOTBADR=totOTBRN?totOTB/totOTBRN:0;
+  const vsLY=totLY?(((totOTB-totLY)/totLY)*100):0;
+  const achBdgt=totBDGT?((totOTB/totBDGT)*100):0;
+  // pickup last week total
+  const lastIdx=PU_WEEKS.length-1;
+  const prevIdx=lastIdx-1;
+  const puHotels=HOTELS_PU;
+  const puRevLast=puHotels.reduce((a,h)=>{const v=PU_RAW.rev[h];return a+(v&&v[lastIdx]!=null?v[lastIdx]:0);},0);
+  const puRevPrev=puHotels.reduce((a,h)=>{const v=PU_RAW.rev[h];return a+(v&&v[prevIdx]!=null?v[prevIdx]:0);},0);
+  const puWoW=puRevPrev?(((puRevLast-puRevPrev)/Math.abs(puRevPrev))*100):0;
+
+  const kpis=[
+    {label:'OTB Revenue',val:fmtM(totOTB),sub:'Acumulado período',col:'#0284c7',icon:'💰'},
+    {label:'vs LY',val:(vsLY>=0?'+':'')+vsLY.toFixed(1)+'%',sub:'OTB 2026 vs 2025',col:vsLY>=0?'#059669':'#e11d48',icon:vsLY>=0?'↑':'↓'},
+    {label:'Alcance Bdgt',val:achBdgt.toFixed(1)+'%',sub:'OTB / Budget',col:achBdgt>=100?'#059669':achBdgt>=80?'#d97706':'#e11d48',icon:'🎯'},
+    {label:'Pickup '+PU_WEEKS[lastIdx].id,val:fmtM(puRevLast),sub:'Promedio diario',col:'#a78bfa',icon:'📈'},
+    {label:'WoW Pickup',val:(puWoW>=0?'+':'')+puWoW.toFixed(1)+'%',sub:'vs semana anterior',col:puWoW>=0?'#059669':'#e11d48',icon:puWoW>=0?'↑':'↓'},
+  ];
+  el.innerHTML=kpis.map(k=>`
+    <div style="background:#fff;border:1.5px solid #e8ecf0;border-radius:12px;padding:16px 18px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:12px;right:14px;font-size:20px;opacity:.15">${k.icon}</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#94a3b8;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">${k.label}</div>
+      <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:${k.col};line-height:1">${k.val}</div>
+      <div style="font-size:10px;color:#94a3b8;margin-top:6px">${k.sub}</div>
+    </div>`).join('');
+}
+
+function renderExecJunta(){
+  const el=document.getElementById('exec-junta-tbl');
+  if(!el) return;
+  const sep='border-left:2px solid #e2e8f0;';
+  const hotels=HOTELS_ALL_LIST.filter(h=>activeExecHotels.has(h));
+  const rows=hotels.map(h=>{
+    const d=RAW.filter(r=>activeMos.has(r.mo)&&r.h===h);
+    const s=(f)=>d.reduce((a,b)=>a+(b[f]||0),0);
+    const otbRN=s('otbRN'),otbRev=s('otbRev'),otbADR=otbRN?otbRev/otbRN:0,otbOcc=d.length?d.reduce((a,b)=>a+(b.otbOcc||0),0)/d.length:0;
+    const lyRN=s('lyRN'),lyRev=s('lyRev'),lyADR=lyRN?lyRev/lyRN:0,lyOcc=d.length?d.reduce((a,b)=>a+(b.lyOcc||0),0)/d.length:0;
+    const bdgtRN=s('bdgtRN'),bdgtRev=s('bdgtRev'),bdgtADR=bdgtRN?bdgtRev/bdgtRN:0,bdgtOcc=d.length?d.reduce((a,b)=>a+(b.bdgtOcc||0),0)/d.length:0;
+    const fcstRN=s('fcstRN'),fcstRev=s('fcstRev'),fcstADR=fcstRN?fcstRev/fcstRN:0,fcstOcc=d.length?d.reduce((a,b)=>a+(b.fcstOcc||0),0)/d.length:0;
+    const vsLY=lyRev?(((otbRev-lyRev)/lyRev)*100):0;
+    const achBdgt=bdgtRev?((otbRev/bdgtRev)*100):0;
+    return{h,col:H_COLORS[h]||'#94a3b8',lyRev,lyADR,lyOcc,otbRev,otbADR,otbOcc,bdgtRev,bdgtADR,bdgtOcc,fcstRev,fcstADR,fcstOcc,vsLY,achBdgt};
+  });
+  const tot={};
+  ['lyRev','otbRev','bdgtRev','fcstRev'].forEach(f=>{tot[f]=RAW.filter(r=>activeMos.has(r.mo)&&activeExecHotels.has(r.h)).reduce((a,b)=>a+(b[f]||0),0)});
+  const totLYRN=RAW.filter(r=>activeMos.has(r.mo)&&activeExecHotels.has(r.h)).reduce((a,b)=>a+(b.lyRN||0),0);
+  const totOTBRN=RAW.filter(r=>activeMos.has(r.mo)&&activeExecHotels.has(r.h)).reduce((a,b)=>a+(b.otbRN||0),0);
+  tot.lyADR=totLYRN?tot.lyRev/totLYRN:0;
+  tot.otbADR=totOTBRN?tot.otbRev/totOTBRN:0;
+  const totVsLY=tot.lyRev?(((tot.otbRev-tot.lyRev)/tot.lyRev)*100):0;
+  const totAch=tot.bdgtRev?((tot.otbRev/tot.bdgtRev)*100):0;
+
+  el.innerHTML=`
+  <thead>
+    <tr style="border-bottom:none">
+      <th style="min-width:120px"></th>
+      <th colspan="3" style="text-align:center;color:#94a3b8;background:#f8f9fa;padding-bottom:4px">LY 2025</th>
+      <th colspan="4" style="text-align:center;color:#0284c7;background:#eff8ff;padding-bottom:4px;${sep}">OTB 2026</th>
+      <th colspan="4" style="text-align:center;color:#475569;background:#f8f9fa;padding-bottom:4px;${sep}">BDGT</th>
+      <th colspan="3" style="text-align:center;color:#d97706;background:#fffbeb;padding-bottom:4px;${sep}">FCST</th>
+    </tr>
+    <tr>
+      <th>Hotel</th>
+      <th>Rev</th><th>ADR</th><th>Occ</th>
+      <th style="${sep}">Rev</th><th>ADR</th><th>Occ</th><th style="font-size:10px;color:#64748b">vs LY</th>
+      <th style="${sep}">Rev</th><th>ADR</th><th>Occ</th><th style="font-size:10px;color:#64748b">OTB/BDGT</th>
+      <th style="${sep}">Rev</th><th>ADR</th><th>Occ</th>
+    </tr>
+  </thead>
+  <tbody>
+    ${rows.map(r=>{
+      const p=r.vsLY>=0;
+      const achP=r.achBdgt>=100;
+      return`<tr>
+        <td><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:${r.col};flex-shrink:0"></span>${r.h}</span></td>
+        <td>${fmtM(r.lyRev)}</td><td>${fmtA(r.lyADR)}</td><td>${r.lyOcc.toFixed(0)}%</td>
+        <td style="color:#0284c7;${sep}">${fmtM(r.otbRev)}</td><td style="color:#0284c7">${fmtA(r.otbADR)}</td><td style="color:#0284c7">${r.otbOcc.toFixed(0)}%</td>
+        <td><span style="font-size:10px;font-weight:600;color:${p?'#059669':'#e11d48'}">${p?'+':''}${r.vsLY.toFixed(1)}%</span></td>
+        <td style="${sep}">${fmtM(r.bdgtRev)}</td><td>${fmtA(r.bdgtADR)}</td><td>${r.bdgtOcc.toFixed(0)}%</td>
+        <td><span style="font-size:10px;font-weight:600;color:${achP?'#059669':'#e11d48'}">${r.bdgtRev?r.achBdgt.toFixed(1)+'%':'—'}</span></td>
+        <td style="color:#d97706;${sep}">${fmtM(r.fcstRev)}</td><td style="color:#d97706">${fmtA(r.fcstADR)}</td><td style="color:#d97706">${r.fcstOcc.toFixed(0)}%</td>
+      </tr>`;
+    }).join('')}
+  </tbody>`;
+}
+
+function renderExecPU(){
+  const el=document.getElementById('exec-pu-table');
+  if(!el) return;
+  const data=PU_RAW[curExecMetric];
+  const weeks=[...PU_WEEKS].reverse(); // más reciente primero
+  const weeksOrig=PU_WEEKS;
+  const hoteles=HOTELS_PU.filter(h=>activeExecHotels.has(h));
+  const isCur=0; // primer columna = más reciente
+  // Header: hotel | WoW Δ | semanas (reciente→antigua)
+  let hdr=`<thead><tr><th style="min-width:140px">Hotel</th><th style="border-left:2px solid #e2e8f0;color:#475569;font-weight:700;white-space:nowrap">WoW Δ</th>`;
+  weeks.forEach((w,i)=>{
+    const style=i===0?'background:#eff8ff;color:#0284c7;font-weight:700':'';
+    hdr+=`<th style="${style}">${w.id}</th>`;
+  });
+  hdr+=`</tr></thead>`;
+  // Body
+  let body=`<tbody>`;
+  hoteles.forEach(h=>{
+    const valsOrig=data[h]||[];
+    const vals=[...valsOrig].reverse();
+    const col=H_COLORS[h]||'#94a3b8';
+    const last=valsOrig[valsOrig.length-1], prev=valsOrig[valsOrig.length-2];
+    const wow=last-prev;
+    const wowP=wow>=0;
+    const wowStr=(wowP?'+':'')+fmtPU(wow,curExecMetric);
+    body+=`<tr>
+      <td><span style="display:inline-flex;align-items:center;gap:5px">
+        <span style="width:7px;height:7px;border-radius:50%;background:${col};flex-shrink:0"></span>${h}
+      </span></td>
+      <td style="border-left:2px solid #e2e8f0;font-weight:700;color:${wowP?'#059669':'#e11d48'};white-space:nowrap">${wowP?'↑':'↓'} ${wowStr}</td>`;
+    vals.forEach((v,i)=>{
+      const isL=i===0;
+      const c=v>0?'#059669':v<0?'#e11d48':'#94a3b8';
+      body+=`<td style="${isL?'background:#eff8ff;font-weight:700;':''}color:${c}">${fmtPU(v,curExecMetric)}</td>`;
+    });
+    body+=`</tr>`;
+  });
+  // Total row
+  const totWow=(()=>{
+    const last=hoteles.reduce((a,h)=>{const v=PU_RAW[curExecMetric][h];return a+(v?v[weeksOrig.length-1]||0:0);},0);
+    const prev=hoteles.reduce((a,h)=>{const v=PU_RAW[curExecMetric][h];return a+(v?v[weeksOrig.length-2]||0:0);},0);
+    return last-prev;
+  })();
+  const totWowP=totWow>=0;
+  body+=`<tr class="total-row"><td>TOTAL</td>`;
+  body+=`<td style="border-left:2px solid #e2e8f0;font-weight:700;color:${totWowP?'#059669':'#e11d48'};white-space:nowrap">${totWowP?'↑':'↓'} ${totWowP?'+':''}${fmtPU(totWow,curExecMetric)}</td>`;
+  weeks.forEach((w,wi)=>{
+    const origIdx=weeksOrig.indexOf(w);
+    const tot=hoteles.reduce((a,h)=>{const v=PU_RAW[curExecMetric][h];return a+(v&&v[origIdx]!=null?v[origIdx]:0);},0);
+    const isL=wi===0;
+    const c=tot>0?'#059669':tot<0?'#e11d48':'#94a3b8';
+    body+=`<td style="${isL?'background:#eff8ff;':''};color:${c}">${fmtPU(tot,curExecMetric)}</td>`;
+  });
+  body+=`</tr></tbody>`;
+  el.innerHTML=hdr+body;
+}
+
+function renderExecSparks(){
+  const grid=document.getElementById('exec-spark-grid');
+  if(!grid) return;
+  const data=PU_RAW.rev;
+  const rnData=PU_RAW.rn;
+  const adrData=PU_RAW.adr;
+  const weeks=PU_WEEKS;
+  const hoteles=HOTELS_PU.filter(h=>activeExecHotels.has(h));
+
+  // shared tooltip
+  if(!document.getElementById('exec-spark-tt')){
+    const tt=document.createElement('div');
+    tt.id='exec-spark-tt';
+    tt.style.cssText='position:fixed;background:#1e2535;color:#fff;font-size:11px;font-family:IBM Plex Mono,monospace;padding:8px 12px;border-radius:8px;pointer-events:none;opacity:0;transition:opacity .15s;z-index:9999;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.3);line-height:1.7';
+    document.body.appendChild(tt);
+  }
+  const tt=document.getElementById('exec-spark-tt');
+
+  grid.innerHTML=hoteles.map(h=>{
+    const vals=data[h]||[];
+    const rnVals=rnData[h]||[];
+    const adrVals=adrData[h]||[];
+    const col=H_COLORS[h]||'#94a3b8';
+    const W=500,H=80,pad=16;
+    const mx=Math.max(...vals.map(Math.abs),1);
+    const pts=vals.map((v,i)=>({
+      x:pad+(i/(vals.length-1))*(W-pad*2),
+      y:H/2-(v/mx)*(H/2-6),v
+    }));
+    const polyline=pts.map(p=>`${p.x},${p.y}`).join(' ');
+    const area=`M${pts[0].x},${H/2} `+pts.map(p=>`L${p.x},${p.y}`).join(' ')+` L${pts[pts.length-1].x},${H/2} Z`;
+
+    // RN wow for display
+    const lastRN=rnVals[rnVals.length-1]||0;
+    const prevRN=rnVals[rnVals.length-2]||0;
+    const wowRN=lastRN-prevRN;
+    const wowRNP=wowRN>=0;
+
+    const dots=pts.map((p,i)=>{
+      const c=p.v>0?col:p.v<0?'#e11d48':'#94a3b8';
+      const r=i===pts.length-1?5:3;
+      const rev=fmtM(vals[i]||0);
+      const rn=rnVals[i]||0;
+      const adr=fmtA(adrVals[i]||0);
+      const wk=weeks[i]?weeks[i].id:'';
+      return`<circle cx="${p.x}" cy="${p.y}" r="${r}" fill="${c}" stroke="#fff" stroke-width="1.5"
+        class="exec-spark-dot"
+        data-week="${wk}" data-rev="${rev}" data-rn="${rn}" data-adr="${adr}"/>`;
+    }).join('');
+
+    const lastN=Math.min(3,vals.length);
+    const barW=32,barGap=10,barMaxH=28;
+    const barMx=Math.max(...vals.slice(-lastN).map(Math.abs),1);
+    const bars=vals.slice(-lastN).map((v,i)=>{
+      const bh=Math.max(2,(Math.abs(v)/barMx)*barMaxH);
+      const bx=W-pad-(lastN-1-i)*(barW+barGap)-barW;
+      const by=H-4-bh;
+      const bc=i===lastN-1?col:(v>0?col+'88':'#e11d4888');
+      return`<rect x="${bx}" y="${by}" width="${barW}" height="${bh}" rx="3" fill="${bc}"/>
+        <text x="${bx+barW/2}" y="${H-2}" text-anchor="middle" font-size="8" fill="#94a3b8">${weeks[vals.length-lastN+i].id}</text>`;
+    }).join('');
+
+    return`<div class="card" style="padding:14px 16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div style="display:flex;align-items:center;gap:7px">
+          <span style="width:9px;height:9px;border-radius:50%;background:${col};flex-shrink:0"></span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;color:#1e2535">${h}</span>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:11px;font-weight:700;color:${wowRNP?'#059669':'#e11d48'}">${wowRNP?'↑':'↓'} ${wowRNP?'+':''}${wowRN} RN vs W ant.</div>
+        </div>
+      </div>
+      <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:70px;cursor:crosshair">
+        <defs>
+          <linearGradient id="eg-${h.replace(/\s/g,'')}" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="${col}" stop-opacity=".18"/>
+            <stop offset="100%" stop-color="${col}" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <line x1="${pad}" y1="${H/2}" x2="${W-pad}" y2="${H/2}" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3"/>
+        <path d="${area}" fill="url(#eg-${h.replace(/\s/g,'')})" />
+        <polyline points="${polyline}" fill="none" stroke="${col}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+        ${dots}
+      </svg>
+    </div>`;
+  }).join('');
+
+  // attach tooltip events
+  grid.querySelectorAll('.exec-spark-dot').forEach(dot=>{
+    dot.addEventListener('mouseenter',e=>{
+      tt.innerHTML=`<div style="color:#94a3b8;font-size:9px;letter-spacing:.08em;margin-bottom:3px">${e.target.dataset.week}</div>`+
+        `<div>Rev &nbsp;<span style="color:#60a5fa;font-weight:700">${e.target.dataset.rev}</span></div>`+
+        `<div>RN &nbsp;&nbsp;<span style="color:#34d399;font-weight:700">${e.target.dataset.rn}</span></div>`+
+        `<div>ADR &nbsp;<span style="color:#fbbf24;font-weight:700">${e.target.dataset.adr}</span></div>`;
+      tt.style.opacity='1';
+    });
+    dot.addEventListener('mousemove',e=>{
+      tt.style.left=(e.clientX+14)+'px';
+      tt.style.top=(e.clientY-10)+'px';
+    });
+    dot.addEventListener('mouseleave',()=>{ tt.style.opacity='0'; });
+  });
 }
 
 function setHotel(h,btn){
