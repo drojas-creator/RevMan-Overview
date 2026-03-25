@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comp Set · Roma Luxury · Posicionamiento de Precios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --surface: #f7f6f4;
+    --surface2: #eeece9;
+    --border: rgba(0,0,0,0.08);
+    --border2: rgba(0,0,0,0.15);
+    --text-primary: #1a1916;
+    --text-secondary: #6b6960;
+    --text-muted: #a8a59e;
+
+    --valise:  #4a5ce8;
+    --alcobas: #0f9e78;
+    --dama:    #d4621a;
+    --condesa: #c2274f;
+
+    --valise-dim:  rgba(123,140,250,0.18);
+    --alcobas-dim: rgba(62,207,168,0.18);
+    --dama-dim:    rgba(240,139,74,0.18);
+    --condesa-dim: rgba(224,92,122,0.18);
+  }
+
+  html, body {
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 48px 24px 64px;
+  }
+
+  .page {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* ── Header ── */
+  .header {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 36px;
+    position: relative;
+    padding-bottom: 28px;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 48px; height: 1px;
+    background: var(--border2);
+  }
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+  .title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(26px, 4vw, 40px);
+    font-weight: 400;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+  }
+  .title em {
+    font-style: italic;
+    color: var(--text-secondary);
+  }
+  .subtitle {
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-weight: 300;
+    margin-top: 2px;
+  }
+
+  /* ── KPI row ── */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .kpi {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color .2s;
+    cursor: default;
+  }
+  .kpi::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    border-radius: 10px 10px 0 0;
+  }
+  .kpi.v::before { background: var(--valise); }
+  .kpi.a::before { background: var(--alcobas); }
+  .kpi.d::before { background: var(--dama); }
+  .kpi.c::before { background: var(--condesa); }
+  .kpi:hover { border-color: var(--border2); }
+  .kpi-label { font-size: 11px; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; }
+  .kpi-value { font-size: 22px; font-family: 'DM Serif Display', serif; letter-spacing: -0.01em; }
+  .kpi-range { font-size: 11px; color: var(--text-secondary); }
+  .kpi.v .kpi-value { color: var(--valise); }
+  .kpi.a .kpi-value { color: var(--alcobas); }
+  .kpi.d .kpi-value { color: var(--dama); }
+  .kpi.c .kpi-value { color: var(--condesa); }
+
+  /* ── Controls ── */
+  .controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .view-toggle {
+    display: flex;
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    padding: 3px;
+    gap: 2px;
+  }
+  .view-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all .18s;
+    letter-spacing: 0.02em;
+  }
+  .view-btn.active {
+    background: var(--surface2);
+    color: var(--text-primary);
+    border: 0.5px solid var(--border2);
+  }
+  .view-btn:hover:not(.active) { color: var(--text-secondary); }
+
+  .month-pills {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+  .pill {
+    background: none;
+    border: 0.5px solid var(--border);
+    color: var(--text-muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    padding: 5px 11px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all .15s;
+    letter-spacing: 0.04em;
+  }
+  .pill:hover:not(.active) { border-color: var(--border2); color: var(--text-secondary); }
+  .pill.active {
+    background: var(--surface2);
+    border-color: var(--border2);
+    color: var(--text-primary);
+  }
+
+  /* ── Chart ── */
+  .chart-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 14px;
+    padding: 28px 28px 20px;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .chart-wrap { position: relative; width: 100%; }
+  #mainCanvas { display: block; }
+
+  /* ── Legend ── */
+  .legend-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 0 4px;
+    margin-bottom: 20px;
+    align-items: center;
+  }
+  .leg { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--text-secondary); }
+  .leg-swatch { width: 20px; height: 3px; border-radius: 2px; }
+  .leg-swatch.dashed { background: none; border-top: 2px dashed; height: 0; margin-top: 1px; }
+  .leg-divider { width: 1px; height: 14px; background: var(--border); margin: 0 4px; }
+  .leg-note { font-size: 11px; color: var(--text-muted); font-style: italic; }
+
+  /* ── Insight bar ── */
+  .insight {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-left: 2px solid var(--border2);
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    min-height: 44px;
+  }
+  .insight strong { color: var(--text-primary); font-weight: 500; }
+
+  /* ── Footer ── */
+  .footer {
+    margin-top: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-top: 20px;
+    border-top: 0.5px solid var(--border);
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+  .footer span { display: flex; align-items: center; gap: 6px; }
+
+  @media (max-width: 600px) {
+    .kpi-row { grid-template-columns: repeat(2, 1fr); }
+    .controls { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <span class="eyebrow">Revenue Management · Comp Set Análisis</span>
+    <h1 class="title">Posicionamiento de <em>precios</em></h1>
+    <p class="subtitle">Tarifa D-J y V-S · Roma Luxury · Abr – Dic &nbsp;·&nbsp; La Valise · Las Alcobas · Dama · Condesa DF</p>
+  </div>
+
+  <!-- KPI cards (avg annual) -->
+  <div class="kpi-row" id="kpi-row"></div>
+
+  <!-- Legend -->
+  <div class="legend-row">
+    <span class="leg"><span class="leg-swatch" style="background:var(--valise)"></span>La Valise</span>
+    <span class="leg"><span class="leg-swatch" style="background:var(--alcobas)"></span>Las Alcobas</span>
+    <span class="leg"><span class="leg-swatch" style="background:var(--dama)"></span>Dama</span>
+    <span class="leg"><span class="leg-swatch" style="background:var(--condesa)"></span>Condesa DF</span>
+    <span class="leg-divider"></span>
+    <span class="leg"><span class="leg-swatch" style="background:#fff;opacity:.6"></span>D-J</span>
+    <span class="leg"><span class="leg-swatch dashed" style="border-color:#fff;opacity:.35"></span>V-S</span>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <div class="view-toggle">
+      <button class="view-btn active" id="btn-bar" onclick="setView('bar')">Por mes</button>
+      <button class="view-btn" id="btn-trend" onclick="setView('trend')">Tendencia anual</button>
+    </div>
+    <div class="month-pills" id="month-pills"></div>
+  </div>
+
+  <!-- Chart -->
+  <div class="chart-card">
+    <div class="chart-wrap" id="chart-wrap">
+      <canvas id="mainCanvas"></canvas>
+    </div>
+  </div>
+
+  <!-- Insight -->
+  <div class="insight" id="insight"></div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <span>Hamak Hotels · Revenue Management</span>
+    <span id="foot-date"></span>
+  </div>
+</div>
+
+<script>
+const MONTHS = ['Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+const HOTELS = ['La Valise','Las Alcobas','Dama','Condesa DF'];
+const CSS_COLORS = ['--valise','--alcobas','--dama','--condesa'];
+
+const DJ = [
+  [720,922,1700,795,543,547,570,538,580],
+  [680,600,2700,1070,354,374,550,630,580],
+  [474,379,788,619,511,375,466,553,451],
+  [442,382,608,434,350,383,505,440,480]
+];
+const VS = [
+  [890,1250,1770,1017,692,527,661,551,797],
+  [700,550,1900,1254,343,440,540,775,586],
+  [666,509,836,551,578,461,538,498,491],
+  [483,383,507,392,370,382,460,400,450]
+];
+
+function cssVar(name) {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
+// ── KPI cards ──
+function buildKPIs() {
+  const row = document.getElementById('kpi-row');
+  const classes = ['v','a','d','c'];
+  HOTELS.forEach((h, i) => {
+    const avgDJ = Math.round(DJ[i].reduce((a,b)=>a+b,0)/DJ[i].length);
+    const minV = Math.min(...VS[i]), maxV = Math.max(...VS[i]);
+    row.innerHTML += `
+      <div class="kpi ${classes[i]}">
+        <span class="kpi-label">${h}</span>
+        <span class="kpi-value">$${avgDJ.toLocaleString()}</span>
+        <span class="kpi-range">V-S rango $${minV.toLocaleString()} – $${maxV.toLocaleString()}</span>
+      </div>`;
+  });
+}
+
+// ── Month pills ──
+let currentMonth = 0;
+function buildPills() {
+  const wrap = document.getElementById('month-pills');
+  MONTHS.forEach((m, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'pill' + (i===0?' active':'');
+    btn.textContent = m;
+    btn.onclick = () => {
+      document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+      btn.classList.add('active');
+      currentMonth = i;
+      renderChart();
+    };
+    wrap.appendChild(btn);
+  });
+}
+
+// ── Chart ──
+let chart = null;
+let currentView = 'bar';
+
+function hexToRgba(hex, alpha) {
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+const PALETTE = ['#4a5ce8','#0f9e78','#d4621a','#c2274f'];
+
+function buildBarConfig() {
+  const m = currentMonth;
+  return {
+    type: 'bar',
+    data: {
+      labels: HOTELS,
+      datasets: [
+        {
+          label: 'D-J',
+          data: HOTELS.map((_,i) => DJ[i][m]),
+          backgroundColor: PALETTE.map(c => hexToRgba(c, 0.80)),
+          borderRadius: 5,
+          barPercentage: 0.52,
+          categoryPercentage: 0.72,
+        },
+        {
+          label: 'V-S',
+          data: HOTELS.map((_,i) => VS[i][m]),
+          backgroundColor: PALETTE.map(c => hexToRgba(c, 0.2)),
+          borderColor: PALETTE.map(c => hexToRgba(c, 0.45)),
+          borderWidth: 1,
+          borderRadius: 5,
+          barPercentage: 0.52,
+          categoryPercentage: 0.72,
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      animation: { duration: 350, easing: 'easeOutQuart' },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#ffffff',
+          borderColor: 'rgba(0,0,0,0.12)',
+          borderWidth: 1,
+          titleColor: '#1a1916',
+          bodyColor: '#6b6960',
+          padding: 12,
+          callbacks: { label: ctx => ` ${ctx.dataset.label}: $${ctx.parsed.y.toLocaleString()}` }
+        }
+      },
+      scales: {
+        x: {
+          ticks: { color: '#a8a59e', font: { family:'DM Sans', size:12 } },
+          grid: { display: false },
+          border: { display: false }
+        },
+        y: {
+          ticks: { color: '#a8a59e', font: { family:'DM Sans', size:11 }, callback: v => '$'+v.toLocaleString() },
+          grid: { color: 'rgba(0,0,0,0.06)', lineWidth: 0.5 },
+          border: { display: false },
+          beginAtZero: true
+        }
+      }
+    }
+  };
+}
+
+function buildTrendConfig() {
+  return {
+    type: 'line',
+    data: {
+      labels: MONTHS,
+      datasets: HOTELS.flatMap((h,i) => [
+        {
+          label: h+' D-J',
+          data: DJ[i],
+          borderColor: PALETTE[i],
+          backgroundColor: hexToRgba(PALETTE[i], 0.08),
+          fill: false,
+          borderWidth: 2,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          pointBackgroundColor: PALETTE[i],
+          pointBorderColor: '#ffffff',
+          pointBorderWidth: 2,
+          tension: 0.35,
+        },
+        {
+          label: h+' V-S',
+          data: VS[i],
+          borderColor: PALETTE[i],
+          backgroundColor: 'transparent',
+          fill: false,
+          borderWidth: 1.5,
+          borderDash: [5,4],
+          pointRadius: 2.5,
+          pointHoverRadius: 5,
+          pointBackgroundColor: PALETTE[i],
+          pointBorderColor: '#ffffff',
+          pointBorderWidth: 1.5,
+          tension: 0.35,
+        }
+      ])
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      animation: { duration: 450, easing: 'easeOutQuart' },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#ffffff',
+          borderColor: 'rgba(0,0,0,0.12)',
+          borderWidth: 1,
+          titleColor: '#1a1916',
+          bodyColor: '#6b6960',
+          padding: 12,
+          callbacks: { label: ctx => ` ${ctx.dataset.label}: $${ctx.parsed.y.toLocaleString()}` }
+        }
+      },
+      scales: {
+        x: {
+          ticks: { color: '#a8a59e', font: { family:'DM Sans', size:12 }, maxRotation: 0 },
+          grid: { display: false },
+          border: { display: false }
+        },
+        y: {
+          ticks: { color: '#a8a59e', font: { family:'DM Sans', size:11 }, callback: v => '$'+v.toLocaleString() },
+          grid: { color: 'rgba(0,0,0,0.06)', lineWidth: 0.5 },
+          border: { display: false },
+          beginAtZero: true
+        }
+      }
+    }
+  };
+}
+
+function renderChart() {
+  const wrap = document.getElementById('chart-wrap');
+  const h = currentView === 'bar' ? 320 : 380;
+  wrap.style.height = h + 'px';
+
+  if (chart) chart.destroy();
+  const canvas = document.getElementById('mainCanvas');
+  canvas.style.height = h + 'px';
+  const config = currentView === 'bar' ? buildBarConfig() : buildTrendConfig();
+  chart = new Chart(canvas, config);
+
+  // insight
+  updateInsight();
+  // show/hide pills
+  document.getElementById('month-pills').style.display = currentView === 'bar' ? 'flex' : 'none';
+}
+
+function updateInsight() {
+  const el = document.getElementById('insight');
+  if (currentView === 'bar') {
+    const m = currentMonth;
+    const djVals = HOTELS.map((_,i)=>DJ[i][m]);
+    const vsVals = HOTELS.map((_,i)=>VS[i][m]);
+    const maxDJ = Math.max(...djVals), minDJ = Math.min(...djVals);
+    const maxVS = Math.max(...vsVals);
+    const leader = HOTELS[djVals.indexOf(maxDJ)];
+    const floor  = HOTELS[djVals.indexOf(minDJ)];
+    const vLeader = HOTELS[vsVals.indexOf(maxVS)];
+    const spread = maxDJ - minDJ;
+    const premDJ = Math.round((maxDJ/minDJ-1)*100);
+    el.innerHTML = `<strong>${MONTHS[m]}:</strong> <strong>${leader}</strong> lidera D-J con <strong>$${maxDJ.toLocaleString()}</strong> — 
+      ${premDJ}% por encima de <strong>${floor}</strong> ($${minDJ.toLocaleString()}). 
+      Diferencial total D-J: <strong>$${spread.toLocaleString()}</strong>. 
+      V-S premium más alto: <strong>${vLeader}</strong> con $${maxVS.toLocaleString()}.`;
+  } else {
+    const peakMonth = MONTHS[2];
+    const valleyMonth = MONTHS[4];
+    el.innerHTML = `Vista anual: pico de comp set en <strong>${peakMonth}</strong> — Las Alcobas alcanza $2,700 D-J. 
+      Valle generalizado en <strong>${valleyMonth}–Sep</strong> con compresión de tarifas para todos los hoteles. 
+      Condesa DF mantiene el rango más estable del año ($342–$608 D-J). 
+      La Valise muestra el mayor diferencial V-S, especialmente en temporada alta.`;
+  }
+}
+
+function setView(v) {
+  currentView = v;
+  document.getElementById('btn-bar').classList.toggle('active', v==='bar');
+  document.getElementById('btn-trend').classList.toggle('active', v==='trend');
+  renderChart();
+}
+
+// Footer date
+document.getElementById('foot-date').textContent = new Date().toLocaleDateString('es-MX',{year:'numeric',month:'long',day:'numeric'});
+
+buildKPIs();
+buildPills();
+renderChart();
+</script>
+</body>
+</html>
