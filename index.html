@@ -86,7 +86,7 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .content{padding:20px 28px 40px}
 
 /* KPI STRIP */
-.kpi-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:20px}
+.kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
 .kpi{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px 14px 12px;position:relative;overflow:hidden;cursor:default;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .kpi:hover{box-shadow:0 4px 12px rgba(0,0,0,.08);transform:translateY(-1px)}
 .kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--kpi-color,var(--amber));border-radius:10px 10px 0 0}
@@ -247,7 +247,7 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .anim{animation:fadeUp .35s ease both}
 .kpi:nth-child(1){animation-delay:.03s}.kpi:nth-child(2){animation-delay:.06s}.kpi:nth-child(3){animation-delay:.09s}.kpi:nth-child(4){animation-delay:.12s}.kpi:nth-child(5){animation-delay:.15s}.kpi:nth-child(6){animation-delay:.18s}
 
-@media(max-width:1300px){.kpi-strip{grid-template-columns:repeat(3,1fr)}.grid2,.grid3{grid-template-columns:1fr}}
+@media(max-width:1300px){.kpi-strip{grid-template-columns:repeat(2,1fr)}.grid2,.grid3{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -277,6 +277,7 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
     <button class="nav-btn active" onclick="setView('overview',this)"><span class="nav-icon">◈</span> Overview</button>
     <button class="nav-btn" onclick="setView('pickup',this)"><span class="nav-icon">↗</span> Pickup Semanal</button>
     <button class="nav-btn" onclick="setView('tabla',this)"><span class="nav-icon">≡</span> Detalle</button>
+    <button class="nav-btn" onclick="setView('tabla2',this)"><span class="nav-icon">≡</span> Detalle 2</button>
     <button class="nav-btn" onclick="setView('pace',this)"><span class="nav-icon">⏱</span> OTB Pace</button>
   </div>
   <div class="live-pill"><div class="live-dot"></div><span id="sb-date">—</span></div>
@@ -299,34 +300,10 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
         <button class="vtab active" onclick="setView('overview',null,this)">Overview</button>
         <button class="vtab" onclick="setView('pickup',null,this)">Pickup Semanal</button>
         <button class="vtab" onclick="setView('tabla',null,this)">Detalle</button>
+        <button class="vtab" onclick="setView('tabla2',null,this)">Detalle 2</button>
         <button class="vtab" onclick="setView('pace',null,this)">OTB Pace</button>
       </div>
     </div>
-  </div>
-
-  <!-- MONTH FILTER BAR -->
-  <div class="month-bar">
-    <span class="mo-label">Período:</span>
-    <button class="mo-btn special active" id="mo-all" onclick="setMonthFilter('all')">Todos</button>
-    <button class="mo-btn special" id="mo-none" onclick="setMonthFilter('none')">Ninguno</button>
-    <div class="mo-sep"></div>
-    <button class="mo-btn special" id="mo-q1" onclick="setMonthFilter('q1')">Q1</button>
-    <button class="mo-btn special" id="mo-q2" onclick="setMonthFilter('q2')">Q2</button>
-    <button class="mo-btn special" id="mo-q3" onclick="setMonthFilter('q3')">Q3</button>
-    <button class="mo-btn special" id="mo-q4" onclick="setMonthFilter('q4')">Q4</button>
-    <div class="mo-sep"></div>
-    <button class="mo-btn" id="mo-Jan" onclick="toggleMonth('Jan')">Ene</button>
-    <button class="mo-btn" id="mo-Feb" onclick="toggleMonth('Feb')">Feb</button>
-    <button class="mo-btn" id="mo-Mar" onclick="toggleMonth('Mar')">Mar</button>
-    <button class="mo-btn" id="mo-Apr" onclick="toggleMonth('Apr')">Abr</button>
-    <button class="mo-btn" id="mo-May" onclick="toggleMonth('May')">May</button>
-    <button class="mo-btn" id="mo-Jun" onclick="toggleMonth('Jun')">Jun</button>
-    <button class="mo-btn" id="mo-Jul" onclick="toggleMonth('Jul')">Jul</button>
-    <button class="mo-btn" id="mo-Aug" onclick="toggleMonth('Aug')">Ago</button>
-    <button class="mo-btn" id="mo-Sep" onclick="toggleMonth('Sep')">Sep</button>
-    <button class="mo-btn" id="mo-Oct" onclick="toggleMonth('Oct')">Oct</button>
-    <button class="mo-btn" id="mo-Nov" onclick="toggleMonth('Nov')">Nov</button>
-    <button class="mo-btn" id="mo-Dec" onclick="toggleMonth('Dec')">Dic</button>
   </div>
 
   <!-- HOTEL FILTER BAR -->
@@ -342,6 +319,43 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
     <button class="ho-btn" id="hf-Numu" style="--hc:#f472b6" onclick="setHotelFilter('Numu')"><span class="ho-dot"></span>Numu</button>
     <button class="ho-btn" id="hf-Santa Fé" style="--hc:#60a5fa" onclick="setHotelFilter('Santa Fé')"><span class="ho-dot"></span>Santa Fé</button>
     <button class="ho-btn" id="hf-Tropicana" style="--hc:#4ade80" onclick="setHotelFilter('Tropicana')"><span class="ho-dot"></span>Tropicana</button>
+  </div>
+
+  <!-- MONTH FILTER BAR -->
+  <div class="month-bar" id="global-month-bar">
+    <span class="mo-label">Período:</span>
+    <button class="mo-btn special active" id="mo-all" onclick="setMonthFilter('all')">Todos</button>
+    <button class="mo-btn special" id="mo-none" onclick="setMonthFilter('none')">Ninguno</button>
+    <div class="mo-sep"></div>
+    <button class="mo-btn" id="mo-Jan" onclick="toggleMonth('Jan')">Ene</button>
+    <button class="mo-btn" id="mo-Feb" onclick="toggleMonth('Feb')">Feb</button>
+    <button class="mo-btn" id="mo-Mar" onclick="toggleMonth('Mar')">Mar</button>
+    <button class="mo-btn" id="mo-Apr" onclick="toggleMonth('Apr')">Abr</button>
+    <button class="mo-btn" id="mo-May" onclick="toggleMonth('May')">May</button>
+    <button class="mo-btn" id="mo-Jun" onclick="toggleMonth('Jun')">Jun</button>
+    <button class="mo-btn" id="mo-Jul" onclick="toggleMonth('Jul')">Jul</button>
+    <button class="mo-btn" id="mo-Aug" onclick="toggleMonth('Aug')">Ago</button>
+    <button class="mo-btn" id="mo-Sep" onclick="toggleMonth('Sep')">Sep</button>
+    <button class="mo-btn" id="mo-Oct" onclick="toggleMonth('Oct')">Oct</button>
+    <button class="mo-btn" id="mo-Nov" onclick="toggleMonth('Nov')">Nov</button>
+    <button class="mo-btn" id="mo-Dec" onclick="toggleMonth('Dec')">Dic</button>
+  </div>
+
+  <!-- PACE MONTH BAR (solo visible en OTB Pace, selección única) -->
+  <div class="month-bar" id="pace-month-bar" style="display:none">
+    <span class="mo-label">Período:</span>
+    <button class="mo-btn active" id="pm-Jan" onclick="setPaceMonth('Jan')">Ene</button>
+    <button class="mo-btn" id="pm-Feb" onclick="setPaceMonth('Feb')">Feb</button>
+    <button class="mo-btn" id="pm-Mar" onclick="setPaceMonth('Mar')">Mar</button>
+    <button class="mo-btn" id="pm-Apr" onclick="setPaceMonth('Apr')">Abr</button>
+    <button class="mo-btn" id="pm-May" onclick="setPaceMonth('May')">May</button>
+    <button class="mo-btn" id="pm-Jun" onclick="setPaceMonth('Jun')">Jun</button>
+    <button class="mo-btn" id="pm-Jul" onclick="setPaceMonth('Jul')">Jul</button>
+    <button class="mo-btn" id="pm-Aug" onclick="setPaceMonth('Aug')">Ago</button>
+    <button class="mo-btn" id="pm-Sep" onclick="setPaceMonth('Sep')">Sep</button>
+    <button class="mo-btn" id="pm-Oct" onclick="setPaceMonth('Oct')">Oct</button>
+    <button class="mo-btn" id="pm-Nov" onclick="setPaceMonth('Nov')">Nov</button>
+    <button class="mo-btn" id="pm-Dec" onclick="setPaceMonth('Dec')">Dic</button>
   </div>
 
   <!-- CONTENT -->
@@ -389,7 +403,7 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
           <div class="rev-vchart" id="adr-chart-ov"></div>
         </div>
         <div class="card anim">
-          <div class="card-title">RevPAR Implícito</div>
+          <div class="card-title">RevPAR</div>
           <div class="card-sub">LY · OTB · BDGT · FCST por mes</div>
           <div class="legend">
             <div class="leg-item"><div class="leg-sq" style="background:#cbd5e1"></div>LY</div>
@@ -407,20 +421,7 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
     <!-- PICKUP SEMANAL -->
     <div class="view" id="view-pickup">
       <div class="section-row">Pickup Semanal — Incremental por Hotel</div>
-      <!-- Hotel filter -->
-      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px">
-        <span style="font-size:11px;color:var(--sub);font-weight:600;letter-spacing:.04em">HOTELES:</span>
-        <button class="pu-week-btn active" onclick="
-          activePUHotels=new Set(HOTELS_PU);
-          document.querySelectorAll('#pu-hotel-filter .pu-week-btn').forEach(b=>b.classList.add('active'));
-          renderPickup();">Todos</button>
-        <button class="pu-week-btn" onclick="
-          activePUHotels=new Set();
-          document.querySelectorAll('#pu-hotel-filter .pu-week-btn').forEach(b=>b.classList.remove('active'));
-          renderPickup();">Ninguno</button>
-        <span style="width:1px;height:20px;background:var(--border);display:inline-block"></span>
-        <div id="pu-hotel-filter" style="display:flex;gap:6px;flex-wrap:wrap"></div>
-      </div>
+      <div id="pu-hotel-filter" style="display:none"></div>
       <div class="card anim" style="margin-bottom:16px">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px">
           <div>
@@ -445,12 +446,14 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
     <div class="view" id="view-exec">
 
       <!-- FILTRO HOTELES EJECUTIVO -->
-      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px">
-        <span style="font-size:11px;color:var(--sub);font-weight:600;letter-spacing:.04em">HOTELES:</span>
-        <button class="pu-week-btn active" id="exh-todos" onclick="execHotelFilter('all')">Todos</button>
-        <button class="pu-week-btn" id="exh-ninguno" onclick="execHotelFilter('none')">Ninguno</button>
-        <span style="width:1px;height:20px;background:var(--border);display:inline-block"></span>
-        <div id="exec-hotel-filter" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+      <div style="display:none" id="exec-hotel-filter-wrap">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+          <span style="font-size:11px;color:var(--sub);font-weight:600;letter-spacing:.04em">HOTELES:</span>
+          <button class="pu-week-btn active" id="exh-todos" onclick="execHotelFilter('all')">Todos</button>
+          <button class="pu-week-btn" id="exh-ninguno" onclick="execHotelFilter('none')">Ninguno</button>
+          <span style="width:1px;height:20px;background:var(--border);display:inline-block"></span>
+          <div id="exec-hotel-filter" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+        </div>
       </div>
 
       <!-- TABLA POSICIÓN -->
@@ -492,12 +495,6 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
     <div class="view" id="view-pace">
       <div class="section-row">Evolución OTB Semanal</div>
 
-      <!-- Pace hotel filter -->
-      <div id="pace-hotel-filter" style="display:flex;flex-wrap:wrap;gap:6px;padding:0 0 16px">
-        <button id="pch-todos" class="pu-week-btn active" onclick="paceHotelFilter('all')" style="padding:5px 12px;font-size:11px">Todos</button>
-        <button id="pch-ninguno" class="pu-week-btn" onclick="paceHotelFilter('none')" style="padding:5px 12px;font-size:11px">Ninguno</button>
-      </div>
-
       <!-- Controls row -->
       <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px">
         <div style="display:flex;gap:4px">
@@ -506,21 +503,6 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
           <button class="pu-week-btn" id="pace-metric-adr" onclick="setPaceMetric('adr')">ADR</button>
           <button class="pu-week-btn" id="pace-metric-occ" onclick="setPaceMetric('occ')">Occ %</button>
         </div>
-        <select id="pace-month-sel" onchange="renderPace()" style="font-size:12px;padding:5px 10px;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text);cursor:pointer">
-          <option value="all">Todos los meses</option>
-          <option value="Jan">Enero</option>
-          <option value="Feb">Febrero</option>
-          <option value="Mar">Marzo</option>
-          <option value="Apr">Abril</option>
-          <option value="May">Mayo</option>
-          <option value="Jun">Junio</option>
-          <option value="Jul">Julio</option>
-          <option value="Aug">Agosto</option>
-          <option value="Sep">Septiembre</option>
-          <option value="Oct">Octubre</option>
-          <option value="Nov">Noviembre</option>
-          <option value="Dec">Diciembre</option>
-        </select>
       </div>
 
       <!-- Pace table -->
@@ -529,7 +511,7 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
       </div>
 
       <!-- Pace trend charts per hotel -->
-      <div id="pace-charts" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px"></div>
+      <div id="pace-charts" style="margin-top:16px"></div>
     </div>
 
     <!-- TABLA -->
@@ -539,6 +521,16 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
         <div class="card-title" style="margin-bottom:4px">Detalle por Mes</div>
         <div class="card-sub" id="tabla-sub">Todas las propiedades · 12 meses</div>
         <table class="dtbl" id="dtbl"></table>
+      </div>
+    </div>
+
+    <!-- TABLA 2 -->
+    <div class="view" id="view-tabla2">
+      <div class="section-row">Tabla Mensual Completa — Copia</div>
+      <div class="card" style="overflow-x:auto">
+        <div class="card-title" style="margin-bottom:4px">Detalle por Mes 2</div>
+        <div class="card-sub" id="tabla2-sub">Todas las propiedades · 12 meses</div>
+        <table class="dtbl" id="dtbl2"></table>
       </div>
     </div>
   </div>
@@ -572,8 +564,8 @@ const RAW=[
 {mo:'Jan',h:'Amomoxtli',lyRN:661,lyADR:6510,lyOcc:63,lyRev:4303375,otbRN:592,otbADR:6664,otbOcc:56,otbRev:3945153,puRev:0,bdgtRN:740,bdgtADR:6670,bdgtOcc:70,bdgtRev:4935800,fcstRN:650,fcstADR:6600,fcstOcc:62,fcstRev:4290000},
 {mo:'Jan',h:'Anticavilla',lyRN:154,lyADR:4597,lyOcc:31,lyRev:707905,otbRN:132,otbADR:4868,otbOcc:27,otbRev:642576,puRev:0,bdgtRN:180,bdgtADR:4650,bdgtOcc:36,bdgtRev:837000,fcstRN:160,fcstADR:4707,fcstOcc:32,fcstRev:753120},
 {mo:'Jan',h:'Boca de Agua',lyRN:236,lyADR:9267,lyOcc:35,lyRev:2187019,otbRN:317,otbADR:6757,otbOcc:46,otbRev:2141969,puRev:0,bdgtRN:410,bdgtADR:8850,bdgtOcc:60,bdgtRev:3628500,fcstRN:300,fcstADR:7200,fcstOcc:44,fcstRev:2160000},
-{mo:'Jan',h:'Casona',lyRN:340,lyADR:7793,lyOcc:34,lyRev:2649562,otbRN:675,otbADR:7487,otbOcc:68,otbRev:5053725,puRev:0,bdgtRN:640,bdgtADR:7560,bdgtOcc:65,bdgtRev:4838400,fcstRN:710,fcstADR:7560,fcstOcc:72,fcstRev:5367600},
-{mo:'Jan',h:'El Santuario',lyRN:909,lyADR:5400,lyOcc:22,lyRev:4908946,otbRN:1293,otbADR:4916,otbOcc:31,otbRev:6356634,puRev:0,bdgtRN:1250,bdgtADR:5400,bdgtOcc:30,bdgtRev:6750000,fcstRN:1250,fcstADR:4900,fcstOcc:30,fcstRev:6125000},
+{mo:'Jan',h:'Casona',lyRN:340,lyADR:7793,lyOcc:34,lyRev:2649562,otbRN:675,otbADR:7487,otbOcc:68,otbRev:5053725,puRev:0,bdgtRN:640,bdgtADR:7560,bdgtOcc:65,bdgtRev:4838400,fcstRN:675,fcstADR:7487,fcstOcc:68,fcstRev:5053725},
+{mo:'Jan',h:'El Santuario',lyRN:909,lyADR:5400,lyOcc:22,lyRev:4908946,otbRN:1293,otbADR:4916,otbOcc:31,otbRev:6356634,puRev:0,bdgtRN:1250,bdgtADR:5400,bdgtOcc:30,bdgtRev:6750000,fcstRN:1293,fcstADR:4916,fcstOcc:31,fcstRev:6356634},
 {mo:'Jan',h:'MDS',lyRN:469,lyADR:3730,lyOcc:30,lyRev:1749227,otbRN:486,otbADR:3368,otbOcc:31,otbRev:1636848,puRev:0,bdgtRN:515,bdgtADR:3900,bdgtOcc:33,bdgtRev:2008500,fcstRN:480,fcstADR:3400,fcstOcc:31,fcstRev:1632000},
 {mo:'Jan',h:'Numu',lyRN:570,lyADR:6955,lyOcc:42,lyRev:3964401,otbRN:657,otbADR:7321,otbOcc:48,otbRev:4809897,puRev:0,bdgtRN:610,bdgtADR:7300,bdgtOcc:45,bdgtRev:4453000,fcstRN:685,fcstADR:7400,fcstOcc:50,fcstRev:5069000},
 {mo:'Jan',h:'Santa Fé',lyRN:1371,lyADR:2860,lyOcc:73,lyRev:3920745,otbRN:1230,otbADR:3079,otbOcc:65,otbRev:3787022,puRev:0,bdgtRN:1240,bdgtADR:3050,bdgtOcc:66,bdgtRev:3782000,fcstRN:1250,fcstADR:3030,fcstOcc:66,fcstRev:3787500},
@@ -581,102 +573,102 @@ const RAW=[
 {mo:'Feb',h:'Amomoxtli',lyRN:714,lyADR:6487,lyOcc:72,lyRev:4631856,otbRN:652,otbADR:6700,otbOcc:66,otbRev:4368400,puRev:0,bdgtRN:730,bdgtADR:6650,bdgtOcc:74,bdgtRev:4854500,fcstRN:750,fcstADR:6650,fcstOcc:76,fcstRev:4987500},
 {mo:'Feb',h:'Anticavilla',lyRN:238,lyADR:4843,lyOcc:51,lyRev:1152650,otbRN:186,otbADR:4851,otbOcc:40,otbRev:902286,puRev:0,bdgtRN:250,bdgtADR:4990,bdgtOcc:54,bdgtRev:1247500,fcstRN:209,fcstADR:4675,fcstOcc:45,fcstRev:977075},
 {mo:'Feb',h:'Boca de Agua',lyRN:246,lyADR:7957,lyOcc:39,lyRev:1957378,otbRN:343,otbADR:6787,otbOcc:54,otbRev:2327941,puRev:0,bdgtRN:440,bdgtADR:8000,bdgtOcc:69,bdgtRev:3520000,fcstRN:385,fcstADR:6680,fcstOcc:60,fcstRev:2571800},
-{mo:'Feb',h:'Casona',lyRN:543,lyADR:8419,lyOcc:59,lyRev:4571755,otbRN:638,otbADR:8663,otbOcc:69,otbRev:5526994,puRev:0,bdgtRN:640,bdgtADR:8650,bdgtOcc:69,bdgtRev:5536000,fcstRN:680,fcstADR:8620,fcstOcc:73,fcstRev:5861600},
-{mo:'Feb',h:'El Santuario',lyRN:1118,lyADR:5375,lyOcc:29,lyRev:6009011,otbRN:1009,otbADR:5407,otbOcc:26,otbRev:5456107,puRev:0,bdgtRN:1580,bdgtADR:5100,bdgtOcc:41,bdgtRev:8058000,fcstRN:1300,fcstADR:5050,fcstOcc:33,fcstRev:6565000},
+{mo:'Feb',h:'Casona',lyRN:543,lyADR:8419,lyOcc:59,lyRev:4571755,otbRN:638,otbADR:8663,otbOcc:69,otbRev:5526994,puRev:0,bdgtRN:640,bdgtADR:8650,bdgtOcc:69,bdgtRev:5536000,fcstRN:638,fcstADR:8663,fcstOcc:69,fcstRev:5526994},
+{mo:'Feb',h:'El Santuario',lyRN:1118,lyADR:5375,lyOcc:29,lyRev:6009011,otbRN:1009,otbADR:5407,otbOcc:26,otbRev:5456107,puRev:0,bdgtRN:1580,bdgtADR:5100,bdgtOcc:41,bdgtRev:8058000,fcstRN:1009,fcstADR:5407,fcstOcc:26,fcstRev:5456107},
 {mo:'Feb',h:'MDS',lyRN:380,lyADR:4077,lyOcc:26,lyRev:1549305,otbRN:507,otbADR:3450,otbOcc:35,otbRev:1749150,puRev:0,bdgtRN:450,bdgtADR:4200,bdgtOcc:31,bdgtRev:1890000,fcstRN:510,fcstADR:3500,fcstOcc:35,fcstRev:1785000},
-{mo:'Feb',h:'Numu',lyRN:671,lyADR:7326,lyOcc:53,lyRev:4915619,otbRN:779,otbADR:7338,otbOcc:61,otbRev:5716302,puRev:13236,bdgtRN:700,bdgtADR:8100,bdgtOcc:55,bdgtRev:5670000,fcstRN:833,fcstADR:8018,fcstOcc:65,fcstRev:6678994},
-{mo:'Feb',h:'Santa Fé',lyRN:1223,lyADR:2628,lyOcc:69,lyRev:3213906,otbRN:1093,otbADR:2884,otbOcc:62,otbRev:3152332,puRev:13236,bdgtRN:1280,bdgtADR:3080,bdgtOcc:72,bdgtRev:3942400,fcstRN:1200,fcstADR:2700,fcstOcc:68,fcstRev:3240000},
+{mo:'Feb',h:'Numu',lyRN:671,lyADR:7326,lyOcc:53,lyRev:4915619,otbRN:779,otbADR:7338,otbOcc:61,otbRev:5716302,puRev:0,bdgtRN:700,bdgtADR:8100,bdgtOcc:55,bdgtRev:5670000,fcstRN:833,fcstADR:8018,fcstOcc:65,fcstRev:6678994},
+{mo:'Feb',h:'Santa Fé',lyRN:1223,lyADR:2628,lyOcc:69,lyRev:3213906,otbRN:1093,otbADR:2884,otbOcc:62,otbRev:3152332,puRev:0,bdgtRN:1280,bdgtADR:3080,bdgtOcc:72,bdgtRev:3942400,fcstRN:1200,fcstADR:2700,fcstOcc:68,fcstRev:3240000},
 {mo:'Feb',h:'Tropicana',lyRN:735,lyADR:3669,lyOcc:36,lyRev:2696736,otbRN:1452,otbADR:3941,otbOcc:72,otbRev:5721606,puRev:0,bdgtRN:1450,bdgtADR:3700,bdgtOcc:71,bdgtRev:5365000,fcstRN:1530,fcstADR:3620,fcstOcc:75,fcstRev:5538600},
-{mo:'Mar',h:'Amomoxtli',lyRN:860,lyADR:6571,lyOcc:82,lyRev:5650728,otbRN:628,otbADR:6575,otbOcc:60,otbRev:4128836,puRev:552421,bdgtRN:880,bdgtADR:6770,bdgtOcc:83,bdgtRev:5957600,fcstRN:610,fcstADR:6600,fcstOcc:58,fcstRev:4026000},
-{mo:'Mar',h:'Anticavilla',lyRN:192,lyADR:5106,lyOcc:39,lyRev:980434,otbRN:144,otbADR:5223,otbOcc:29,otbRev:752044,puRev:93028,bdgtRN:233,bdgtADR:5060,bdgtOcc:47,bdgtRev:1178980,fcstRN:196,fcstADR:5200,fcstOcc:40,fcstRev:1019200},
-{mo:'Mar',h:'Boca de Agua',lyRN:307,lyADR:6882,lyOcc:45,lyRev:2112624,otbRN:189,otbADR:6757,otbOcc:28,otbRev:1277073,puRev:36250,bdgtRN:480,bdgtADR:7900,bdgtOcc:70,bdgtRev:3792000,fcstRN:250,fcstADR:7200,fcstOcc:37,fcstRev:1800000},
-{mo:'Mar',h:'Casona',lyRN:631,lyADR:8055,lyOcc:64,lyRev:5082689,otbRN:626,otbADR:7865,otbOcc:63,otbRev:4923427,puRev:411720,bdgtRN:717,bdgtADR:8200,bdgtOcc:72,bdgtRev:5879400,fcstRN:640,fcstADR:7900,fcstOcc:65,fcstRev:5056000},
-{mo:'Mar',h:'El Santuario',lyRN:1522,lyADR:5326,lyOcc:37,lyRev:8105989,otbRN:1122,otbADR:5101,otbOcc:27,otbRev:5723120,puRev:513242,bdgtRN:1800,bdgtADR:5300,bdgtOcc:43,bdgtRev:9540000,fcstRN:1300,fcstADR:5100,fcstOcc:31,fcstRev:6630000},
-{mo:'Mar',h:'MDS',lyRN:476,lyADR:4020,lyOcc:31,lyRev:1913306,otbRN:391,otbADR:4033,otbOcc:25,otbRev:1576778,puRev:209066,bdgtRN:524,bdgtADR:4200,bdgtOcc:34,bdgtRev:2200800,fcstRN:460,fcstADR:4100,fcstOcc:30,fcstRev:1886000},
-{mo:'Mar',h:'Numu',lyRN:616,lyADR:7724,lyOcc:45,lyRev:4758003,otbRN:713,otbADR:6758,otbOcc:52,otbRev:4818675,puRev:93944,bdgtRN:760,bdgtADR:8400,bdgtOcc:56,bdgtRev:6384000,fcstRN:758,fcstADR:6966,fcstOcc:56,fcstRev:5280228},
-{mo:'Mar',h:'Santa Fé',lyRN:1279,lyADR:2467,lyOcc:68,lyRev:3155007,otbRN:1472,otbADR:2470,otbOcc:78,otbRev:3635192,puRev:214222,bdgtRN:1370,bdgtADR:3090,bdgtOcc:72,bdgtRev:4233300,fcstRN:1600,fcstADR:2400,fcstOcc:85,fcstRev:3840000},
-{mo:'Mar',h:'Tropicana',lyRN:1138,lyADR:4141,lyOcc:52,lyRev:4712675,otbRN:1504,otbADR:3675,otbOcc:69,otbRev:5527200,puRev:132719,bdgtRN:1550,bdgtADR:4050,bdgtOcc:71,bdgtRev:6277500,fcstRN:1550,fcstADR:4000,fcstOcc:71,fcstRev:6200000},
-{mo:'Apr',h:'Amomoxtli',lyRN:692,lyADR:6859,lyOcc:68,lyRev:4746130,otbRN:426,otbADR:6013,otbOcc:42,otbRev:2561679,puRev:118036,bdgtRN:750,bdgtADR:6750,bdgtOcc:74,bdgtRev:5062500,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Apr',h:'Anticavilla',lyRN:207,lyADR:4626,lyOcc:43,lyRev:957645,otbRN:56,otbADR:4941,otbOcc:12,otbRev:276696,puRev:0,bdgtRN:237,bdgtADR:5141,bdgtOcc:49,bdgtRev:1218417,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Apr',h:'Boca de Agua',lyRN:291,lyADR:7248,lyOcc:44,lyRev:2109151,otbRN:122,otbADR:6768,otbOcc:18,otbRev:825696,puRev:871318,bdgtRN:350,bdgtADR:7300,bdgtOcc:53,bdgtRev:2555000,fcstRN:300,fcstADR:8500,fcstOcc:45,fcstRev:2550000},
-{mo:'Apr',h:'Casona',lyRN:364,lyADR:7461,lyOcc:38,lyRev:2715712,otbRN:563,otbADR:6815,otbOcc:59,otbRev:3836811,puRev:477444,bdgtRN:531,bdgtADR:7600,bdgtOcc:55,bdgtRev:4035600,fcstRN:560,fcstADR:7700,fcstOcc:58,fcstRev:4312000},
-{mo:'Apr',h:'El Santuario',lyRN:927,lyADR:6015,lyOcc:23,lyRev:5575561,otbRN:514,otbADR:4629,otbOcc:13,otbRev:2379311,puRev:475550,bdgtRN:1200,bdgtADR:4900,bdgtOcc:30,bdgtRev:5880000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Apr',h:'MDS',lyRN:343,lyADR:4200,lyOcc:23,lyRev:1440489,otbRN:173,otbADR:4539,otbOcc:12,otbRev:785276,puRev:62095,bdgtRN:430,bdgtADR:4100,bdgtOcc:29,bdgtRev:1763000,fcstRN:430,fcstADR:4100,fcstOcc:29,fcstRev:1763000},
-{mo:'Apr',h:'Numu',lyRN:717,lyADR:7589,lyOcc:54,lyRev:5441442,otbRN:552,otbADR:7331,otbOcc:42,otbRev:4046833,puRev:-59730,bdgtRN:720,bdgtADR:7900,bdgtOcc:55,bdgtRev:5688000,fcstRN:665,fcstADR:8046,fcstOcc:50,fcstRev:5350590},
-{mo:'Apr',h:'Santa Fé',lyRN:1332,lyADR:2666,lyOcc:73,lyRev:3551599,otbRN:638,otbADR:2762,otbOcc:35,otbRev:1761990,puRev:346672,bdgtRN:1300,bdgtADR:3020,bdgtOcc:71,bdgtRev:3926000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Apr',h:'Tropicana',lyRN:820,lyADR:3651,lyOcc:39,lyRev:2994189,otbRN:624,otbADR:3238,otbOcc:30,otbRev:2020200,puRev:134458,bdgtRN:1103,bdgtADR:3648,bdgtOcc:53,bdgtRev:4023744,fcstRN:1100,fcstADR:3600,fcstOcc:52,fcstRev:3960000},
-{mo:'May',h:'Amomoxtli',lyRN:706,lyADR:6488,lyOcc:67,lyRev:4580845,otbRN:271,otbADR:6064,otbOcc:26,otbRev:1643255,puRev:459124,bdgtRN:750,bdgtADR:6600,bdgtOcc:71,bdgtRev:4950000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'May',h:'Anticavilla',lyRN:174,lyADR:5073,lyOcc:35,lyRev:882723,otbRN:14,otbADR:5029,otbOcc:3,otbRev:70406,puRev:0,bdgtRN:188,bdgtADR:5010,bdgtOcc:38,bdgtRev:941880,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'May',h:'Boca de Agua',lyRN:200,lyADR:5652,lyOcc:29,lyRev:1130438,otbRN:37,otbADR:5472,otbOcc:5,otbRev:202464,puRev:-590772,bdgtRN:270,bdgtADR:5900,bdgtOcc:40,bdgtRev:1593000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'May',h:'Casona',lyRN:456,lyADR:6701,lyOcc:46,lyRev:3055818,otbRN:177,otbADR:6857,otbOcc:18,otbRev:1213756,puRev:103459,bdgtRN:580,bdgtADR:7350,bdgtOcc:58,bdgtRev:4263000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'May',h:'El Santuario',lyRN:1153,lyADR:5698,lyOcc:28,lyRev:6569607,otbRN:112,otbADR:6091,otbOcc:3,otbRev:682201,puRev:65386,bdgtRN:1300,bdgtADR:5000,bdgtOcc:31,bdgtRev:6500000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'May',h:'MDS',lyRN:351,lyADR:4000,lyOcc:23,lyRev:1404021,otbRN:47,otbADR:4583,otbOcc:3,otbRev:215403,puRev:186144,bdgtRN:430,bdgtADR:4100,bdgtOcc:28,bdgtRev:1763000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'May',h:'Numu',lyRN:678,lyADR:8354,lyOcc:50,lyRev:5663874,otbRN:366,otbADR:6003,otbOcc:27,otbRev:2197233,puRev:259323,bdgtRN:710,bdgtADR:8400,bdgtOcc:52,bdgtRev:5964000,fcstRN:650,fcstADR:7362,fcstOcc:48,fcstRev:4785300},
-{mo:'May',h:'Santa Fé',lyRN:1145,lyADR:2280,lyOcc:61,lyRev:2610770,otbRN:122,otbADR:2710,otbOcc:6,otbRev:330641,puRev:41972,bdgtRN:1200,bdgtADR:2850,bdgtOcc:63,bdgtRev:3420000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'May',h:'Tropicana',lyRN:654,lyADR:4330,lyOcc:30,lyRev:2832110,otbRN:471,otbADR:3815,otbOcc:22,otbRev:1796865,puRev:36815,bdgtRN:1100,bdgtADR:4260,bdgtOcc:51,bdgtRev:4686000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Jun',h:'Amomoxtli',lyRN:716,lyADR:6014,lyOcc:70,lyRev:4305702,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:740,bdgtADR:6200,bdgtOcc:73,bdgtRev:4588000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Jun',h:'Anticavilla',lyRN:144,lyADR:4689,lyOcc:30,lyRev:675158,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:189,bdgtADR:4961,bdgtOcc:39,bdgtRev:937629,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Jun',h:'Boca de Agua',lyRN:153,lyADR:6619,lyOcc:23,lyRev:1012684,otbRN:16,otbADR:7288,otbOcc:2,otbRev:116608,puRev:-115008,bdgtRN:240,bdgtADR:5900,bdgtOcc:36,bdgtRev:1416000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Jun',h:'Casona',lyRN:412,lyADR:5649,lyOcc:43,lyRev:2327375,otbRN:16,otbADR:14369,otbOcc:2,otbRev:229906,puRev:-20708,bdgtRN:815,bdgtADR:13500,bdgtOcc:85,bdgtRev:11002500,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Jun',h:'El Santuario',lyRN:1092,lyADR:5156,lyOcc:27,lyRev:5630337,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:1210,bdgtADR:5200,bdgtOcc:30,bdgtRev:6292000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Jun',h:'MDS',lyRN:212,lyADR:4105,lyOcc:14,lyRev:870168,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:320,bdgtADR:4150,bdgtOcc:21,bdgtRev:1328000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Jun',h:'Numu',lyRN:549,lyADR:5927,lyOcc:42,lyRev:3253878,otbRN:151,otbADR:6579,otbOcc:11,otbRev:993429,puRev:231993,bdgtRN:660,bdgtADR:7000,bdgtOcc:50,bdgtRev:4620000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Jun',h:'Santa Fé',lyRN:694,lyADR:2397,lyOcc:38,lyRev:1663664,otbRN:38,otbADR:2574,otbOcc:2,otbRev:97800,puRev:97800,bdgtRN:1090,bdgtADR:3090,bdgtOcc:60,bdgtRev:3368100,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Jun',h:'Tropicana',lyRN:306,lyADR:2532,lyOcc:15,lyRev:774766,otbRN:87,otbADR:2572,otbOcc:4,otbRev:223721,puRev:13561,bdgtRN:920,bdgtADR:3100,bdgtOcc:44,bdgtRev:2852000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Mar',h:'Amomoxtli',lyRN:860,lyADR:6571,lyOcc:82,lyRev:5650728,otbRN:698,otbADR:6586,otbOcc:66,otbRev:4597028,puRev:142811,bdgtRN:880,bdgtADR:6770,bdgtOcc:83,bdgtRev:5957600,fcstRN:630,fcstADR:6600,fcstOcc:60,fcstRev:4158000},
+{mo:'Mar',h:'Anticavilla',lyRN:192,lyADR:5106,lyOcc:39,lyRev:980434,otbRN:181,otbADR:5055,otbOcc:36,otbRev:914955,puRev:22292,bdgtRN:233,bdgtADR:5060,bdgtOcc:47,bdgtRev:1178980,fcstRN:174,fcstADR:4891,fcstOcc:35,fcstRev:851034},
+{mo:'Mar',h:'Boca de Agua',lyRN:307,lyADR:6882,lyOcc:45,lyRev:2112624,otbRN:227,otbADR:6276,otbOcc:33,otbRev:1424652,puRev:41884,bdgtRN:480,bdgtADR:7900,bdgtOcc:70,bdgtRev:3792000,fcstRN:205,fcstADR:6800,fcstOcc:30,fcstRev:1394000},
+{mo:'Mar',h:'Casona',lyRN:631,lyADR:8055,lyOcc:64,lyRev:5082689,otbRN:676,otbADR:7866,otbOcc:68,otbRev:5317416,puRev:53583,bdgtRN:717,bdgtADR:8200,bdgtOcc:72,bdgtRev:5879400,fcstRN:660,fcstADR:7800,fcstOcc:67,fcstRev:5148000},
+{mo:'Mar',h:'El Santuario',lyRN:1522,lyADR:5326,lyOcc:37,lyRev:8105989,otbRN:1327,otbADR:5146,otbOcc:32,otbRev:6828742,puRev:239124,bdgtRN:1800,bdgtADR:5300,bdgtOcc:43,bdgtRev:9540000,fcstRN:1300,fcstADR:5100,fcstOcc:31,fcstRev:6630000},
+{mo:'Mar',h:'MDS',lyRN:476,lyADR:4020,lyOcc:31,lyRev:1913306,otbRN:412,otbADR:3831,otbOcc:27,otbRev:1578372,puRev:32250,bdgtRN:524,bdgtADR:4200,bdgtOcc:34,bdgtRev:2200800,fcstRN:460,fcstADR:4100,fcstOcc:30,fcstRev:1886000},
+{mo:'Mar',h:'Numu',lyRN:616,lyADR:7724,lyOcc:45,lyRev:4758003,otbRN:729,otbADR:6844,otbOcc:53,otbRev:4989276,puRev:123072,bdgtRN:760,bdgtADR:8400,bdgtOcc:56,bdgtRev:6384000,fcstRN:733,fcstADR:6786,fcstOcc:54,fcstRev:4974138},
+{mo:'Mar',h:'Santa Fé',lyRN:1279,lyADR:2467,lyOcc:68,lyRev:3155007,otbRN:1524,otbADR:2528,otbOcc:81,otbRev:3852672,puRev:85013,bdgtRN:1370,bdgtADR:3090,bdgtOcc:72,bdgtRev:4233300,fcstRN:1600,fcstADR:2430,fcstOcc:85,fcstRev:3888000},
+{mo:'Mar',h:'Tropicana',lyRN:1138,lyADR:4141,lyOcc:52,lyRev:4712675,otbRN:1552,otbADR:3978,otbOcc:72,otbRev:6173080,puRev:103393,bdgtRN:1550,bdgtADR:4050,bdgtOcc:71,bdgtRev:6277500,fcstRN:1550,fcstADR:4000,fcstOcc:71,fcstRev:6200000},
+{mo:'Apr',h:'Amomoxtli',lyRN:692,lyADR:6859,lyOcc:68,lyRev:4746130,otbRN:614,otbADR:6651,otbOcc:60,otbRev:4083714,puRev:538060,bdgtRN:750,bdgtADR:6750,bdgtOcc:74,bdgtRev:5062500,fcstRN:730,fcstADR:6700,fcstOcc:72,fcstRev:4891000},
+{mo:'Apr',h:'Anticavilla',lyRN:207,lyADR:4626,lyOcc:43,lyRev:957645,otbRN:129,otbADR:4929,otbOcc:27,otbRev:635841,puRev:218483,bdgtRN:237,bdgtADR:5141,bdgtOcc:49,bdgtRev:1218417,fcstRN:159,fcstADR:4891,fcstOcc:33,fcstRev:777669},
+{mo:'Apr',h:'Boca de Agua',lyRN:291,lyADR:7248,lyOcc:44,lyRev:2109151,otbRN:192,otbADR:8010,otbOcc:29,otbRev:1537920,puRev:229015,bdgtRN:350,bdgtADR:7300,bdgtOcc:53,bdgtRev:2555000,fcstRN:230,fcstADR:8000,fcstOcc:35,fcstRev:1840000},
+{mo:'Apr',h:'Casona',lyRN:364,lyADR:7461,lyOcc:38,lyRev:2715712,otbRN:596,otbADR:6800,otbOcc:62,otbRev:4052800,puRev:154570,bdgtRN:531,bdgtADR:7600,bdgtOcc:55,bdgtRev:4035600,fcstRN:630,fcstADR:6800,fcstOcc:66,fcstRev:4284000},
+{mo:'Apr',h:'El Santuario',lyRN:927,lyADR:6015,lyOcc:23,lyRev:5575561,otbRN:1020,otbADR:5193,otbOcc:25,otbRev:5296860,puRev:1599378,bdgtRN:1200,bdgtADR:4900,bdgtOcc:30,bdgtRev:5880000,fcstRN:1400,fcstADR:5150,fcstOcc:35,fcstRev:7210000},
+{mo:'Apr',h:'MDS',lyRN:343,lyADR:4200,lyOcc:23,lyRev:1440489,otbRN:256,otbADR:4415,otbOcc:17,otbRev:1130240,puRev:109398,bdgtRN:430,bdgtADR:4100,bdgtOcc:29,bdgtRev:1763000,fcstRN:330,fcstADR:4200,fcstOcc:22,fcstRev:1386000},
+{mo:'Apr',h:'Numu',lyRN:717,lyADR:7589,lyOcc:54,lyRev:5441442,otbRN:612,otbADR:7446,otbOcc:46,otbRev:4556952,puRev:223149,bdgtRN:720,bdgtADR:7900,bdgtOcc:55,bdgtRev:5688000,fcstRN:665,fcstADR:8046,fcstOcc:50,fcstRev:5350590},
+{mo:'Apr',h:'Santa Fé',lyRN:1332,lyADR:2666,lyOcc:73,lyRev:3551599,otbRN:830,otbADR:2896,otbOcc:45,otbRev:2403680,puRev:187817,bdgtRN:1300,bdgtADR:3020,bdgtOcc:71,bdgtRev:3926000,fcstRN:1100,fcstADR:2850,fcstOcc:60,fcstRev:3135000},
+{mo:'Apr',h:'Tropicana',lyRN:820,lyADR:3651,lyOcc:39,lyRev:2994189,otbRN:748,otbADR:3404,otbOcc:36,otbRev:2546192,puRev:206127,bdgtRN:1103,bdgtADR:3648,bdgtOcc:53,bdgtRev:4023744,fcstRN:950,fcstADR:3400,fcstOcc:45,fcstRev:3230000},
+{mo:'May',h:'Amomoxtli',lyRN:706,lyADR:6488,lyOcc:67,lyRev:4580845,otbRN:353,otbADR:6133,otbOcc:33,otbRev:2164949,puRev:258317,bdgtRN:750,bdgtADR:6600,bdgtOcc:71,bdgtRev:4950000,fcstRN:530,fcstADR:6500,fcstOcc:50,fcstRev:3445000},
+{mo:'May',h:'Anticavilla',lyRN:174,lyADR:5073,lyOcc:35,lyRev:882723,otbRN:31,otbADR:4830,otbOcc:6,otbRev:149730,puRev:0,bdgtRN:188,bdgtADR:5010,bdgtOcc:38,bdgtRev:941880,fcstRN:174,fcstADR:4611,fcstOcc:35,fcstRev:802314},
+{mo:'May',h:'Boca de Agua',lyRN:200,lyADR:5652,lyOcc:29,lyRev:1130438,otbRN:60,otbADR:7492,otbOcc:9,otbRev:449520,puRev:85884,bdgtRN:270,bdgtADR:5900,bdgtOcc:40,bdgtRev:1593000,fcstRN:200,fcstADR:5800,fcstOcc:29,fcstRev:1160000},
+{mo:'May',h:'Casona',lyRN:456,lyADR:6701,lyOcc:46,lyRev:3055818,otbRN:206,otbADR:6783,otbOcc:21,otbRev:1397298,puRev:0,bdgtRN:580,bdgtADR:7350,bdgtOcc:58,bdgtRev:4263000,fcstRN:550,fcstADR:7200,fcstOcc:55,fcstRev:3960000},
+{mo:'May',h:'El Santuario',lyRN:1153,lyADR:5698,lyOcc:28,lyRev:6569607,otbRN:300,otbADR:4787,otbOcc:7,otbRev:1436100,puRev:98076,bdgtRN:1300,bdgtADR:5000,bdgtOcc:31,bdgtRev:6500000,fcstRN:1200,fcstADR:5700,fcstOcc:29,fcstRev:6840000},
+{mo:'May',h:'MDS',lyRN:351,lyADR:4000,lyOcc:23,lyRev:1404021,otbRN:54,otbADR:4577,otbOcc:3,otbRev:247158,puRev:5054,bdgtRN:430,bdgtADR:4100,bdgtOcc:28,bdgtRev:1763000,fcstRN:400,fcstADR:4100,fcstOcc:26,fcstRev:1640000},
+{mo:'May',h:'Numu',lyRN:678,lyADR:8354,lyOcc:50,lyRev:5663874,otbRN:411,otbADR:6315,otbOcc:30,otbRev:2595465,puRev:192379,bdgtRN:710,bdgtADR:8400,bdgtOcc:52,bdgtRev:5964000,fcstRN:650,fcstADR:7362,fcstOcc:48,fcstRev:4785300},
+{mo:'May',h:'Santa Fé',lyRN:1145,lyADR:2280,lyOcc:61,lyRev:2610770,otbRN:208,otbADR:2756,otbOcc:11,otbRev:573248,puRev:94619,bdgtRN:1200,bdgtADR:2850,bdgtOcc:63,bdgtRev:3420000,fcstRN:1200,fcstADR:2500,fcstOcc:63,fcstRev:3000000},
+{mo:'May',h:'Tropicana',lyRN:654,lyADR:4330,lyOcc:30,lyRev:2832110,otbRN:502,otbADR:3941,otbOcc:23,otbRev:1978131,puRev:34262,bdgtRN:1100,bdgtADR:4260,bdgtOcc:51,bdgtRev:4686000,fcstRN:1000,fcstADR:4100,fcstOcc:46,fcstRev:4100000},
+{mo:'Jun',h:'Amomoxtli',lyRN:716,lyADR:6014,lyOcc:70,lyRev:4305702,otbRN:59,otbADR:5470,otbOcc:6,otbRev:322730,puRev:322730,bdgtRN:740,bdgtADR:6200,bdgtOcc:73,bdgtRev:4588000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Jun',h:'Anticavilla',lyRN:144,lyADR:4689,lyOcc:30,lyRev:675158,otbRN:4,otbADR:3967,otbOcc:1,otbRev:15868,puRev:15868,bdgtRN:189,bdgtADR:4961,bdgtOcc:39,bdgtRev:937629,fcstRN:162,fcstADR:4843,fcstOcc:34,fcstRev:784566},
+{mo:'Jun',h:'Boca de Agua',lyRN:153,lyADR:6619,lyOcc:23,lyRev:1012684,otbRN:20,otbADR:7910,otbOcc:3,otbRev:158200,puRev:0,bdgtRN:240,bdgtADR:5900,bdgtOcc:36,bdgtRev:1416000,fcstRN:165,fcstADR:5800,fcstOcc:25,fcstRev:957000},
+{mo:'Jun',h:'Casona',lyRN:412,lyADR:5649,lyOcc:43,lyRev:2327375,otbRN:41,otbADR:11867,otbOcc:4,otbRev:486547,puRev:194233,bdgtRN:815,bdgtADR:13500,bdgtOcc:85,bdgtRev:11002500,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Jun',h:'El Santuario',lyRN:1092,lyADR:5156,lyOcc:27,lyRev:5630337,otbRN:27,otbADR:6529,otbOcc:1,otbRev:176283,puRev:176283,bdgtRN:1210,bdgtADR:5200,bdgtOcc:30,bdgtRev:6292000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Jun',h:'MDS',lyRN:212,lyADR:4105,lyOcc:14,lyRev:870168,otbRN:6,otbADR:5553,otbOcc:0,otbRev:33318,puRev:33318,bdgtRN:320,bdgtADR:4150,bdgtOcc:21,bdgtRev:1328000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Jun',h:'Numu',lyRN:549,lyADR:5927,lyOcc:42,lyRev:3253878,otbRN:189,otbADR:6194,otbOcc:14,otbRev:1170666,puRev:69738,bdgtRN:660,bdgtADR:7000,bdgtOcc:50,bdgtRev:4620000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Jun',h:'Santa Fé',lyRN:694,lyADR:2397,lyOcc:38,lyRev:1663664,otbRN:64,otbADR:2692,otbOcc:3,otbRev:172288,puRev:23941,bdgtRN:1090,bdgtADR:3090,bdgtOcc:60,bdgtRev:3368100,fcstRN:700,fcstADR:2450,fcstOcc:38,fcstRev:1715000},
+{mo:'Jun',h:'Tropicana',lyRN:306,lyADR:2532,lyOcc:15,lyRev:774766,otbRN:108,otbADR:2794,otbOcc:5,otbRev:301698,puRev:15873,bdgtRN:920,bdgtADR:3100,bdgtOcc:44,bdgtRev:2852000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Jul',h:'Amomoxtli',lyRN:746,lyADR:6089,lyOcc:71,lyRev:4542105,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:750,bdgtADR:6050,bdgtOcc:71,bdgtRev:4537500,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Jul',h:'Anticavilla',lyRN:194,lyADR:4800,lyOcc:39,lyRev:931167,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:206,bdgtADR:4936,bdgtOcc:42,bdgtRev:1016816,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Jul',h:'Boca de Agua',lyRN:247,lyADR:5198,lyOcc:36,lyRev:1283973,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:240,bdgtADR:5900,bdgtOcc:35,bdgtRev:1416000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Jul',h:'Casona',lyRN:257,lyADR:6058,lyOcc:26,lyRev:1556869,otbRN:4,otbADR:6977,otbOcc:0,otbRev:57476,puRev:-67831,bdgtRN:600,bdgtADR:9405,bdgtOcc:60,bdgtRev:5643000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Jul',h:'Boca de Agua',lyRN:247,lyADR:5198,lyOcc:36,lyRev:1283973,otbRN:36,otbADR:7263,otbOcc:5,otbRev:261468,puRev:261468,bdgtRN:240,bdgtADR:5900,bdgtOcc:35,bdgtRev:1416000,fcstRN:205,fcstADR:5800,fcstOcc:30,fcstRev:1189000},
+{mo:'Jul',h:'Casona',lyRN:257,lyADR:6058,lyOcc:26,lyRev:1556869,otbRN:10,otbADR:5788,otbOcc:1,otbRev:118670,puRev:0,bdgtRN:600,bdgtADR:9405,bdgtOcc:60,bdgtRev:5643000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Jul',h:'El Santuario',lyRN:667,lyADR:5217,lyOcc:16,lyRev:3479483,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:1030,bdgtADR:5300,bdgtOcc:25,bdgtRev:5459000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Jul',h:'MDS',lyRN:293,lyADR:3757,lyOcc:19,lyRev:1100714,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:380,bdgtADR:3900,bdgtOcc:25,bdgtRev:1482000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Jul',h:'Numu',lyRN:453,lyADR:5889,lyOcc:33,lyRev:2667503,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:490,bdgtADR:6500,bdgtOcc:36,bdgtRev:3185000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Jul',h:'Santa Fé',lyRN:1134,lyADR:2553,lyOcc:60,lyRev:2894645,otbRN:63,otbADR:2321,otbOcc:3,otbRev:146254,puRev:146254,bdgtRN:1150,bdgtADR:3200,bdgtOcc:61,bdgtRev:3680000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Jul',h:'Tropicana',lyRN:562,lyADR:2841,lyOcc:26,lyRev:1596773,otbRN:62,otbADR:2387,otbOcc:3,otbRev:147963,puRev:5883,bdgtRN:1055,bdgtADR:2913,bdgtOcc:49,bdgtRev:3073215,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Jul',h:'Numu',lyRN:453,lyADR:5889,lyOcc:33,lyRev:2667503,otbRN:88,otbADR:6293,otbOcc:6,otbRev:553784,puRev:553784,bdgtRN:490,bdgtADR:6500,bdgtOcc:36,bdgtRev:3185000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Jul',h:'Santa Fé',lyRN:1134,lyADR:2553,lyOcc:60,lyRev:2894645,otbRN:94,otbADR:2842,otbOcc:5,otbRev:267148,puRev:7343,bdgtRN:1150,bdgtADR:3200,bdgtOcc:61,bdgtRev:3680000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Jul',h:'Tropicana',lyRN:562,lyADR:2841,lyOcc:26,lyRev:1596773,otbRN:65,otbADR:2572,otbOcc:3,otbRev:167148,puRev:12044,bdgtRN:1055,bdgtADR:2913,bdgtOcc:49,bdgtRev:3073215,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Aug',h:'Amomoxtli',lyRN:776,lyADR:6132,lyOcc:74,lyRev:4758502,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:790,bdgtADR:6200,bdgtOcc:75,bdgtRev:4898000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Aug',h:'Anticavilla',lyRN:127,lyADR:4951,lyOcc:26,lyRev:628810,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:160,bdgtADR:5149,bdgtOcc:32,bdgtRev:823840,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Aug',h:'Boca de Agua',lyRN:405,lyADR:4918,lyOcc:59,lyRev:1991628,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:290,bdgtADR:6000,bdgtOcc:43,bdgtRev:1740000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Aug',h:'Casona',lyRN:284,lyADR:6121,lyOcc:29,lyRev:1738421,otbRN:4,otbADR:7430,otbOcc:0,otbRev:29721,puRev:1,bdgtRN:360,bdgtADR:6500,bdgtOcc:36,bdgtRev:2340000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Aug',h:'Boca de Agua',lyRN:405,lyADR:4918,lyOcc:59,lyRev:1991628,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:290,bdgtADR:6000,bdgtOcc:43,bdgtRev:1740000,fcstRN:270,fcstADR:5900,fcstOcc:40,fcstRev:1593000},
+{mo:'Aug',h:'Casona',lyRN:284,lyADR:6121,lyOcc:29,lyRev:1738421,otbRN:4,otbADR:7430,otbOcc:0,otbRev:29720,puRev:0,bdgtRN:360,bdgtADR:6500,bdgtOcc:36,bdgtRev:2340000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Aug',h:'El Santuario',lyRN:783,lyADR:5420,lyOcc:19,lyRev:4243860,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:1050,bdgtADR:5300,bdgtOcc:25,bdgtRev:5565000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Aug',h:'MDS',lyRN:343,lyADR:3734,lyOcc:22,lyRev:1280762,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:330,bdgtADR:3900,bdgtOcc:21,bdgtRev:1287000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Aug',h:'Numu',lyRN:584,lyADR:6281,lyOcc:43,lyRev:3668139,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:500,bdgtADR:6300,bdgtOcc:37,bdgtRev:3150000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Aug',h:'Santa Fé',lyRN:993,lyADR:2493,lyOcc:53,lyRev:2475062,otbRN:111,otbADR:2322,otbOcc:6,otbRev:257778,puRev:257778,bdgtRN:1040,bdgtADR:3001,bdgtOcc:55,bdgtRev:3121040,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Aug',h:'Tropicana',lyRN:245,lyADR:2693,lyOcc:11,lyRev:659883,otbRN:29,otbADR:1906,otbOcc:1,otbRev:55260,puRev:-2091,bdgtRN:744,bdgtADR:2843,bdgtOcc:34,bdgtRev:2115192,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Aug',h:'Santa Fé',lyRN:993,lyADR:2493,lyOcc:53,lyRev:2475062,otbRN:122,otbADR:2852,otbOcc:6,otbRev:347944,puRev:0,bdgtRN:1040,bdgtADR:3001,bdgtOcc:55,bdgtRev:3121040,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Aug',h:'Tropicana',lyRN:245,lyADR:2693,lyOcc:11,lyRev:659883,otbRN:36,otbADR:2165,otbOcc:2,otbRev:77922,puRev:0,bdgtRN:744,bdgtADR:2843,bdgtOcc:34,bdgtRev:2115192,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Sep',h:'Amomoxtli',lyRN:633,lyADR:6292,lyOcc:62,lyRev:3982526,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:640,bdgtADR:6400,bdgtOcc:63,bdgtRev:4096000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Sep',h:'Anticavilla',lyRN:185,lyADR:4838,lyOcc:39,lyRev:895110,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:192,bdgtADR:4900,bdgtOcc:40,bdgtRev:940800,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Sep',h:'Boca de Agua',lyRN:152,lyADR:4087,lyOcc:24,lyRev:621203,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:280,bdgtADR:6000,bdgtOcc:44,bdgtRev:1680000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Sep',h:'Casona',lyRN:409,lyADR:6651,lyOcc:43,lyRev:2720087,otbRN:11,otbADR:7455,otbOcc:1,otbRev:82003,puRev:9,bdgtRN:486,bdgtADR:6714,bdgtOcc:51,bdgtRev:3263004,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Sep',h:'Boca de Agua',lyRN:152,lyADR:4087,lyOcc:24,lyRev:621203,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:280,bdgtADR:6000,bdgtOcc:44,bdgtRev:1680000,fcstRN:190,fcstADR:5900,fcstOcc:30,fcstRev:1121000},
+{mo:'Sep',h:'Casona',lyRN:409,lyADR:6651,lyOcc:43,lyRev:2720087,otbRN:11,otbADR:7454,otbOcc:1,otbRev:81994,puRev:0,bdgtRN:486,bdgtADR:6714,bdgtOcc:51,bdgtRev:3263004,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Sep',h:'El Santuario',lyRN:848,lyADR:5127,lyOcc:21,lyRev:4347696,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:1400,bdgtADR:5100,bdgtOcc:35,bdgtRev:7140000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Sep',h:'MDS',lyRN:266,lyADR:3926,lyOcc:18,lyRev:1044414,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:390,bdgtADR:4000,bdgtOcc:26,bdgtRev:1560000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Sep',h:'Numu',lyRN:638,lyADR:6354,lyOcc:48,lyRev:4054145,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:690,bdgtADR:6700,bdgtOcc:52,bdgtRev:4623000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Sep',h:'Santa Fé',lyRN:397,lyADR:2212,lyOcc:22,lyRev:878164,otbRN:34,otbADR:2872,otbOcc:2,otbRev:97659,puRev:97659,bdgtRN:960,bdgtADR:2900,bdgtOcc:52,bdgtRev:2784000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Sep',h:'Tropicana',lyRN:336,lyADR:2517,lyOcc:16,lyRev:845794,otbRN:21,otbADR:1129,otbOcc:1,otbRev:23699,puRev:0,bdgtRN:600,bdgtADR:2784,bdgtOcc:29,bdgtRev:1670400,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Sep',h:'Santa Fé',lyRN:397,lyADR:2212,lyOcc:22,lyRev:878164,otbRN:4,otbADR:2872,otbOcc:0,otbRev:11488,puRev:0,bdgtRN:960,bdgtADR:2900,bdgtOcc:52,bdgtRev:2784000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Sep',h:'Tropicana',lyRN:336,lyADR:2517,lyOcc:16,lyRev:845794,otbRN:98,otbADR:2646,otbOcc:5,otbRev:259259,puRev:222241,bdgtRN:600,bdgtADR:2784,bdgtOcc:29,bdgtRev:1670400,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Oct',h:'Amomoxtli',lyRN:684,lyADR:6718,lyOcc:65,lyRev:4595064,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:750,bdgtADR:6600,bdgtOcc:71,bdgtRev:4950000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Oct',h:'Anticavilla',lyRN:215,lyADR:4690,lyOcc:43,lyRev:1008415,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:230,bdgtADR:4696,bdgtOcc:46,bdgtRev:1080080,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Oct',h:'Boca de Agua',lyRN:194,lyADR:4543,lyOcc:30,lyRev:881332,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:330,bdgtADR:6300,bdgtOcc:51,bdgtRev:2079000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Oct',h:'Casona',lyRN:739,lyADR:7564,lyOcc:74,lyRev:5589678,otbRN:29,otbADR:7204,otbOcc:3,otbRev:208921,puRev:5,bdgtRN:740,bdgtADR:9017,bdgtOcc:75,bdgtRev:6672580,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Oct',h:'Boca de Agua',lyRN:194,lyADR:4543,lyOcc:30,lyRev:881332,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:330,bdgtADR:6300,bdgtOcc:51,bdgtRev:2079000,fcstRN:260,fcstADR:6000,fcstOcc:40,fcstRev:1560000},
+{mo:'Oct',h:'Casona',lyRN:739,lyADR:7564,lyOcc:74,lyRev:5589678,otbRN:58,otbADR:8837,otbOcc:6,otbRev:512546,puRev:110741,bdgtRN:740,bdgtADR:9017,bdgtOcc:75,bdgtRev:6672580,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Oct',h:'El Santuario',lyRN:1096,lyADR:4917,lyOcc:26,lyRev:5388933,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:1650,bdgtADR:5200,bdgtOcc:40,bdgtRev:8580000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Oct',h:'MDS',lyRN:444,lyADR:3816,lyOcc:29,lyRev:1694295,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:570,bdgtADR:4300,bdgtOcc:37,bdgtRev:2451000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Oct',h:'Numu',lyRN:681,lyADR:8090,lyOcc:50,lyRev:5508956,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:750,bdgtADR:8300,bdgtOcc:55,bdgtRev:6225000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Oct',h:'Santa Fé',lyRN:644,lyADR:2158,lyOcc:34,lyRev:1389829,otbRN:50,otbADR:3032,otbOcc:3,otbRev:151619,puRev:151619,bdgtRN:1067,bdgtADR:3390,bdgtOcc:56,bdgtRev:3617130,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Oct',h:'Tropicana',lyRN:583,lyADR:2508,lyOcc:27,lyRev:1462071,otbRN:32,otbADR:2572,otbOcc:1,otbRev:82288,puRev:11100,bdgtRN:1200,bdgtADR:3250,bdgtOcc:55,bdgtRev:3900000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Oct',h:'Santa Fé',lyRN:644,lyADR:2158,lyOcc:34,lyRev:1389829,otbRN:19,otbADR:3032,otbOcc:1,otbRev:57608,puRev:0,bdgtRN:1067,bdgtADR:3390,bdgtOcc:56,bdgtRev:3617130,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Oct',h:'Tropicana',lyRN:583,lyADR:2508,lyOcc:27,lyRev:1462071,otbRN:82,otbADR:3164,otbOcc:4,otbRev:259407,puRev:93092,bdgtRN:1200,bdgtADR:3250,bdgtOcc:55,bdgtRev:3900000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Nov',h:'Amomoxtli',lyRN:757,lyADR:6622,lyOcc:74,lyRev:5012491,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:730,bdgtADR:6850,bdgtOcc:72,bdgtRev:5000500,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Nov',h:'Anticavilla',lyRN:242,lyADR:4882,lyOcc:50,lyRev:1181335,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:260,bdgtADR:4794,bdgtOcc:54,bdgtRev:1246440,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Nov',h:'Boca de Agua',lyRN:285,lyADR:5787,lyOcc:43,lyRev:1649272,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:450,bdgtADR:7500,bdgtOcc:68,bdgtRev:3375000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Nov',h:'Casona',lyRN:696,lyADR:7047,lyOcc:73,lyRev:4904406,otbRN:24,otbADR:7470,otbOcc:3,otbRev:179283,puRev:3,bdgtRN:744,bdgtADR:8202,bdgtOcc:78,bdgtRev:6102288,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Nov',h:'Boca de Agua',lyRN:285,lyADR:5787,lyOcc:43,lyRev:1649272,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:450,bdgtADR:7500,bdgtOcc:68,bdgtRev:3375000,fcstRN:300,fcstADR:7300,fcstOcc:45,fcstRev:2190000},
+{mo:'Nov',h:'Casona',lyRN:696,lyADR:7047,lyOcc:73,lyRev:4904406,otbRN:25,otbADR:7807,otbOcc:3,otbRev:195175,puRev:0,bdgtRN:744,bdgtADR:8202,bdgtOcc:78,bdgtRev:6102288,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Nov',h:'El Santuario',lyRN:1642,lyADR:5004,lyOcc:41,lyRev:8216683,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:1600,bdgtADR:5300,bdgtOcc:40,bdgtRev:8480000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Nov',h:'MDS',lyRN:522,lyADR:3645,lyOcc:35,lyRev:1902476,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:680,bdgtADR:4300,bdgtOcc:45,bdgtRev:2924000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Nov',h:'Numu',lyRN:768,lyADR:8773,lyOcc:58,lyRev:6737626,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:860,bdgtADR:8700,bdgtOcc:65,bdgtRev:7482000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Nov',h:'Santa Fé',lyRN:1289,lyADR:2464,lyOcc:70,lyRev:3176096,otbRN:105,otbADR:3131,otbOcc:6,otbRev:328769,puRev:328769,bdgtRN:1290,bdgtADR:3680,bdgtOcc:70,bdgtRev:4747200,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Nov',h:'Tropicana',lyRN:1083,lyADR:3356,lyOcc:52,lyRev:3634635,otbRN:216,otbADR:3589,otbOcc:10,otbRev:775224,puRev:511266,bdgtRN:1450,bdgtADR:3960,bdgtOcc:69,bdgtRev:5742000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Nov',h:'Santa Fé',lyRN:1289,lyADR:2464,lyOcc:70,lyRev:3176096,otbRN:121,otbADR:1797,otbOcc:7,otbRev:217437,puRev:8459,bdgtRN:1290,bdgtADR:3680,bdgtOcc:70,bdgtRev:4747200,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Nov',h:'Tropicana',lyRN:1083,lyADR:3356,lyOcc:52,lyRev:3634635,otbRN:671,otbADR:3663,otbOcc:32,otbRev:2457873,puRev:1480,bdgtRN:1450,bdgtADR:3960,bdgtOcc:69,bdgtRev:5742000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Dec',h:'Amomoxtli',lyRN:661,lyADR:7219,lyOcc:63,lyRev:4771700,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:770,bdgtADR:6980,bdgtOcc:73,bdgtRev:5374600,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Dec',h:'Anticavilla',lyRN:191,lyADR:5123,lyOcc:39,lyRev:978482,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:270,bdgtADR:5100,bdgtOcc:54,bdgtRev:1377000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Dec',h:'Boca de Agua',lyRN:345,lyADR:8208,lyOcc:51,lyRev:2831760,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:410,bdgtADR:10800,bdgtOcc:60,bdgtRev:4428000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Dec',h:'Casona',lyRN:632,lyADR:6982,lyOcc:64,lyRev:4412725,otbRN:5,otbADR:8110,otbOcc:1,otbRev:40550,puRev:5,bdgtRN:680,bdgtADR:7550,bdgtOcc:69,bdgtRev:5134000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Dec',h:'Boca de Agua',lyRN:345,lyADR:8208,lyOcc:51,lyRev:2831760,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:410,bdgtADR:10800,bdgtOcc:60,bdgtRev:4428000,fcstRN:350,fcstADR:10000,fcstOcc:51,fcstRev:3500000},
+{mo:'Dec',h:'Casona',lyRN:632,lyADR:6982,lyOcc:64,lyRev:4412725,otbRN:5,otbADR:8109,otbOcc:1,otbRev:40545,puRev:0,bdgtRN:680,bdgtADR:7550,bdgtOcc:69,bdgtRev:5134000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Dec',h:'El Santuario',lyRN:945,lyADR:5335,lyOcc:23,lyRev:5041103,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:1450,bdgtADR:6000,bdgtOcc:35,bdgtRev:8700000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Dec',h:'MDS',lyRN:346,lyADR:3828,lyOcc:22,lyRev:1324602,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:470,bdgtADR:4350,bdgtOcc:30,bdgtRev:2044500,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
 {mo:'Dec',h:'Numu',lyRN:750,lyADR:8852,lyOcc:55,lyRev:6638625,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:720,bdgtADR:9800,bdgtOcc:53,bdgtRev:7056000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Dec',h:'Santa Fé',lyRN:1319,lyADR:3046,lyOcc:70,lyRev:4017674,otbRN:36,otbADR:3231,otbOcc:2,otbRev:116303,puRev:116303,bdgtRN:1300,bdgtADR:3900,bdgtOcc:69,bdgtRev:5070000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
-{mo:'Dec',h:'Tropicana',lyRN:1374,lyADR:3929,lyOcc:63,lyRev:5398487,otbRN:139,otbADR:3904,otbOcc:6,otbRev:542587,puRev:66619,bdgtRN:1480,bdgtADR:4230,bdgtOcc:68,bdgtRev:6260400,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0}
+{mo:'Dec',h:'Santa Fé',lyRN:1319,lyADR:3046,lyOcc:70,lyRev:4017674,otbRN:7,otbADR:3230,otbOcc:0,otbRev:22610,puRev:0,bdgtRN:1300,bdgtADR:3900,bdgtOcc:69,bdgtRev:5070000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Dec',h:'Tropicana',lyRN:1374,lyADR:3929,lyOcc:63,lyRev:5398487,otbRN:554,otbADR:3645,otbOcc:26,otbRev:2019053,puRev:6623,bdgtRN:1480,bdgtADR:4230,bdgtOcc:68,bdgtRev:6260400,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0}
 ];
 
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -773,8 +765,6 @@ function renderKPIs(){
     {l:'OTB Revenue 2026',v:fmtM(otbRev),d:`${otbRev&&lyRev?((otbRev/lyRev*100).toFixed(0)):'0'}% del LY · ADR: ${fmtA(otbADR)}`,cls:otbRev>lyRev?'up':'neu',c:'#0284c7'},
     {l:'Budget Revenue',v:fmtM(bdgtRev),d:`ADR: ${fmtA(bdgtADR)} · Occ: ${bdgtOcc}%`,cls:'neu',c:'#7c3aed'},
     {l:'FCST Revenue',v:fmtM(fcstRev),d:`${lyRev?((fcstRev/lyRev-1)*100).toFixed(1):0}% vs LY · ${bdgtRev?Math.round(fcstRev/bdgtRev*100):0}% del BDGT`,cls:fcstRev>=bdgtRev?'up':'dn',c:col},
-    {l:'Ocupación OTB vs BDGT',v:otbOcc+'%',d:`BDGT: ${bdgtOcc}% · FCST: ${fcstOcc||bdgtOcc}%`,cls:otbOcc>=bdgtOcc?'up':'dn',c:col},
-    {l:'Pickup 7D Rev',v:fmtM(puTot),d:puTot>=0?'↑ señal positiva':'↓ señal negativa',cls:puTot>=0?'up':'dn',c:puTot>=0?'#059669':'#e11d48'},
   ];
   document.getElementById('kpi-strip').innerHTML=kpis.map(k=>`<div class="kpi anim" style="--kpi-color:${k.c}"><div class="kpi-lbl">${k.l}</div><div class="kpi-val">${k.v}</div><div class="kpi-delta ${k.cls}">${k.d}</div></div>`).join('')
 }
@@ -922,49 +912,190 @@ function renderADRDelta(){
 }
 
 function renderTabla(){
-  const bm=byMonth();const el=document.getElementById('dtbl');if(!el)return;
-  const tot={lyRN:sm(bm,'lyRN'),lyADR:av(bm,'lyADR'),lyOcc:av(bm,'lyOcc'),lyRev:sm(bm,'lyRev'),otbRN:sm(bm,'otbRN'),otbADR:av(bm.filter(d=>d.otbADR>0),'otbADR'),otbOcc:av(bm,'otbOcc'),otbRev:sm(bm,'otbRev'),bdgtRev:sm(bm,'bdgtRev'),fcstRev:sm(bm,'fcstRev'),puRev:sm(bm,'puRev')};
+  const el=document.getElementById('dtbl');if(!el)return;
+  const mos=[...activeMos].sort((a,b)=>MONTHS.indexOf(a)-MONTHS.indexOf(b));
   const sep='border-left:2px solid var(--border2);';
-  el.innerHTML=`
-  <thead>
-    <tr style="border-bottom:none">
-      <th></th>
-      <th colspan="4" style="text-align:center;color:#94a3b8;background:#f8f9fa;border-radius:6px 0 0 0;padding-bottom:4px">LY 2025</th>
-      <th colspan="4" style="text-align:center;color:#0284c7;background:#eff8ff;padding-bottom:4px;${sep}">OTB 2026</th>
-      <th colspan="1" style="text-align:center;color:#475569;background:#f8f9fa;padding-bottom:4px;${sep}">BDGT</th>
-      <th colspan="1" style="text-align:center;color:#d97706;background:#fffbeb;padding-bottom:4px;${sep}">FCST</th>
-      <th colspan="1" style="text-align:center;color:#059669;background:#f0fdf4;padding-bottom:4px;${sep}">Pickup</th>
-    </tr>
-    <tr>
-      <th>Mes</th>
-      <th>RN</th><th>ADR</th><th>Occ</th><th>Rev</th>
-      <th style="${sep}">RN</th><th>ADR</th><th>Occ</th><th>Rev</th>
-      <th style="${sep}">Rev</th>
-      <th style="${sep}">Rev</th>
-      <th style="${sep}">7d Rev</th>
-    </tr>
-  </thead>
-  <tbody>
-    ${bm.map(d=>{const ref=d.fcstRev||d.bdgtRev,pu=d.puRev;return`<tr>
-      <td>${d.mo}</td>
-      <td>${d.lyRN.toLocaleString()}</td><td>${fmtA(d.lyADR)}</td><td>${d.lyOcc}%</td><td>${fmtM(d.lyRev)}</td>
-      <td style="color:#0284c7;${sep}">${d.otbRN.toLocaleString()}</td><td style="color:#0284c7">${d.otbADR?fmtA(d.otbADR):'—'}</td><td style="color:#0284c7">${d.otbOcc}%</td><td style="color:#0284c7">${fmtM(d.otbRev)}</td>
-      <td style="${sep}">${fmtM(d.bdgtRev)}</td>
-      <td style="color:#d97706;${sep}">${ref?fmtM(ref):'—'}</td>
-      <td style="${sep}"><span class="badge ${pu>=0?'b-up':'b-dn'}">${pu?fmtM(pu):'—'}</span></td>
-    </tr>`}).join('')}
-    <tr class="total-row">
-      <td>TOTAL</td>
-      <td>${tot.lyRN.toLocaleString()}</td><td>${fmtA(tot.lyADR)}</td><td>${tot.lyOcc}%</td><td>${fmtM(tot.lyRev)}</td>
-      <td style="${sep}">${tot.otbRN.toLocaleString()}</td><td>${fmtA(tot.otbADR)}</td><td>${tot.otbOcc}%</td><td>${fmtM(tot.otbRev)}</td>
-      <td style="${sep}">${fmtM(tot.bdgtRev)}</td>
-      <td style="${sep}">${fmtM(tot.fcstRev||tot.bdgtRev)}</td>
-      <td style="${sep}"><span class="badge ${tot.puRev>=0?'b-up':'b-dn'}">${fmtM(tot.puRev)}</span></td>
-    </tr>
-  </tbody>`;
+  const hotelsToShow = curHotel==='all' ? HOTELS_ALL_LIST : [curHotel];
+
+  // Column header HTML reused per hotel block
+  // LY: ADR · Occ · Rev | OTB: ADR · Occ · Rev | BDGT: ADR · Occ · Rev | FCST: ADR · Occ · Rev
+  const colHeader=()=>`
+    <tr style="background:#f8f9fa">
+      <th style="min-width:80px;font-size:9px;color:var(--dim);font-weight:500;padding:5px 8px;border-bottom:1px solid var(--border2)">Mes</th>
+      <th style="font-size:9px;color:#94a3b8;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">ADR LY</th>
+      <th style="font-size:9px;color:#94a3b8;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">Occ LY</th>
+      <th style="font-size:9px;color:#94a3b8;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">Rev LY</th>
+      <th style="font-size:9px;color:#0284c7;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2);${sep}">ADR OTB</th>
+      <th style="font-size:9px;color:#0284c7;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">Occ OTB</th>
+      <th style="font-size:9px;color:#0284c7;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">Rev OTB</th>
+      <th style="font-size:9px;color:#475569;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2);${sep}">ADR Bdgt</th>
+      <th style="font-size:9px;color:#475569;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">Occ Bdgt</th>
+      <th style="font-size:9px;color:#475569;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">Rev Bdgt</th>
+      <th style="font-size:9px;color:#d97706;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2);${sep}">ADR Fcst</th>
+      <th style="font-size:9px;color:#d97706;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">Occ Fcst</th>
+      <th style="font-size:9px;color:#d97706;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">Rev Fcst</th>
+    </tr>`;
+
+  let html='<thead></thead><tbody>';
+
+  const grand={lyRev:0,lyADRs:[],lyOccs:[],otbRev:0,otbADRs:[],otbOccs:[],bdgtRev:0,bdgtADRs:[],bdgtOccs:[],fcstRev:0,fcstADRs:[],fcstOccs:[]};
+
+  hotelsToShow.forEach((h,hi)=>{
+    const col=H_COLORS[h]||'#94a3b8';
+    const hRows=RAW.filter(r=>r.h===h&&mos.includes(r.mo))
+      .sort((a,b)=>MONTHS.indexOf(a.mo)-MONTHS.indexOf(b.mo));
+    if(!hRows.length) return;
+
+    // Spacing between hotel blocks (except first)
+    if(hi>0) html+=`<tr><td colspan="13" style="padding:6px 0;background:var(--bg);border:none"></td></tr>`;
+
+    // Hotel name row — full width, styled as card header
+    html+=`<tr>
+      <td colspan="13" style="padding:10px 12px 0;background:#fff;border-top:2px solid ${col};border-bottom:none">
+        <span style="display:inline-flex;align-items:center;gap:8px;font-family:'IBM Plex Sans',sans-serif;font-size:13px;font-weight:700;color:#1e2535">
+          <span style="width:10px;height:10px;border-radius:50%;background:${col};flex-shrink:0;display:inline-block"></span>
+          ${h}
+        </span>
+      </td>
+    </tr>`;
+
+    // Column headers right below hotel name
+    html+=colHeader();
+
+    const ht={lyRev:0,lyADRs:[],lyOccs:[],otbRev:0,otbADRs:[],otbOccs:[],bdgtRev:0,bdgtADRs:[],bdgtOccs:[],fcstRev:0,fcstADRs:[],fcstOccs:[]};
+
+    hRows.forEach(d=>{
+      const fcst=d.fcstRev||0;
+      html+=`<tr>
+        <td style="padding-left:14px;font-size:11px;color:var(--text);font-weight:500">${d.mo}</td>
+        <td>${fmtA(d.lyADR)}</td><td>${d.lyOcc}%</td><td>${fmtM(d.lyRev)}</td>
+        <td style="color:#0284c7;${sep}">${d.otbADR?fmtA(d.otbADR):'—'}</td><td style="color:#0284c7">${d.otbOcc}%</td><td style="color:#0284c7">${fmtM(d.otbRev)}</td>
+        <td style="${sep}">${d.bdgtADR?fmtA(d.bdgtADR):'—'}</td><td>${d.bdgtOcc||0}%</td><td>${fmtM(d.bdgtRev)}</td>
+        <td style="color:#d97706;${sep}">${d.fcstADR?fmtA(d.fcstADR):'—'}</td><td style="color:#d97706">${d.fcstOcc||0}%</td><td style="color:#d97706">${fcst?fmtM(fcst):'—'}</td>
+      </tr>`;
+      ht.lyRev+=d.lyRev; if(d.lyADR>0)ht.lyADRs.push(d.lyADR); if(d.lyOcc>0)ht.lyOccs.push(d.lyOcc);
+      ht.otbRev+=d.otbRev; if(d.otbADR>0)ht.otbADRs.push(d.otbADR); if(d.otbOcc>0)ht.otbOccs.push(d.otbOcc);
+      ht.bdgtRev+=d.bdgtRev; if(d.bdgtADR>0)ht.bdgtADRs.push(d.bdgtADR); if(d.bdgtOcc>0)ht.bdgtOccs.push(d.bdgtOcc);
+      ht.fcstRev+=fcst; if(d.fcstADR>0)ht.fcstADRs.push(d.fcstADR); if(d.fcstOcc>0)ht.fcstOccs.push(d.fcstOcc);
+    });
+
+    // Hotel subtotal row
+    const avg=arr=>arr.length?Math.round(arr.reduce((a,b)=>a+b,0)/arr.length):0;
+    const hlyADR=avg(ht.lyADRs), hlyOcc=avg(ht.lyOccs);
+    const hotbADR=avg(ht.otbADRs), hotbOcc=avg(ht.otbOccs);
+    const hbdgtADR=avg(ht.bdgtADRs), hbdgtOcc=avg(ht.bdgtOccs);
+    const hfcstADR=avg(ht.fcstADRs), hfcstOcc=avg(ht.fcstOccs);
+    html+=`<tr style="background:${col}18;border-top:1px solid ${col}55">
+      <td style="font-weight:700;font-size:11px;color:${col};padding-left:14px">Total ${h}</td>
+      <td style="font-weight:600">${fmtA(hlyADR)}</td><td style="font-weight:600">${hlyOcc}%</td><td style="font-weight:600">${fmtM(ht.lyRev)}</td>
+      <td style="color:#0284c7;font-weight:600;${sep}">${fmtA(hotbADR)}</td><td style="color:#0284c7;font-weight:600">${hotbOcc}%</td><td style="color:#0284c7;font-weight:600">${fmtM(ht.otbRev)}</td>
+      <td style="font-weight:600;${sep}">${fmtA(hbdgtADR)}</td><td style="font-weight:600">${hbdgtOcc}%</td><td style="font-weight:600">${fmtM(ht.bdgtRev)}</td>
+      <td style="color:#d97706;font-weight:600;${sep}">${fmtA(hfcstADR)}</td><td style="color:#d97706;font-weight:600">${hfcstOcc}%</td><td style="color:#d97706;font-weight:600">${ht.fcstRev?fmtM(ht.fcstRev):'—'}</td>
+    </tr>`;
+
+    grand.lyRev+=ht.lyRev; grand.lyADRs.push(...ht.lyADRs); grand.lyOccs.push(...ht.lyOccs);
+    grand.otbRev+=ht.otbRev; grand.otbADRs.push(...ht.otbADRs); grand.otbOccs.push(...ht.otbOccs);
+    grand.bdgtRev+=ht.bdgtRev; grand.bdgtADRs.push(...ht.bdgtADRs); grand.bdgtOccs.push(...ht.bdgtOccs);
+    grand.fcstRev+=ht.fcstRev; grand.fcstADRs.push(...ht.fcstADRs); grand.fcstOccs.push(...ht.fcstOccs);
+  });
+
+  if(hotelsToShow.length>1){
+    const avg=arr=>arr.length?Math.round(arr.reduce((a,b)=>a+b,0)/arr.length):0;
+    const glyADR=avg(grand.lyADRs), glyOcc=avg(grand.lyOccs);
+    const gotbADR=avg(grand.otbADRs), gotbOcc=avg(grand.otbOccs);
+    const gbdgtADR=avg(grand.bdgtADRs), gbdgtOcc=avg(grand.bdgtOccs);
+    const gfcstADR=avg(grand.fcstADRs), gfcstOcc=avg(grand.fcstOccs);
+    html+=`<tr><td colspan="13" style="padding:6px 0;background:var(--bg);border:none"></td></tr>`;
+    html+=`<tr class="total-row">
+      <td>TOTAL PORTFOLIO</td>
+      <td>${fmtA(glyADR)}</td><td>${glyOcc}%</td><td>${fmtM(grand.lyRev)}</td>
+      <td style="${sep}">${fmtA(gotbADR)}</td><td>${gotbOcc}%</td><td>${fmtM(grand.otbRev)}</td>
+      <td style="${sep}">${fmtA(gbdgtADR)}</td><td>${gbdgtOcc}%</td><td>${fmtM(grand.bdgtRev)}</td>
+      <td style="${sep}">${fmtA(gfcstADR)}</td><td>${gfcstOcc}%</td><td>${grand.fcstRev?fmtM(grand.fcstRev):'—'}</td>
+    </tr>`;
+  }
+
+  html+='</tbody>';
+  el.innerHTML=html;
 }
 
 const HOTELS_ALL_LIST=['Amomoxtli','Anticavilla','Boca de Agua','Casona','El Santuario','MDS','Numu','Santa Fé','Tropicana'];
+
+function renderTabla2(){
+  const el=document.getElementById('dtbl2');if(!el)return;
+  const mos=[...activeMos].sort((a,b)=>MONTHS.indexOf(a)-MONTHS.indexOf(b));
+  const sep='border-left:2px solid var(--border2);';
+  const hotelsToShow=curHotel==='all'?HOTELS_ALL_LIST:[curHotel];
+  const colHeader=()=>`
+    <tr style="background:#f8f9fa">
+      <th style="min-width:80px;font-size:9px;color:var(--dim);font-weight:500;padding:5px 8px;border-bottom:1px solid var(--border2)">Mes</th>
+      <th style="font-size:9px;color:#94a3b8;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">ADR LY</th>
+      <th style="font-size:9px;color:#94a3b8;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">Occ LY</th>
+      <th style="font-size:9px;color:#94a3b8;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">Rev LY</th>
+      <th style="font-size:9px;color:#0284c7;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2);${sep}">ADR OTB</th>
+      <th style="font-size:9px;color:#0284c7;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">Occ OTB</th>
+      <th style="font-size:9px;color:#0284c7;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">Rev OTB</th>
+      <th style="font-size:9px;color:#475569;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2);${sep}">ADR Bdgt</th>
+      <th style="font-size:9px;color:#475569;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">Occ Bdgt</th>
+      <th style="font-size:9px;color:#475569;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">Rev Bdgt</th>
+      <th style="font-size:9px;color:#d97706;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2);${sep}">ADR Fcst</th>
+      <th style="font-size:9px;color:#d97706;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">Occ Fcst</th>
+      <th style="font-size:9px;color:#d97706;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">Rev Fcst</th>
+    </tr>`;
+  let html='<thead></thead><tbody>';
+  const grand={lyRev:0,lyADRs:[],lyOccs:[],otbRev:0,otbADRs:[],otbOccs:[],bdgtRev:0,bdgtADRs:[],bdgtOccs:[],fcstRev:0,fcstADRs:[],fcstOccs:[]};
+  hotelsToShow.forEach((h,hi)=>{
+    const col=H_COLORS[h]||'#94a3b8';
+    const hRows=RAW.filter(r=>r.h===h&&mos.includes(r.mo)).sort((a,b)=>MONTHS.indexOf(a.mo)-MONTHS.indexOf(b.mo));
+    if(!hRows.length) return;
+    if(hi>0) html+=`<tr><td colspan="13" style="padding:6px 0;background:var(--bg);border:none"></td></tr>`;
+    html+=`<tr><td colspan="13" style="padding:10px 12px 0;background:#fff;border-top:2px solid ${col};border-bottom:none">
+      <span style="display:inline-flex;align-items:center;gap:8px;font-family:'IBM Plex Sans',sans-serif;font-size:13px;font-weight:700;color:#1e2535">
+        <span style="width:10px;height:10px;border-radius:50%;background:${col};flex-shrink:0;display:inline-block"></span>${h}
+      </span></td></tr>`;
+    html+=colHeader();
+    const ht={lyRev:0,lyADRs:[],lyOccs:[],otbRev:0,otbADRs:[],otbOccs:[],bdgtRev:0,bdgtADRs:[],bdgtOccs:[],fcstRev:0,fcstADRs:[],fcstOccs:[]};
+    hRows.forEach(d=>{
+      const fcst=d.fcstRev||0;
+      html+=`<tr>
+        <td style="padding-left:14px;font-size:11px;color:var(--text);font-weight:500">${d.mo}</td>
+        <td>${fmtA(d.lyADR)}</td><td>${d.lyOcc}%</td><td>${fmtM(d.lyRev)}</td>
+        <td style="color:#0284c7;${sep}">${d.otbADR?fmtA(d.otbADR):'—'}</td><td style="color:#0284c7">${d.otbOcc}%</td><td style="color:#0284c7">${fmtM(d.otbRev)}</td>
+        <td style="${sep}">${d.bdgtADR?fmtA(d.bdgtADR):'—'}</td><td>${d.bdgtOcc||0}%</td><td>${fmtM(d.bdgtRev)}</td>
+        <td style="color:#d97706;${sep}">${d.fcstADR?fmtA(d.fcstADR):'—'}</td><td style="color:#d97706">${d.fcstOcc||0}%</td><td style="color:#d97706">${fcst?fmtM(fcst):'—'}</td>
+      </tr>`;
+      ht.lyRev+=d.lyRev; if(d.lyADR>0)ht.lyADRs.push(d.lyADR); if(d.lyOcc>0)ht.lyOccs.push(d.lyOcc);
+      ht.otbRev+=d.otbRev; if(d.otbADR>0)ht.otbADRs.push(d.otbADR); if(d.otbOcc>0)ht.otbOccs.push(d.otbOcc);
+      ht.bdgtRev+=d.bdgtRev; if(d.bdgtADR>0)ht.bdgtADRs.push(d.bdgtADR); if(d.bdgtOcc>0)ht.bdgtOccs.push(d.bdgtOcc);
+      ht.fcstRev+=fcst; if(d.fcstADR>0)ht.fcstADRs.push(d.fcstADR); if(d.fcstOcc>0)ht.fcstOccs.push(d.fcstOcc);
+    });
+    const avg=arr=>arr.length?Math.round(arr.reduce((a,b)=>a+b,0)/arr.length):0;
+    html+=`<tr style="background:${col}18;border-top:1px solid ${col}55">
+      <td style="font-weight:700;font-size:11px;color:${col};padding-left:14px">Total ${h}</td>
+      <td style="font-weight:600">${fmtA(avg(ht.lyADRs))}</td><td style="font-weight:600">${avg(ht.lyOccs)}%</td><td style="font-weight:600">${fmtM(ht.lyRev)}</td>
+      <td style="color:#0284c7;font-weight:600;${sep}">${fmtA(avg(ht.otbADRs))}</td><td style="color:#0284c7;font-weight:600">${avg(ht.otbOccs)}%</td><td style="color:#0284c7;font-weight:600">${fmtM(ht.otbRev)}</td>
+      <td style="font-weight:600;${sep}">${fmtA(avg(ht.bdgtADRs))}</td><td style="font-weight:600">${avg(ht.bdgtOccs)}%</td><td style="font-weight:600">${fmtM(ht.bdgtRev)}</td>
+      <td style="color:#d97706;font-weight:600;${sep}">${fmtA(avg(ht.fcstADRs))}</td><td style="color:#d97706;font-weight:600">${avg(ht.fcstOccs)}%</td><td style="color:#d97706;font-weight:600">${ht.fcstRev?fmtM(ht.fcstRev):'—'}</td>
+    </tr>`;
+    grand.lyRev+=ht.lyRev; grand.lyADRs.push(...ht.lyADRs); grand.lyOccs.push(...ht.lyOccs);
+    grand.otbRev+=ht.otbRev; grand.otbADRs.push(...ht.otbADRs); grand.otbOccs.push(...ht.otbOccs);
+    grand.bdgtRev+=ht.bdgtRev; grand.bdgtADRs.push(...ht.bdgtADRs); grand.bdgtOccs.push(...ht.bdgtOccs);
+    grand.fcstRev+=ht.fcstRev; grand.fcstADRs.push(...ht.fcstADRs); grand.fcstOccs.push(...ht.fcstOccs);
+  });
+  if(hotelsToShow.length>1){
+    const avg=arr=>arr.length?Math.round(arr.reduce((a,b)=>a+b,0)/arr.length):0;
+    html+=`<tr><td colspan="13" style="padding:6px 0;background:var(--bg);border:none"></td></tr>`;
+    html+=`<tr class="total-row">
+      <td>TOTAL PORTFOLIO</td>
+      <td>${fmtA(avg(grand.lyADRs))}</td><td>${avg(grand.lyOccs)}%</td><td>${fmtM(grand.lyRev)}</td>
+      <td style="${sep}">${fmtA(avg(grand.otbADRs))}</td><td>${avg(grand.otbOccs)}%</td><td>${fmtM(grand.otbRev)}</td>
+      <td style="${sep}">${fmtA(avg(grand.bdgtADRs))}</td><td>${avg(grand.bdgtOccs)}%</td><td>${fmtM(grand.bdgtRev)}</td>
+      <td style="${sep}">${fmtA(avg(grand.fcstADRs))}</td><td>${avg(grand.fcstOccs)}%</td><td>${grand.fcstRev?fmtM(grand.fcstRev):'—'}</td>
+    </tr>`;
+  }
+  html+='</tbody>';
+  el.innerHTML=html;
+}
 let activeJuntaHotels=new Set(HOTELS_ALL_LIST);
 
 function toggleJuntaHotel(h){
@@ -1066,40 +1197,43 @@ const PU_WEEKS=[
   {id:'W08',label:'23 Feb–1 Mar'},
   {id:'W09',label:'02–08 Mar'},
   {id:'W10',label:'09–15 Mar'},
+  {id:'W11',label:'16–22 Mar'},
+  {id:'W12',label:'23–29 Mar'},
+  {id:'W13',label:'30 Mar–05 Abr'},
 ];
 const PU_RAW={
   rev:{
-    'Amomoxtli':   [92641,159268,177311,158490,173474,138053,184620,179633,108083,165888,248520],
-    'Anticavilla': [20942,46372,26076,50887,68166,70288,18944,36343,21015,19271,23762],
-    'Boca de Agua':[52051,59956,52418,64473,98346,57184,58584,38567,17910,56269,14315],
-    'Casona':      [151703,164624,226591,169560,174682,82602,126823,138496,-13946,60120,5954],
-    'El Santuario':[242612,227585,326572,377088,350546,104548,132120,212745,150007,287710,264906],
-    'MDS':         [54966,74130,91599,59826,46099,25531,43231,67242,33589,52482,28527],
-    'Numu':        [161838,226760,292903,197984,324025,76083,206859,136086,-2030,187722,155096],
-    'Santa Fé':    [67547,167379,66845,81864,64131,97514,284869,114836,58382,77327,59766],
-    'Tropicana':   [-71535,128709,127224,187608,120868,96911,128339,95784,70467,64533,75363],
+    'Amomoxtli':   [92641,159268,177311,158490,173474,138053,184620,179633,108083,165888,248520,142811,235515,137770],
+    'Anticavilla': [20942,46372,26076,50887,68166,70288,18944,36343,21015,19271,23762,22292,53131,36610],
+    'Boca de Agua':[52051,59956,52418,64473,98346,57184,58584,38567,17910,56269,14315,41884,36278,57700],
+    'Casona':      [151703,164624,226591,169560,174682,82602,126823,138496,-13946,60120,107167,53583,58243,76989],
+    'El Santuario':[242612,227585,326572,377088,350546,104548,132120,212745,150007,287710,264906,239124,251172,266088],
+    'MDS':         [54966,74130,91599,59826,46099,25531,43231,67242,33589,52482,28527,32250,31429,26355],
+    'Numu':        [161838,226760,292903,197984,324025,76083,206859,136086,-2030,187722,155096,123072,63508,111354],
+    'Santa Fé':    [67547,167379,66845,81864,64131,97514,284869,114836,58382,77327,59766,85013,64579,40870],
+    'Tropicana':   [-71535,128709,127224,187608,120868,96911,128339,95784,70467,64533,75363,103393,132588,60674],
   },
   rn:{
-    'Amomoxtli':   [12,28,23,21,21,15,15,23,14,20,42],
-    'Anticavilla': [3,7,4,7,7,4,9,5,3,3,4],
-    'Boca de Agua':[8,8,8,9,12,9,11,4,5,10,2],
-    'Casona':      [19,20,25,22,20,15,9,17,-1,8,13],
-    'El Santuario':[46,50,46,64,59,16,22,37,23,55,49],
-    'MDS':         [14,18,28,15,12,9,7,8,8,14,7],
-    'Numu':        [25,31,40,29,22,22,27,20,-1,12,20],
-    'Santa Fé':    [22,56,23,26,21,34,130,38,20,26,18],
-    'Tropicana':   [-9,34,28,58,32,34,38,25,29,17,19],
+    'Amomoxtli':   [12,28,23,21,21,15,15,23,14,20,42,17,25,18],
+    'Anticavilla': [3,7,4,7,7,4,9,5,3,3,4,4,8,6],
+    'Boca de Agua':[8,8,8,9,12,9,11,4,5,10,2,7,7,9],
+    'Casona':      [19,20,25,22,20,15,9,17,-1,8,13,7,7,9],
+    'El Santuario':[46,50,46,64,59,16,22,37,23,55,49,48,42,39],
+    'MDS':         [14,18,28,15,12,9,7,8,8,14,7,7,7,6],
+    'Numu':        [25,31,40,29,22,22,27,20,-1,12,20,18,10,17],
+    'Santa Fé':    [22,56,23,26,21,34,130,38,20,26,18,19,19,12],
+    'Tropicana':   [-9,34,28,58,32,34,38,25,29,17,19,30,30,16],
   },
   adr:{
-    'Amomoxtli':   [7720,5747,7806,7651,8205,9117,7260,7859,7642,8294,5857],
-    'Anticavilla': [6663,6242,6294,6984,7574,5591,5766,6876,6687,6745,5941],
-    'Boca de Agua':[6506,8229,6552,7398,8294,6671,5326,2783,3388,5879,6680],
-    'Casona':      [7866,8411,8961,8359,8098,9035,8297,7947,12203,7383,474],
-    'El Santuario':[5274,4526,5114,4631,5899,6714,5891,5684,6442,5191,5454],
-    'MDS':         [3967,4118,3255,4027,3888,4964,4656,3858,4125,3711,4249],
-    'Numu':        [6586,7417,7375,6929,8130,3458,7542,6662,1421,15644,7867],
-    'Santa Fé':    [3070,2997,2888,3184,3013,2832,2191,2988,2878,2942,3374],
-    'Tropicana':   [8346,4644,3774,3259,3511,3056,3377,3352,2819,3894,3908],
+    'Amomoxtli':   [7720,5747,7806,7651,8205,9117,7260,7859,7642,8476,5857,8401,9314,7654],
+    'Anticavilla': [6663,6242,6294,6984,7574,5591,5766,6876,6687,6745,5941,5381,6887,6250],
+    'Boca de Agua':[6506,8229,6552,7398,8294,6671,5326,2783,3388,5879,6680,6374,5290,6311],
+    'Casona':      [7866,8411,8961,8359,8098,9035,8297,7947,12203,7383,8525,7502,8320,8554],
+    'El Santuario':[5274,4526,5114,4631,5899,6714,5891,5684,6442,5191,5454,4982,5960,6899],
+    'MDS':         [3967,4118,3255,4027,3888,4964,4656,3858,4125,3711,4249,4341,4490,4500],
+    'Numu':        [6586,7417,7375,6929,8130,3458,7542,6662,1421,15644,7867,6731,6443,6606],
+    'Santa Fé':    [3070,2997,2888,3184,3013,2832,2191,2988,2878,2942,3374,3790,3451,3447],
+    'Tropicana':   [8346,4644,3774,3259,3511,3056,3377,3352,2819,3894,3908,3619,4484,3759],
   }
 };
 const HOTELS_PU=['Amomoxtli','Anticavilla','Boca de Agua','Casona','El Santuario','MDS','Numu','Santa Fé','Tropicana'];
@@ -1183,46 +1317,6 @@ const PACE_RAW={
 
 /* ── PACE STATE ── */
 let curPaceMetric='rev';
-let activePaceHotels=new Set(HOTELS_ALL_LIST);
-
-// Build hotel filter buttons after DOM ready (called in init)
-function initPaceHotelFilter(){
-  const el=document.getElementById('pace-hotel-filter');
-  if(!el||el.dataset.init) return;
-  el.dataset.init='1';
-  HOTELS_ALL_LIST.forEach(h=>{
-    const b=document.createElement('button');
-    b.className='pu-week-btn active';
-    b.style.cssText='padding:5px 10px;font-size:11px;border-left:3px solid '+H_COLORS[h];
-    b.textContent=h;
-    b.onclick=()=>paceHotelFilter(h);
-    b.dataset.hotel=h;
-    el.appendChild(b);
-  });
-}
-
-function paceHotelFilter(action){
-  if(action==='all'){
-    activePaceHotels=new Set(HOTELS_ALL_LIST);
-    document.querySelectorAll('#pace-hotel-filter .pu-week-btn').forEach(b=>b.classList.add('active'));
-    document.getElementById('pch-todos').classList.add('active');
-    document.getElementById('pch-ninguno').classList.remove('active');
-  } else if(action==='none'){
-    activePaceHotels=new Set();
-    document.querySelectorAll('#pace-hotel-filter .pu-week-btn').forEach(b=>b.classList.remove('active'));
-    document.getElementById('pch-todos').classList.remove('active');
-    document.getElementById('pch-ninguno').classList.add('active');
-  } else {
-    if(activePaceHotels.has(action)) activePaceHotels.delete(action);
-    else activePaceHotels.add(action);
-    const btn=document.querySelector('#pace-hotel-filter [data-hotel="'+action+'"]');
-    if(btn) btn.classList.toggle('active', activePaceHotels.has(action));
-    const allActive=activePaceHotels.size===HOTELS_ALL_LIST.length;
-    document.getElementById('pch-todos').classList.toggle('active',allActive);
-    document.getElementById('pch-ninguno').classList.toggle('active',activePaceHotels.size===0);
-  }
-  renderPace();
-}
 
 function setPaceMetric(m){
   curPaceMetric=m;
@@ -1256,16 +1350,24 @@ function paceWoW(curr,prev,m){
   return '<span style="font-size:10px;color:'+color+'">'+(pos?'↑':'↓')+Math.abs(pct).toFixed(1)+'%</span>';
 }
 
-const MONTH_KEYS=['Jan','Feb','Mar','Apr','May','Jun'];
+const MONTH_KEYS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const MONTH_LABELS={Jan:'Enero',Feb:'Febrero',Mar:'Marzo',Apr:'Abril',May:'Mayo',Jun:'Junio',Jul:'Julio',Aug:'Agosto',Sep:'Septiembre',Oct:'Octubre',Nov:'Noviembre',Dec:'Diciembre'};
 
 function renderPace(){
-  initPaceHotelFilter();
   const el=document.getElementById('pace-table');
   if(!el) return;
-  const moSel=document.getElementById('pace-month-sel')?.value||'all';
-  const months=moSel==='all'?MONTH_KEYS:[moSel];
-  const hotels=[...activePaceHotels].filter(h=>HOTELS_ALL_LIST.includes(h));
+
+  // OTB Pace requiere un solo hotel — usa el hotel bar global
+  if(curHotel==='all'){
+    el.innerHTML=`<tr><td style="padding:24px 16px;text-align:center;color:#64748b;font-size:12px;font-family:IBM Plex Sans,sans-serif">
+      Selecciona un hotel específico en la barra superior para ver el OTB Pace.
+    </td></tr>`;
+    document.getElementById('pace-charts').innerHTML='';
+    return;
+  }
+
+  const hotels=[curHotel].filter(h=>HOTELS_ALL_LIST.includes(h));
+  const months=[curPaceMonth].filter(m=>MONTH_KEYS.includes(m));
   const m=curPaceMetric;
 
   // VERTICAL layout: rows = Semana × Mes, columns = Hotels
@@ -1326,188 +1428,245 @@ function renderPace(){
   renderPaceCharts(months, hotels, m);
 }
 
-function drawPaceChart(canvas, seriesAgg, color, m, hoverIdx){
+function drawPaceChart(canvas, serOcc, serAdr, color, hoverIdx){
   const ctx=canvas.getContext('2d');
-  const W=canvas.width, H=canvas.height;
-  const padL=8,padR=8,padT=10,padB=20;
+  const dpr=window.devicePixelRatio||1;
+  const W=canvas.width/dpr, H=canvas.height/dpr;
+  const padL=52, padR=64, padT=20, padB=32;
   const chartW=W-padL-padR, chartH=H-padT-padB;
-  const n=seriesAgg.length;
-  const max=Math.max(...seriesAgg,1);
+  const n=serOcc.length;
+  if(n<2){ctx.restore&&ctx.restore();return;}
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.save(); ctx.scale(dpr,dpr);
 
-  ctx.clearRect(0,0,W,H);
+  // ── Scales ──────────────────────────────────────────────
+  // Occ: left axis 0–100%
+  const yOcc=v=>padT+chartH*(1-v/100);
 
-  // Grid lines
-  ctx.strokeStyle='rgba(100,116,139,0.15)';
-  ctx.lineWidth=1;
-  [0.25,0.5,0.75,1].forEach(pct=>{
-    const y=padT+chartH*(1-pct);
-    ctx.beginPath();ctx.moveTo(padL,y);ctx.lineTo(W-padR,y);ctx.stroke();
+  // ADR: right axis, tight range around data
+  const adrVals=serAdr.filter(v=>v>0);
+  const adrMin=adrVals.length?Math.floor(Math.min(...adrVals)*0.92/100)*100:0;
+  const adrMax=adrVals.length?Math.ceil(Math.max(...adrVals)*1.08/100)*100:10000;
+  const yAdr=v=>padT+chartH*(1-(v-adrMin)/(adrMax-adrMin));
+  const xPos=i=>padL+(n===1?chartW/2:(i/(n-1))*chartW);
+
+  // ── Background grid ─────────────────────────────────────
+  ctx.strokeStyle='rgba(100,116,139,0.1)'; ctx.lineWidth=1; ctx.setLineDash([]);
+  [0,25,50,75,100].forEach(v=>{
+    const y=yOcc(v);
+    ctx.beginPath(); ctx.moveTo(padL,y); ctx.lineTo(padL+chartW,y); ctx.stroke();
+  });
+  // Vertical tick lines
+  serOcc.forEach((_,i)=>{
+    const x=xPos(i);
+    ctx.strokeStyle='rgba(100,116,139,0.07)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(x,padT); ctx.lineTo(x,padT+chartH); ctx.stroke();
   });
 
-  const pts=seriesAgg.map((v,i)=>({
-    x:padL+(i/(n-1))*chartW,
-    y:padT+chartH*(1-(v/max))
-  }));
+  // ── Left axis — Occ % ───────────────────────────────────
+  ctx.font=`10px IBM Plex Mono,monospace`; ctx.textAlign='right';
+  [0,25,50,75,100].forEach(v=>{
+    ctx.fillStyle='#10b981';
+    ctx.fillText(v+'%', padL-8, yOcc(v)+3.5);
+    // axis tick
+    ctx.strokeStyle='rgba(16,185,129,0.3)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(padL-4,yOcc(v)); ctx.lineTo(padL,yOcc(v)); ctx.stroke();
+  });
+  // Axis label
+  ctx.save();
+  ctx.translate(14, padT+chartH/2);
+  ctx.rotate(-Math.PI/2);
+  ctx.fillStyle='#10b981'; ctx.font='bold 10px IBM Plex Sans,sans-serif'; ctx.textAlign='center';
+  ctx.fillText('Occ %', 0, 0);
+  ctx.restore();
 
-  // Line
-  ctx.strokeStyle=color;
-  ctx.lineWidth=2;
-  ctx.beginPath();
-  pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
-  ctx.stroke();
+  // ── Right axis — ADR ────────────────────────────────────
+  const adrStep=(adrMax-adrMin)/4;
+  ctx.textAlign='left';
+  [0,1,2,3,4].forEach(i=>{
+    const v=Math.round(adrMin+adrStep*i);
+    const y=yAdr(v);
+    ctx.fillStyle='#d97706';
+    ctx.fillText('$'+v.toLocaleString(), padL+chartW+8, y+3.5);
+    ctx.strokeStyle='rgba(217,119,6,0.3)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(padL+chartW,y); ctx.lineTo(padL+chartW+4,y); ctx.stroke();
+  });
+  // Axis label
+  ctx.save();
+  ctx.translate(W-10, padT+chartH/2);
+  ctx.rotate(Math.PI/2);
+  ctx.fillStyle='#d97706'; ctx.font='bold 10px IBM Plex Sans,sans-serif'; ctx.textAlign='center';
+  ctx.fillText('ADR', 0, 0);
+  ctx.restore();
 
-  // Fill
-  ctx.globalAlpha=0.12;
-  ctx.fillStyle=color;
-  ctx.beginPath();
-  ctx.moveTo(pts[0].x,padT+chartH);
-  pts.forEach(p=>ctx.lineTo(p.x,p.y));
-  ctx.lineTo(pts[n-1].x,padT+chartH);
-  ctx.closePath();
-  ctx.fill();
+  // ── Occ % area + line ───────────────────────────────────
+  const ptsOcc=serOcc.map((v,i)=>({x:xPos(i),y:yOcc(v),v}));
+  // Filled area
+  ctx.globalAlpha=0.12; ctx.fillStyle='#10b981';
+  ctx.beginPath(); ctx.moveTo(ptsOcc[0].x, padT+chartH);
+  ptsOcc.forEach(p=>ctx.lineTo(p.x,p.y));
+  ctx.lineTo(ptsOcc[n-1].x, padT+chartH); ctx.closePath(); ctx.fill();
   ctx.globalAlpha=1;
+  // Line
+  ctx.strokeStyle='#10b981'; ctx.lineWidth=2.5; ctx.setLineDash([]);
+  ctx.beginPath(); ptsOcc.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y)); ctx.stroke();
 
-  // Dots
-  pts.forEach((p,i)=>{
-    ctx.fillStyle=seriesAgg[i]>0?color:'#334155';
-    ctx.beginPath();ctx.arc(p.x,p.y,hoverIdx===i?5:3,0,Math.PI*2);ctx.fill();
+  // ── ADR line ────────────────────────────────────────────
+  const ptsAdr=serAdr.map((v,i)=>({x:xPos(i),y:v>0?yAdr(v):null,v}));
+  ctx.strokeStyle='#d97706'; ctx.lineWidth=2.5; ctx.setLineDash([6,3]);
+  ctx.beginPath(); let started=false;
+  ptsAdr.forEach(p=>{
+    if(p.y===null){started=false;return;}
+    started?ctx.lineTo(p.x,p.y):(ctx.moveTo(p.x,p.y),started=true);
+  });
+  ctx.stroke(); ctx.setLineDash([]);
+
+  // ── Dots ────────────────────────────────────────────────
+  ptsOcc.forEach((p,i)=>{
+    if(!p.v) return;
+    const r=hoverIdx===i?6:3.5;
+    ctx.fillStyle='#10b981';
+    ctx.beginPath(); ctx.arc(p.x,p.y,r,0,Math.PI*2); ctx.fill();
+    if(hoverIdx===i){ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(p.x,p.y,r,0,Math.PI*2);ctx.stroke();}
+  });
+  ptsAdr.forEach((p,i)=>{
+    if(p.y===null||!p.v) return;
+    const r=hoverIdx===i?6:3.5;
+    ctx.fillStyle='#d97706';
+    ctx.beginPath(); ctx.arc(p.x,p.y,r,0,Math.PI*2); ctx.fill();
+    if(hoverIdx===i){ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(p.x,p.y,r,0,Math.PI*2);ctx.stroke();}
   });
 
-  // Week labels
-  ctx.fillStyle='#94a3b8';
-  ctx.font='9px IBM Plex Mono,monospace';
-  ctx.textAlign='center';
-  PACE_WEEKS.forEach((w,i)=>{
-    ctx.fillText(w.slice(0,5),padL+(i/(n-1))*chartW,H-4);
+  // ── Week labels ─────────────────────────────────────────
+  ctx.fillStyle='#64748b'; ctx.font='9px IBM Plex Mono,monospace'; ctx.textAlign='center';
+  serOcc.forEach((_,i)=>{
+    const w=PACE_WEEKS[i]||'';
+    ctx.fillText(w, xPos(i), padT+chartH+18);
   });
 
-  // Hover crosshair + tooltip
-  if(hoverIdx>=0 && hoverIdx<n){
-    const p=pts[hoverIdx];
-    const val=seriesAgg[hoverIdx];
-
-    // Vertical line
-    ctx.strokeStyle='rgba(148,163,184,0.4)';
-    ctx.lineWidth=1;
-    ctx.setLineDash([3,3]);
-    ctx.beginPath();ctx.moveTo(p.x,padT);ctx.lineTo(p.x,padT+chartH);ctx.stroke();
+  // ── Hover tooltip ───────────────────────────────────────
+  if(hoverIdx>=0&&hoverIdx<n){
+    const x=xPos(hoverIdx);
+    // Crosshair
+    ctx.strokeStyle='rgba(148,163,184,0.4)'; ctx.lineWidth=1; ctx.setLineDash([4,3]);
+    ctx.beginPath(); ctx.moveTo(x,padT); ctx.lineTo(x,padT+chartH); ctx.stroke();
     ctx.setLineDash([]);
 
-    if(val>0){
-      // Format value
-      let label;
-      if(m==='rev') label='$'+Math.round(val/1000).toLocaleString()+'K';
-      else if(m==='adr') label='$'+Math.round(val).toLocaleString();
-      else if(m==='occ') label=val+'%';
-      else label=Math.round(val).toLocaleString()+' RN';
+    const oc=serOcc[hoverIdx], ad=serAdr[hoverIdx];
+    const week=PACE_WEEKS[hoverIdx]||'';
+    const lines=[
+      {t:week, c:'#94a3b8'},
+      {t:oc+'% Occ', c:'#10b981'},
+      {t:ad?'$'+Math.round(ad).toLocaleString()+' ADR':'— ADR', c:'#d97706'},
+    ];
+    const boxW=108, lineH=16, boxH=lines.length*lineH+14;
+    let bx=x+12; if(bx+boxW>W-padR+20) bx=x-boxW-12;
+    const by=Math.max(padT+4, Math.min(ptsOcc[hoverIdx].y-boxH/2, padT+chartH-boxH));
 
-      // Tooltip box
-      ctx.font='bold 10px IBM Plex Sans,sans-serif';
-      const tw=ctx.measureText(label).width;
-      const boxW=tw+12, boxH=18;
-      let bx=p.x-boxW/2;
-      if(bx<2) bx=2;
-      if(bx+boxW>W-2) bx=W-boxW-2;
-      const by=Math.max(padT-2, p.y-boxH-6);
+    ctx.shadowColor='rgba(0,0,0,0.25)'; ctx.shadowBlur=10;
+    ctx.fillStyle='#1e293b';
+    ctx.beginPath(); ctx.roundRect(bx,by,boxW,boxH,6); ctx.fill();
+    ctx.shadowBlur=0;
+    ctx.strokeStyle='rgba(255,255,255,0.1)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.roundRect(bx,by,boxW,boxH,6); ctx.stroke();
 
-      // Shadow
-      ctx.shadowColor='rgba(0,0,0,0.25)';
-      ctx.shadowBlur=6;
-      ctx.fillStyle='#1e293b';
-      ctx.beginPath();
-      ctx.roundRect(bx,by,boxW,boxH,4);
-      ctx.fill();
-      ctx.shadowBlur=0;
-
-      // Border
-      ctx.strokeStyle=color;
-      ctx.lineWidth=1.5;
-      ctx.beginPath();
-      ctx.roundRect(bx,by,boxW,boxH,4);
-      ctx.stroke();
-
-      // Text
-      ctx.fillStyle='#f1f5f9';
-      ctx.textAlign='center';
-      ctx.fillText(label,bx+boxW/2,by+12);
-
-      // Highlighted dot
-      ctx.fillStyle=color;
-      ctx.beginPath();ctx.arc(p.x,p.y,5,0,Math.PI*2);ctx.fill();
-      ctx.strokeStyle='#1e293b';
-      ctx.lineWidth=1.5;
-      ctx.beginPath();ctx.arc(p.x,p.y,5,0,Math.PI*2);ctx.stroke();
-    }
+    ctx.font='bold 10px IBM Plex Sans,sans-serif'; ctx.textAlign='left';
+    lines.forEach((l,li)=>{
+      ctx.fillStyle=l.c;
+      ctx.fillText(l.t, bx+10, by+14+li*lineH);
+    });
   }
+
+  ctx.restore();
 }
 
 function renderPaceCharts(months, hotels, m){
   const el=document.getElementById('pace-charts');
   if(!el) return;
-  if(hotels.length===0){el.innerHTML='';return;}
-
   el.innerHTML='';
-  hotels.forEach(h=>{
-    const card=document.createElement('div');
-    card.className='card';
-    card.style.cssText='padding:12px;position:relative';
+  if(!hotels.length) return;
 
-    const title=document.createElement('div');
-    title.className='card-title';
-    title.style.cssText='font-size:11px;margin-bottom:8px;color:'+H_COLORS[h];
-    title.textContent=h;
-    card.appendChild(title);
+  const h=hotels[0];
+  const col=H_COLORS[h]||'#94a3b8';
 
-    // Aggregate across selected months
-    const seriesAgg=PACE_WEEKS.map((_,wi)=>{
-      let total=0, count=0;
-      months.forEach(mo=>{
-        if(!PACE_RAW[mo]||!PACE_RAW[mo][h]) return;
-        const v=PACE_RAW[mo][h][wi][m];
-        if(v>0){total+=v;count++;}
-      });
-      return count>0?total:0;
+  // Aggregate Occ and ADR across selected months
+  const aggOcc=PACE_WEEKS.map((_,wi)=>{
+    let t=0,c=0;
+    months.forEach(mo=>{
+      if(!PACE_RAW[mo]||!PACE_RAW[mo][h]) return;
+      const v=PACE_RAW[mo][h][wi].occ; if(v>0){t+=v;c++;}
     });
+    return c>0?Math.round(t/c):0;
+  });
+  const aggAdr=PACE_WEEKS.map((_,wi)=>{
+    let t=0,c=0;
+    months.forEach(mo=>{
+      if(!PACE_RAW[mo]||!PACE_RAW[mo][h]) return;
+      const v=PACE_RAW[mo][h][wi].adr; if(v>0){t+=v;c++;}
+    });
+    return c>0?Math.round(t/c):0;
+  });
 
-    const canvas=document.createElement('canvas');
-    const dpr=window.devicePixelRatio||1;
-    const CW=320, CH=110;
+  // Card full width
+  const card=document.createElement('div');
+  card.className='card';
+  card.style.cssText='padding:18px 18px 10px;';
+
+  // Header + legend
+  const hdr=document.createElement('div');
+  hdr.style.cssText='display:flex;align-items:center;gap:16px;margin-bottom:14px;flex-wrap:wrap';
+  hdr.innerHTML=`
+    <span style="font-family:Playfair Display,serif;font-size:14px;font-weight:700;color:#1e2535">Evolución OTB — <span style="color:${col}">${h}</span></span>
+    <span style="margin-left:auto;display:flex;gap:14px;align-items:center">
+      <span style="display:flex;align-items:center;gap:5px;font-size:10px;font-family:IBM Plex Mono,monospace;color:#10b981">
+        <span style="display:inline-block;width:22px;height:2.5px;background:#10b981;border-radius:1px"></span>Ocupación %
+      </span>
+      <span style="display:flex;align-items:center;gap:5px;font-size:10px;font-family:IBM Plex Mono,monospace;color:#d97706">
+        <svg width="22" height="6" style="flex-shrink:0"><line x1="0" y1="3" x2="22" y2="3" stroke="#d97706" stroke-width="2.5" stroke-dasharray="6,3"/></svg>ADR
+      </span>
+    </span>`;
+  card.appendChild(hdr);
+
+  // Canvas — full width, tall
+  const canvas=document.createElement('canvas');
+  const dpr=window.devicePixelRatio||1;
+  // Responsive: read container width after appending
+  card.appendChild(canvas);
+  el.appendChild(card);
+
+  function sizeAndDraw(hoverIdx=-1){
+    const CW=card.clientWidth-36;
+    const CH=260;
     canvas.width=CW*dpr; canvas.height=CH*dpr;
     canvas.style.width=CW+'px'; canvas.style.height=CH+'px';
-    canvas.getContext('2d').scale(dpr,dpr);
-    canvas.style.cssText+='display:block;cursor:crosshair';
-    card.appendChild(canvas);
-    el.appendChild(card);
+    canvas.style.display='block';
+    drawPaceChart(canvas, aggOcc, aggAdr, col, hoverIdx);
+  }
 
-    // Initial draw (no hover)
-    drawPaceChart(canvas, seriesAgg, H_COLORS[h], m, -1);
+  // Initial draw after layout
+  requestAnimationFrame(()=>sizeAndDraw());
 
-    // Hover logic
-    const padL=8, padR=8, padB=20;
-    const n=seriesAgg.length;
-
-    canvas.addEventListener('mousemove', e=>{
-      const rect=canvas.getBoundingClientRect();
-      const mouseX=e.clientX-rect.left;
-      const chartW=CW-padL-padR;
-      // Find closest point
-      let closest=-1, minDist=Infinity;
-      for(let i=0;i<n;i++){
-        const px=padL+(i/(n-1))*chartW;
-        const d=Math.abs(mouseX-px);
-        if(d<minDist){minDist=d;closest=i;}
-      }
-      if(minDist<(chartW/(n-1))*0.6){
-        drawPaceChart(canvas, seriesAgg, H_COLORS[h], m, closest);
-      } else {
-        drawPaceChart(canvas, seriesAgg, H_COLORS[h], m, -1);
-      }
-    });
-
-    canvas.addEventListener('mouseleave', ()=>{
-      drawPaceChart(canvas, seriesAgg, H_COLORS[h], m, -1);
-    });
+  // Hover
+  canvas.style.cursor='crosshair';
+  canvas.addEventListener('mousemove',e=>{
+    const rect=canvas.getBoundingClientRect();
+    const CW=rect.width;
+    const padL=52,padR=64;
+    const chartW=CW-padL-padR;
+    const n=aggOcc.length;
+    const mouseX=e.clientX-rect.left;
+    let closest=-1,minDist=Infinity;
+    for(let i=0;i<n;i++){
+      const px=padL+(n===1?chartW/2:(i/(n-1))*chartW);
+      const d=Math.abs(mouseX-px);
+      if(d<minDist){minDist=d;closest=i;}
+    }
+    sizeAndDraw(minDist<(chartW/(n-1||1))*0.65?closest:-1);
   });
+  canvas.addEventListener('mouseleave',()=>sizeAndDraw(-1));
+
+  // Redraw on resize
+  window.addEventListener('resize',()=>sizeAndDraw(),{passive:true});
 }
 
 let curPUMetric='rev';
@@ -1535,19 +1694,7 @@ function fmtPU(v,metric){
 }
 
 function renderPickup(){
-  // render hotel filter buttons
-  const filterEl=document.getElementById('pu-hotel-filter');
-  if(filterEl&&!filterEl.dataset.init){
-    filterEl.dataset.init='1';
-    filterEl.innerHTML=HOTELS_PU.map(h=>{
-      const col=H_COLORS[h]||'#94a3b8';
-      const id='puh-'+h.replace(/[\s']/g,'_');
-      return`<button id="${id}" class="pu-week-btn active" onclick="togglePUHotel('${h.replace(/'/g,"\\'")}')">
-        <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${col};margin-right:4px;vertical-align:middle"></span>${h}
-      </button>`;
-    }).join('');
-  }
-
+  // activePUHotels ya está sincronizado desde el hotel bar global (setHotel / setHotelFilter)
   const el=document.getElementById('pu-weekly-table');if(!el)return;
   const data=PU_RAW[curPUMetric];
   const weeks=PU_WEEKS;
@@ -1676,6 +1823,7 @@ function renderAll(){
   if(curView==='overview'){renderRev();renderOcc();renderHM();renderADRChart('adr-chart-ov');renderRevPARChart('revpar-chart-ov');renderPaceBar();}
   else if(curView==='pickup'){renderPickup();}
   else if(curView==='tabla'){renderTabla();}
+  else if(curView==='tabla2'){renderTabla2();}
   else if(curView==='exec'){renderExec();}
   else if(curView==='pace'){renderPace();}
 }
@@ -1686,15 +1834,30 @@ function setView(v,navBtn,tabBtn){
   document.getElementById('view-'+v).classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.vtab').forEach(b=>b.classList.remove('active'));
-  document.getElementById('kpi-strip').style.display=(v==='tabla'||v==='pickup'||v==='exec'||v==='pace')?'none':'grid';
+  document.getElementById('kpi-strip').style.display=(v==='tabla'||v==='tabla2'||v==='pickup'||v==='exec'||v==='pace')?'none':'grid';
   const hotelBar=document.querySelector('.hotel-bar');
-  if(hotelBar) hotelBar.style.display=v==='exec'?'none':'';
-  const idx={exec:0,overview:1,pickup:2,tabla:3,pace:4};
+  if(hotelBar) hotelBar.style.display='';
+  // Intercambiar barra de mes: pace usa su propia barra de un solo mes
+  const globalMB=document.getElementById('global-month-bar');
+  const paceMB=document.getElementById('pace-month-bar');
+  if(globalMB) globalMB.style.display=v==='pace'?'none':'';
+  if(paceMB)   paceMB.style.display=v==='pace'?'':'none';
+  const idx={exec:0,overview:1,pickup:2,tabla:3,tabla2:4,pace:5};
   document.querySelectorAll('.nav-btn')[idx[v]]?.classList.add('active');
   document.querySelectorAll('.vtab')[idx[v]]?.classList.add('active');
-  const t={overview:'Overview General',pickup:'Pickup Semanal',tabla:'Tabla Detalle',exec:'Resumen Semanal',pace:'OTB Pace'};
+  const t={overview:'Overview General',pickup:'Pickup Semanal',tabla:'Tabla Detalle',tabla2:'Tabla Detalle 2',exec:'Resumen Semanal',pace:'OTB Pace'};
   document.getElementById('tb-title').textContent=t[v];
   renderAll();
+}
+
+let curPaceMonth='Jan';
+function setPaceMonth(m){
+  curPaceMonth=m;
+  MONTH_KEYS.forEach(mo=>{
+    const btn=document.getElementById('pm-'+mo);
+    if(btn) btn.classList.toggle('active', mo===m);
+  });
+  renderPace();
 }
 
 /* ── EXEC METRIC STATE ── */
@@ -1705,25 +1868,30 @@ function execHotelFilter(action){
   if(action==='all'){
     activeExecHotels=new Set(HOTELS_ALL_LIST);
     document.querySelectorAll('#exec-hotel-filter .pu-week-btn').forEach(b=>b.classList.add('active'));
-    document.getElementById('exh-todos').classList.add('active');
-    document.getElementById('exh-ninguno').classList.remove('active');
+    const et=document.getElementById('exh-todos'); if(et) et.classList.add('active');
+    const en=document.getElementById('exh-ninguno'); if(en) en.classList.remove('active');
   } else if(action==='none'){
     activeExecHotels=new Set();
     document.querySelectorAll('#exec-hotel-filter .pu-week-btn').forEach(b=>b.classList.remove('active'));
-    document.getElementById('exh-todos').classList.remove('active');
-    document.getElementById('exh-ninguno').classList.add('active');
+    const et=document.getElementById('exh-todos'); if(et) et.classList.remove('active');
+    const en=document.getElementById('exh-ninguno'); if(en) en.classList.add('active');
   } else {
-    // toggle individual
     if(activeExecHotels.has(action)) activeExecHotels.delete(action);
     else activeExecHotels.add(action);
-    document.getElementById('exh-todos').classList.remove('active');
-    document.getElementById('exh-ninguno').classList.remove('active');
+    const et=document.getElementById('exh-todos'); if(et) et.classList.remove('active');
+    const en=document.getElementById('exh-ninguno'); if(en) en.classList.remove('active');
     document.querySelectorAll('#exec-hotel-filter .pu-week-btn').forEach(b=>{
       const hn=b.dataset.hotel;
       b.classList.toggle('active', activeExecHotels.has(hn));
     });
   }
   renderExec();
+}
+
+// Sync exec hotels with global hotel bar
+function syncExecHotels(){
+  if(curHotel==='all') activeExecHotels=new Set(HOTELS_ALL_LIST);
+  else activeExecHotels=new Set([curHotel]);
 }
 
 function initExecHotelFilter(){
@@ -1748,6 +1916,7 @@ function setExecMetric(m){
 
 /* ── RENDER RESUMEN EJECUTIVO ── */
 function renderExec(){
+  syncExecHotels();
   initExecHotelFilter();
   renderExecJunta();
   renderExecPU();
@@ -2048,10 +2217,7 @@ function setHotelFilter(h){
 }
 
 function syncPUHotelButtons(){
-  document.querySelectorAll('#pu-hotel-filter .pu-week-btn').forEach(b=>{
-    const hname=b.textContent.trim().replace(/^\s*●\s*/,'');
-    b.classList.toggle('active', activePUHotels.has(hname));
-  });
+  // filtro interno eliminado — el hotel bar global controla activePUHotels
 }
 
 document.getElementById('sb-date').textContent=new Date().toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'});
