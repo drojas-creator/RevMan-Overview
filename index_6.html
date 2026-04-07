@@ -1,0 +1,2227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Revenue Intelligence · Portfolio 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f6f8;--s1:#ffffff;--s2:#f0f2f5;--s3:#e8eaed;--s4:#dde1e7;
+  --border:#e2e5ea;--border2:#c8cdd6;
+  --text:#1a202c;--sub:#64748b;--dim:#94a3b8;
+  --amber:#d97706;--amber-light:#fef3c7;--amber-mid:#fbbf24;
+  --cyan:#0284c7;--cyan-light:#e0f2fe;
+  --rose:#e11d48;--rose-light:#ffe4e6;
+  --green:#059669;--green-light:#d1fae5;
+  --violet:#7c3aed;--orange:#ea580c;
+  --sidebar:#1e2535;--sidebar-text:#94a3b8;--sidebar-active:#ffffff;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-weight:400;display:flex;min-height:100vh}
+
+/* ── SIDEBAR ── */
+.sidebar{width:220px;min-width:220px;background:var(--sidebar);border-right:none;display:flex;flex-direction:column;position:fixed;top:0;bottom:0;left:0;z-index:200;overflow-y:auto}
+.logo-block{padding:22px 20px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.logo-mark{font-family:'Playfair Display',serif;font-size:19px;font-weight:900;letter-spacing:-.03em;color:#fff;line-height:1}
+.logo-mark span{color:var(--amber-mid);font-style:italic}
+.logo-sub{font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(255,255,255,.3);letter-spacing:.14em;text-transform:uppercase;margin-top:5px}
+.sb-section{padding:12px 12px 6px}
+.sb-label{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.25);padding:0 8px 8px;display:block}
+.hotel-btn{display:flex;align-items:center;gap:9px;width:100%;padding:8px 10px;border:none;background:transparent;color:var(--sidebar-text);font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:400;cursor:pointer;border-radius:7px;text-align:left;transition:all .15s;margin-bottom:1px;position:relative}
+.hotel-btn:hover{background:rgba(255,255,255,.07);color:#fff}
+.hotel-btn.active{background:rgba(255,255,255,.12);color:#fff}
+.hotel-btn.active::before{content:'';position:absolute;left:0;top:22%;bottom:22%;width:3px;border-radius:0 3px 3px 0;background:var(--hotel-color,var(--amber-mid))}
+.h-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;background:var(--hotel-color,var(--amber-mid))}
+.h-rn{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(255,255,255,.2)}
+.sb-nav{padding:8px 12px;border-top:1px solid rgba(255,255,255,.07);margin-top:auto}
+.nav-btn{display:flex;align-items:center;gap:9px;width:100%;padding:8px 10px;border:none;background:transparent;color:var(--sidebar-text);font-family:'IBM Plex Sans',sans-serif;font-size:12px;cursor:pointer;border-radius:7px;transition:all .15s;margin-bottom:1px;text-align:left}
+.nav-btn:hover{background:rgba(255,255,255,.07);color:#fff}
+.nav-btn.active{background:rgba(255,255,255,.12);color:#fff}
+.nav-icon{font-size:13px;opacity:.6}
+.live-pill{display:flex;align-items:center;gap:7px;padding:12px 20px;border-top:1px solid rgba(255,255,255,.07);font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(255,255,255,.25)}
+.live-dot{width:5px;height:5px;border-radius:50%;background:#34d399;box-shadow:0 0 6px #34d399;animation:blink 2.4s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ── MAIN ── */
+.main{margin-left:220px;flex:1;display:flex;flex-direction:column}
+
+/* TOPBAR */
+.topbar{padding:14px 28px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:#fff;position:sticky;top:0;z-index:100;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.tb-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;letter-spacing:-.02em;color:var(--text)}
+.tb-hotel{display:flex;align-items:center;gap:7px;margin-top:2px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--sub)}
+.tb-dot{width:7px;height:7px;border-radius:50%}
+.tb-right{display:flex;align-items:center;gap:10px}
+.view-tabs{display:flex;background:var(--s2);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.vtab{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;padding:7px 13px;border:none;background:transparent;color:var(--sub);cursor:pointer;transition:all .15s;letter-spacing:.04em}
+.vtab:hover{color:var(--text)}
+.vtab.active{background:#fff;color:var(--amber);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+
+/* MONTH FILTER BAR */
+.month-bar{background:#fff;border-bottom:1px solid var(--border);padding:10px 28px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.mo-label{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-right:4px;white-space:nowrap}
+.mo-btn{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;padding:5px 11px;border:1.5px solid var(--border);border-radius:20px;background:#fff;color:var(--sub);cursor:pointer;transition:all .15s;letter-spacing:.02em;white-space:nowrap}
+.mo-btn:hover{border-color:var(--amber-mid);color:var(--amber)}
+.mo-btn.active{background:var(--amber);border-color:var(--amber);color:#fff;box-shadow:0 2px 6px rgba(217,119,6,.25)}
+.mo-btn.range-active{background:var(--amber-light);border-color:var(--amber-mid);color:var(--amber)}
+.mo-sep{width:1px;height:18px;background:var(--border);margin:0 2px}
+.mo-btn.special{border-color:var(--border2);background:var(--s2);color:var(--sub)}
+.mo-btn.special:hover{border-color:var(--amber-mid);color:var(--amber);background:var(--amber-light)}
+.mo-btn.special.active{background:var(--amber);border-color:var(--amber);color:#fff}
+#mo-none{border-color:#fca5a5;color:#e11d48;background:#fff}
+#mo-none:hover{background:#ffe4e6;border-color:#e11d48}
+
+/* HOTEL FILTER BAR */
+.hotel-bar{background:#fafbfc;border-bottom:1px solid var(--border);padding:8px 28px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.ho-btn{font-family:'IBM Plex Sans',sans-serif;font-size:11px;font-weight:500;padding:5px 11px;border:1.5px solid var(--border);border-radius:20px;background:#fff;color:var(--sub);cursor:pointer;transition:all .15s;white-space:nowrap;display:flex;align-items:center;gap:5px}
+.ho-btn:hover{border-color:var(--hc,#fbbf24);color:var(--hc,#fbbf24)}
+.ho-btn.active{background:var(--hc,#fbbf24);border-color:var(--hc,#fbbf24);color:#fff;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.ho-btn .ho-dot{width:6px;height:6px;border-radius:50%;background:var(--hc,#fbbf24);flex-shrink:0}
+.ho-btn.active .ho-dot{background:#fff}
+.ho-btn.all-btn{background:var(--s2);border-color:var(--border2)}
+.ho-btn.all-btn.active{background:var(--sidebar);border-color:var(--sidebar);color:#fff}
+.ho-btn.all-btn:hover{border-color:var(--sidebar);color:var(--sidebar)}
+
+/* CONTENT */
+.content{padding:20px 28px 40px}
+
+/* KPI STRIP */
+.kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.kpi{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px 14px 12px;position:relative;overflow:hidden;cursor:default;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.kpi:hover{box-shadow:0 4px 12px rgba(0,0,0,.08);transform:translateY(-1px)}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--kpi-color,var(--amber));border-radius:10px 10px 0 0}
+.kpi-lbl{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--sub);margin-bottom:8px}
+.kpi-val{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;letter-spacing:-.03em;line-height:1;color:var(--kpi-color,var(--text));margin-bottom:6px}
+.kpi-delta{font-family:'IBM Plex Mono',monospace;font-size:9.5px}
+.up{color:var(--green)}.dn{color:var(--rose)}.neu{color:var(--sub)}
+
+/* SECTION */
+.section-row{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.section-row::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* CARD */
+.card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.card:hover{box-shadow:0 4px 16px rgba(0,0,0,.07)}
+.card-title{font-family:'Playfair Display',serif;font-size:13px;font-weight:700;margin-bottom:2px;letter-spacing:-.01em;color:var(--text)}
+.card-sub{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--sub);margin-bottom:14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.grid3{display:grid;grid-template-columns:3fr 2fr;gap:12px;margin-bottom:12px}
+
+/* LEGEND */
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:12px}
+.leg-item{display:flex;align-items:center;gap:5px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--sub)}
+.leg-sq{width:9px;height:9px;border-radius:2px}
+
+/* REV CHART — Vertical grouped */
+.rev-vchart{width:100%;overflow-x:auto;min-height:180px}
+.rev-inner{display:flex;align-items:flex-end;gap:5px;height:180px;padding-bottom:20px;padding-left:36px;position:relative;border-bottom:2px solid var(--border)}
+.rev-yaxis{position:absolute;left:0;top:0;bottom:20px;display:flex;flex-direction:column;justify-content:space-between;pointer-events:none}
+.rev-ytick{font-family:'IBM Plex Mono',monospace;font-size:7px;color:var(--dim);line-height:1;white-space:nowrap}
+.rev-gridline{position:absolute;left:36px;right:0;height:1px;background:var(--border);opacity:.6;pointer-events:none}
+.rev-group{display:flex;align-items:flex-end;gap:2px;flex:1;min-width:32px;position:relative}
+.rev-vbar{flex:1;border-radius:3px 3px 0 0;transition:height 1s cubic-bezier(.16,1,.3,1);cursor:default;position:relative;min-width:6px}
+.rev-vbar:hover{filter:brightness(1.1)}
+.rev-vbar:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100%+4px);left:50%;transform:translateX(-50%);background:#1e2535;color:#fff;font-family:'IBM Plex Mono',monospace;font-size:8px;padding:4px 8px;border-radius:5px;white-space:nowrap;z-index:99;pointer-events:none;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.rev-bdgt-line{position:absolute;left:0;right:0;height:2.5px;background:#1a202c;border-radius:2px;cursor:default;z-index:10}
+.rev-bdgt-line:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100%+4px);left:50%;transform:translateX(-50%);background:#1e2535;color:#fff;font-family:'IBM Plex Mono',monospace;font-size:8px;padding:4px 8px;border-radius:5px;white-space:nowrap;z-index:99;pointer-events:none}
+.rev-mlabel{position:absolute;bottom:-16px;left:50%;transform:translateX(-50%);font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--sub);text-transform:uppercase;white-space:nowrap}
+.rev-vallabel{position:absolute;top:-13px;left:50%;transform:translateX(-50%);font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:500;white-space:nowrap;pointer-events:none}
+
+/* BAR CHART */
+.bar-chart{display:flex;flex-direction:column;gap:6px}
+.bar-row{display:flex;align-items:center;gap:8px}
+.bar-m{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--sub);width:24px;text-transform:uppercase}
+.bar-tracks{flex:1;display:flex;flex-direction:column;gap:2px}
+.bar-track{height:9px;background:var(--s3);border-radius:2px;overflow:hidden}
+.bar-fill{height:100%;border-radius:2px;transition:width 1.2s cubic-bezier(.16,1,.3,1)}
+.bar-val{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--sub);width:48px;text-align:right}
+
+/* OCC CHART — Vertical */
+.occ-chart{width:100%;overflow-x:auto}
+.occ-inner{display:flex;align-items:flex-end;gap:4px;height:160px;padding-bottom:20px;padding-left:28px;position:relative;border-bottom:2px solid var(--border)}
+.occ-yaxis{position:absolute;left:0;top:0;bottom:20px;display:flex;flex-direction:column;justify-content:space-between;pointer-events:none}
+.occ-ytick{font-family:'IBM Plex Mono',monospace;font-size:7.5px;color:var(--dim);line-height:1}
+.occ-gridline{position:absolute;left:28px;right:0;height:1px;background:var(--border);opacity:.5;pointer-events:none}
+.occ-group{display:flex;align-items:flex-end;gap:2px;flex:1;min-width:28px;position:relative}
+.occ-vbar{flex:1;border-radius:3px 3px 0 0;transition:height .9s cubic-bezier(.16,1,.3,1);cursor:default;position:relative;min-width:5px}
+.occ-vbar:hover{filter:brightness(1.12)}
+.occ-vbar:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100%+4px);left:50%;transform:translateX(-50%);background:#1e2535;color:#fff;font-family:'IBM Plex Mono',monospace;font-size:8px;padding:4px 7px;border-radius:5px;white-space:nowrap;z-index:99;pointer-events:none;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.occ-mlabel{position:absolute;bottom:-16px;left:50%;transform:translateX(-50%);font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--sub);text-transform:uppercase;white-space:nowrap}
+.occ-vallabel{position:absolute;top:-13px;left:50%;transform:translateX(-50%);font-family:'IBM Plex Mono',monospace;font-size:7.5px;font-weight:500;white-space:nowrap;pointer-events:none}
+.occ-vlabel{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--sub);text-transform:uppercase;white-space:nowrap}
+.occ-yaxis{position:absolute;left:0;top:0;bottom:22px;display:flex;flex-direction:column;justify-content:space-between;pointer-events:none}
+.occ-ytick{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--dim);line-height:1}
+
+/* PICKUP */
+.pu-chart{display:flex;flex-direction:column;gap:5px}
+.pu-row{display:flex;align-items:center;gap:7px}
+.pu-m{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--sub);width:24px;text-transform:uppercase}
+.pu-track{flex:1;height:18px;position:relative;display:flex;align-items:center}
+.pu-axis{position:absolute;left:50%;top:0;bottom:0;width:1px;background:var(--border2)}
+.pu-bar{position:absolute;height:10px;border-radius:2px;top:50%;transform:translateY(-50%)}
+.pu-val{font-family:'IBM Plex Mono',monospace;font-size:9px;width:56px;text-align:right}
+
+/* HEATMAP */
+.hm-wrap{overflow-x:auto}
+.hm-grid{display:grid;gap:3px;min-width:560px}
+.hm-cell{height:28px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:8.5px;font-weight:500;cursor:default;transition:transform .15s,filter .15s;position:relative;color:#fff}
+.hm-cell:hover{transform:scale(1.1);z-index:10;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+.hm-lbl{font-family:'IBM Plex Mono',monospace;font-size:8.5px;color:var(--sub);display:flex;align-items:center;text-transform:uppercase}
+.hm-mth{font-family:'IBM Plex Mono',monospace;font-size:8.5px;color:var(--sub);text-align:center;padding:2px;text-transform:uppercase}
+.hm-tip{position:absolute;bottom:calc(100% + 5px);left:50%;transform:translateX(-50%);background:#1e2535;color:#fff;font-size:8.5px;padding:6px 8px;white-space:nowrap;border-radius:6px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:200;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.hm-cell:hover .hm-tip{opacity:1}
+
+/* ADR TABLE */
+.adr-head{display:grid;grid-template-columns:30px 1fr 1fr 1fr 1fr;gap:4px;font-family:'IBM Plex Mono',monospace;font-size:8.5px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;padding:0 0 8px;border-bottom:1px solid var(--border);margin-bottom:4px}
+.adr-row{display:grid;grid-template-columns:30px 1fr 1fr 1fr 1fr;gap:4px;font-family:'IBM Plex Mono',monospace;font-size:10px;padding:6px 0;border-bottom:1px solid var(--border);align-items:center;transition:background .12s;cursor:default}
+.adr-row:hover{background:var(--s2);padding:6px 6px;margin:0 -6px;border-radius:5px}
+.adr-row:last-child{border-bottom:none}
+.a-m{color:var(--sub);font-size:9px;text-transform:uppercase}
+.a-r{text-align:right;color:var(--text)}
+.a-tag{display:inline-block;padding:2px 6px;border-radius:4px;font-size:8.5px;float:right;font-weight:500}
+.pos-tag{background:var(--green-light);color:var(--green)}
+.neg-tag{background:var(--rose-light);color:var(--rose)}
+
+/* DETAIL TABLE */
+.dtbl{width:100%;border-collapse:collapse}
+.dtbl th{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);text-align:right;padding:0 8px 10px;border-bottom:2px solid var(--border);font-weight:500;position:sticky;top:0;background:#fff}
+.dtbl th:first-child{text-align:left}
+.dtbl td{font-family:'IBM Plex Mono',monospace;font-size:10px;text-align:right;padding:7px 8px;border-bottom:1px solid var(--border);color:var(--sub)}
+.dtbl td:first-child{text-align:left;font-family:'IBM Plex Sans',sans-serif;font-size:11.5px;font-weight:500;color:var(--text)}
+.dtbl tr:hover td{background:var(--s2)}
+.dtbl tr.total-row td{background:var(--amber-light);color:var(--amber);font-weight:600;border-top:2px solid var(--amber-mid);border-bottom:none}
+.dtbl tr.total-row td:first-child{color:var(--amber)}
+.badge{display:inline-block;padding:2px 6px;border-radius:4px;font-size:8.5px;font-weight:500}
+.b-up{background:var(--green-light);color:var(--green)}
+.b-dn{background:var(--rose-light);color:var(--rose)}
+
+/* GAP CHART */
+.gap-row{display:flex;flex-direction:column;gap:6px}
+.gap-item{display:flex;align-items:center;gap:7px}
+.gap-m{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--sub);width:24px;text-transform:uppercase}
+.gap-track{flex:1;height:14px;background:var(--s3);border-radius:3px;position:relative;overflow:hidden}
+.gap-bdgt{position:absolute;top:0;left:0;height:100%;background:rgba(226,85,85,.15);border-radius:3px}
+.gap-otb{position:absolute;top:2px;left:0;height:10px;border-radius:2px}
+.gap-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;width:52px;text-align:right;font-weight:500}
+
+/* VIEWS */
+.view{display:none}
+.view.active{display:block}
+
+/* MONTH FILTER ACTIVE INDICATOR */
+.month-filter-active{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:var(--amber-light);border:1px solid var(--amber-mid);border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--amber);font-weight:500}
+.month-filter-active button{border:none;background:none;cursor:pointer;color:var(--amber);font-size:11px;line-height:1;padding:0 0 0 4px}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--s2)}
+::-webkit-scrollbar-thumb{background:var(--s4);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--border2)}
+
+/* ── PICKUP SEMANAL ── */
+.pu-week-selector{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.pu-week-btn{padding:4px 10px;border:1px solid var(--border);border-radius:20px;background:#fff;font-size:11px;font-family:'IBM Plex Mono',monospace;cursor:pointer;color:var(--sub);transition:all .15s}
+.pu-week-btn:hover{border-color:#0284c7;color:#0284c7}
+.pu-week-btn.active{background:#0284c7;border-color:#0284c7;color:#fff}
+.pu-metric-btn{padding:4px 12px;border:1px solid var(--border);border-radius:20px;background:#fff;font-size:11px;cursor:pointer;color:var(--sub);transition:all .15s}
+.pu-metric-btn.active{background:#1e2535;border-color:#1e2535;color:#fff}
+.pu-table{width:100%;border-collapse:collapse;font-size:12px}
+.pu-table th{padding:7px 10px;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;color:var(--sub);background:#f8f9fa;border-bottom:2px solid var(--border);white-space:nowrap}
+.pu-table th:first-child{text-align:left;min-width:130px}
+.pu-table td{padding:7px 10px;text-align:right;border-bottom:1px solid var(--border);font-size:12px;white-space:nowrap}
+.pu-table td:first-child{text-align:left;font-weight:500}
+.pu-table tr:last-child td{border-bottom:none}
+.pu-table tr:hover td{background:#f8faff}
+.pu-table .total-row td{font-weight:700;background:#f8f9fa;border-top:2px solid var(--border)}
+.pu-cell-pos{color:#059669}
+.pu-cell-neg{color:#e11d48}
+.pu-cell-cur{background:#fffbeb!important;font-weight:600}
+/* Trend chart */
+.trend-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:4px}
+.trend-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px 20px}
+.trend-card-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px;display:flex;align-items:center;gap:6px}
+.trend-card-sub{font-size:10px;color:var(--sub);margin-bottom:12px}
+.trend-svg{width:100%;height:120px;overflow:visible}
+@media(max-width:1300px){.trend-grid{grid-template-columns:repeat(2,1fr)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.anim{animation:fadeUp .35s ease both}
+.kpi:nth-child(1){animation-delay:.03s}.kpi:nth-child(2){animation-delay:.06s}.kpi:nth-child(3){animation-delay:.09s}.kpi:nth-child(4){animation-delay:.12s}.kpi:nth-child(5){animation-delay:.15s}.kpi:nth-child(6){animation-delay:.18s}
+
+@media(max-width:1300px){.kpi-strip{grid-template-columns:repeat(2,1fr)}.grid2,.grid3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="logo-block">
+    <div class="logo-mark">Revenue<span>IQ</span></div>
+    <div class="logo-sub">Portfolio · 2025 → 2026</div>
+  </div>
+  <div class="sb-section">
+    <span class="sb-label">Propiedades</span>
+    <button class="hotel-btn active" style="--hotel-color:#fbbf24" onclick="setHotel('all',this)"><span class="h-dot" style="background:linear-gradient(135deg,#fbbf24,#38bdf8)"></span><span>Todas</span><span class="h-rn">9</span></button>
+    <button class="hotel-btn" style="--hotel-color:#38bdf8" onclick="setHotel('Amomoxtli',this)"><span class="h-dot"></span><span>Amomoxtli</span></button>
+    <button class="hotel-btn" style="--hotel-color:#a78bfa" onclick="setHotel('Anticavilla',this)"><span class="h-dot"></span><span>Anticavilla</span></button>
+    <button class="hotel-btn" style="--hotel-color:#34d399" onclick="setHotel('Boca de Agua',this)"><span class="h-dot"></span><span>Boca de Agua</span></button>
+    <button class="hotel-btn" style="--hotel-color:#fbbf24" onclick="setHotel('Casona',this)"><span class="h-dot"></span><span>Casona</span></button>
+    <button class="hotel-btn" style="--hotel-color:#fb923c" onclick="setHotel('El Santuario',this)"><span class="h-dot"></span><span>El Santuario</span></button>
+    <button class="hotel-btn" style="--hotel-color:#fb7185" onclick="setHotel('MDS',this)"><span class="h-dot"></span><span>MDS</span></button>
+    <button class="hotel-btn" style="--hotel-color:#f472b6" onclick="setHotel('Numu',this)"><span class="h-dot"></span><span>Numu</span></button>
+    <button class="hotel-btn" style="--hotel-color:#60a5fa" onclick="setHotel('Santa Fé',this)"><span class="h-dot"></span><span>Santa Fé</span></button>
+    <button class="hotel-btn" style="--hotel-color:#4ade80" onclick="setHotel('Tropicana',this)"><span class="h-dot"></span><span>Tropicana</span></button>
+  </div>
+  <div class="sb-nav">
+    <span class="sb-label" style="color:rgba(255,255,255,.25);display:block;padding:0 8px 8px">Vistas</span>
+    <button class="nav-btn" onclick="setView('exec',this)"><span class="nav-icon">⬡</span> Resumen Semanal</button>
+    <button class="nav-btn active" onclick="setView('overview',this)"><span class="nav-icon">◈</span> Overview</button>
+    <button class="nav-btn" onclick="setView('pickup',this)"><span class="nav-icon">↗</span> Pickup Semanal</button>
+    <button class="nav-btn" onclick="setView('tabla',this)"><span class="nav-icon">≡</span> Detalle</button>
+    <button class="nav-btn" onclick="setView('tabla2',this)"><span class="nav-icon">≡</span> Detalle 2</button>
+    <button class="nav-btn" onclick="setView('pace',this)"><span class="nav-icon">⏱</span> OTB Pace</button>
+  </div>
+  <div class="live-pill"><div class="live-dot"></div><span id="sb-date">—</span></div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div>
+      <div class="tb-title" id="tb-title">Overview General</div>
+      <div class="tb-hotel"><div class="tb-dot" id="tb-dot" style="background:var(--amber)"></div><span id="tb-hotel">Todas las propiedades · 9 hoteles</span></div>
+    </div>
+    <div class="tb-right">
+      <div id="month-active-badge"></div>
+      <span id="data-status" style="font-size:11px;color:#94a3b8;margin-right:8px"></span>
+      <div class="view-tabs">
+        <button class="vtab" onclick="setView('exec',null,this)">Resumen Semanal</button>
+        <button class="vtab active" onclick="setView('overview',null,this)">Overview</button>
+        <button class="vtab" onclick="setView('pickup',null,this)">Pickup Semanal</button>
+        <button class="vtab" onclick="setView('tabla',null,this)">Detalle</button>
+        <button class="vtab" onclick="setView('tabla2',null,this)">Detalle 2</button>
+        <button class="vtab" onclick="setView('pace',null,this)">OTB Pace</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOTEL FILTER BAR -->
+  <div class="hotel-bar">
+    <span class="mo-label">Hotel:</span>
+    <button class="ho-btn all-btn active" id="hf-all" onclick="setHotelFilter('all')">Todos</button>
+    <button class="ho-btn" id="hf-Amomoxtli" style="--hc:#38bdf8" onclick="setHotelFilter('Amomoxtli')"><span class="ho-dot"></span>Amomoxtli</button>
+    <button class="ho-btn" id="hf-Anticavilla" style="--hc:#a78bfa" onclick="setHotelFilter('Anticavilla')"><span class="ho-dot"></span>Anticavilla</button>
+    <button class="ho-btn" id="hf-Boca de Agua" style="--hc:#34d399" onclick="setHotelFilter('Boca de Agua')"><span class="ho-dot"></span>Boca de Agua</button>
+    <button class="ho-btn" id="hf-Casona" style="--hc:#fbbf24" onclick="setHotelFilter('Casona')"><span class="ho-dot"></span>Casona</button>
+    <button class="ho-btn" id="hf-El Santuario" style="--hc:#fb923c" onclick="setHotelFilter('El Santuario')"><span class="ho-dot"></span>El Santuario</button>
+    <button class="ho-btn" id="hf-MDS" style="--hc:#fb7185" onclick="setHotelFilter('MDS')"><span class="ho-dot"></span>MDS</button>
+    <button class="ho-btn" id="hf-Numu" style="--hc:#f472b6" onclick="setHotelFilter('Numu')"><span class="ho-dot"></span>Numu</button>
+    <button class="ho-btn" id="hf-Santa Fé" style="--hc:#60a5fa" onclick="setHotelFilter('Santa Fé')"><span class="ho-dot"></span>Santa Fé</button>
+    <button class="ho-btn" id="hf-Tropicana" style="--hc:#4ade80" onclick="setHotelFilter('Tropicana')"><span class="ho-dot"></span>Tropicana</button>
+  </div>
+
+  <!-- MONTH FILTER BAR -->
+  <div class="month-bar" id="global-month-bar">
+    <span class="mo-label">Período:</span>
+    <button class="mo-btn special active" id="mo-all" onclick="setMonthFilter('all')">Todos</button>
+    <button class="mo-btn special" id="mo-none" onclick="setMonthFilter('none')">Ninguno</button>
+    <div class="mo-sep"></div>
+    <button class="mo-btn" id="mo-Jan" onclick="toggleMonth('Jan')">Ene</button>
+    <button class="mo-btn" id="mo-Feb" onclick="toggleMonth('Feb')">Feb</button>
+    <button class="mo-btn" id="mo-Mar" onclick="toggleMonth('Mar')">Mar</button>
+    <button class="mo-btn" id="mo-Apr" onclick="toggleMonth('Apr')">Abr</button>
+    <button class="mo-btn" id="mo-May" onclick="toggleMonth('May')">May</button>
+    <button class="mo-btn" id="mo-Jun" onclick="toggleMonth('Jun')">Jun</button>
+    <button class="mo-btn" id="mo-Jul" onclick="toggleMonth('Jul')">Jul</button>
+    <button class="mo-btn" id="mo-Aug" onclick="toggleMonth('Aug')">Ago</button>
+    <button class="mo-btn" id="mo-Sep" onclick="toggleMonth('Sep')">Sep</button>
+    <button class="mo-btn" id="mo-Oct" onclick="toggleMonth('Oct')">Oct</button>
+    <button class="mo-btn" id="mo-Nov" onclick="toggleMonth('Nov')">Nov</button>
+    <button class="mo-btn" id="mo-Dec" onclick="toggleMonth('Dec')">Dic</button>
+  </div>
+
+  <!-- PACE MONTH BAR (solo visible en OTB Pace, selección única) -->
+  <div class="month-bar" id="pace-month-bar" style="display:none">
+    <span class="mo-label">Período:</span>
+    <button class="mo-btn active" id="pm-Jan" onclick="setPaceMonth('Jan')">Ene</button>
+    <button class="mo-btn" id="pm-Feb" onclick="setPaceMonth('Feb')">Feb</button>
+    <button class="mo-btn" id="pm-Mar" onclick="setPaceMonth('Mar')">Mar</button>
+    <button class="mo-btn" id="pm-Apr" onclick="setPaceMonth('Apr')">Abr</button>
+    <button class="mo-btn" id="pm-May" onclick="setPaceMonth('May')">May</button>
+    <button class="mo-btn" id="pm-Jun" onclick="setPaceMonth('Jun')">Jun</button>
+    <button class="mo-btn" id="pm-Jul" onclick="setPaceMonth('Jul')">Jul</button>
+    <button class="mo-btn" id="pm-Aug" onclick="setPaceMonth('Aug')">Ago</button>
+    <button class="mo-btn" id="pm-Sep" onclick="setPaceMonth('Sep')">Sep</button>
+    <button class="mo-btn" id="pm-Oct" onclick="setPaceMonth('Oct')">Oct</button>
+    <button class="mo-btn" id="pm-Nov" onclick="setPaceMonth('Nov')">Nov</button>
+    <button class="mo-btn" id="pm-Dec" onclick="setPaceMonth('Dec')">Dic</button>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+    <div class="kpi-strip" id="kpi-strip"></div>
+
+    <!-- OVERVIEW -->
+    <div class="view active" id="view-overview">
+      <div class="section-row">Revenue & Ocupación Mensual</div>
+      <div class="grid3">
+        <div class="card anim">
+          <div class="card-title">Revenue por Mes</div>
+          <div class="card-sub">LY 2025 · OTB 2026 · BDGT · FCST por mes</div>
+          <div class="legend">
+            <div class="leg-item"><div class="leg-sq" style="background:#cbd5e1"></div>LY 2025</div>
+            <div class="leg-item"><div class="leg-sq" style="background:#0284c7"></div>OTB 2026</div>
+            <div class="leg-item"><div class="leg-sq" style="background:#475569"></div>BDGT</div>
+            <div class="leg-item"><div class="leg-sq" style="background:#d97706"></div>FCST</div>
+          </div>
+          <div class="rev-vchart" id="rev-chart"></div>
+        </div>
+        <div class="card anim">
+          <div class="card-title">Ocupación %</div>
+          <div class="card-sub">LY · OTB · BDGT · FCST por mes</div>
+          <div class="legend">
+            <div class="leg-item"><div class="leg-sq" style="background:#cbd5e1"></div>LY</div>
+            <div class="leg-item"><div class="leg-sq" style="background:#0284c7"></div>OTB</div>
+            <div class="leg-item"><div class="leg-sq" style="background:#475569"></div>BDGT</div>
+            <div class="leg-item"><div class="leg-sq" style="background:#d97706"></div>FCST</div>
+          </div>
+          <div class="occ-chart" id="occ-chart"></div>
+        </div>
+      </div>
+      <div class="section-row">ADR & RevPAR Mensual</div>
+      <div class="grid3">
+        <div class="card anim">
+          <div class="card-title">ADR por Mes</div>
+          <div class="card-sub">LY 2025 · OTB 2026 · BDGT · FCST por mes</div>
+          <div class="legend">
+            <div class="leg-item"><div class="leg-sq" style="background:#cbd5e1"></div>LY 2025</div>
+            <div class="leg-item"><div class="leg-sq" style="background:#0284c7"></div>OTB 2026</div>
+            <div class="leg-item"><div class="leg-sq" style="background:#475569"></div>BDGT</div>
+            <div class="leg-item"><div class="leg-sq" style="background:#d97706"></div>FCST</div>
+          </div>
+          <div class="rev-vchart" id="adr-chart-ov"></div>
+        </div>
+        <div class="card anim">
+          <div class="card-title">RevPAR</div>
+          <div class="card-sub">LY · OTB · BDGT · FCST por mes</div>
+          <div class="legend">
+            <div class="leg-item"><div class="leg-sq" style="background:#cbd5e1"></div>LY</div>
+            <div class="leg-item"><div class="leg-sq" style="background:#0284c7"></div>OTB</div>
+            <div class="leg-item"><div class="leg-sq" style="background:#475569"></div>BDGT</div>
+            <div class="leg-item"><div class="leg-sq" style="background:#d97706"></div>FCST</div>
+          </div>
+          <div class="rev-vchart" id="revpar-chart-ov"></div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- PICKUP SEMANAL -->
+    <div class="view" id="view-pickup">
+      <div class="section-row">Pickup Semanal — Incremental por Hotel</div>
+      <div id="pu-hotel-filter" style="display:none"></div>
+      <div class="card anim" style="margin-bottom:16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px">
+          <div>
+            <div class="card-title" style="margin-bottom:2px">Pickup Incremental Semanal</div>
+            <div class="card-sub">Lo vendido cada semana · selecciona métrica</div>
+          </div>
+          <div style="display:flex;gap:6px">
+            <button class="pu-metric-btn active" id="pum-rev" onclick="setPUMetric('rev')">Revenue</button>
+            <button class="pu-metric-btn" id="pum-rn" onclick="setPUMetric('rn')">Room Nights</button>
+            <button class="pu-metric-btn" id="pum-adr" onclick="setPUMetric('adr')">ADR</button>
+          </div>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="pu-table" id="pu-weekly-table"></table>
+        </div>
+      </div>
+      <div class="section-row">Tendencia por Hotel</div>
+      <div class="trend-grid" id="pu-trend-grid"></div>
+    </div>
+
+    <!-- RESUMEN EJECUTIVO -->
+    <div class="view" id="view-exec">
+
+      <!-- FILTRO HOTELES EJECUTIVO -->
+      <div style="display:none" id="exec-hotel-filter-wrap">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+          <span style="font-size:11px;color:var(--sub);font-weight:600;letter-spacing:.04em">HOTELES:</span>
+          <button class="pu-week-btn active" id="exh-todos" onclick="execHotelFilter('all')">Todos</button>
+          <button class="pu-week-btn" id="exh-ninguno" onclick="execHotelFilter('none')">Ninguno</button>
+          <span style="width:1px;height:20px;background:var(--border);display:inline-block"></span>
+          <div id="exec-hotel-filter" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+        </div>
+      </div>
+
+      <!-- TABLA POSICIÓN -->
+      <div class="card" style="overflow-x:auto;margin-bottom:18px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+          <div>
+            <div class="card-title" style="margin-bottom:2px">📊 Posición del Portfolio</div>
+            <div class="card-sub">LY 2025 · OTB 2026 · Budget · Forecast · Acumulado período</div>
+          </div>
+        </div>
+        <table class="dtbl" id="exec-junta-tbl"></table>
+      </div>
+
+      <!-- PICKUP -->
+      <div class="card" style="margin-bottom:18px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+          <div>
+            <div class="card-title" style="margin-bottom:2px">📈 Pick Up WoW</div>
+            <div class="card-sub">Promedio diario · últimas semanas</div>
+          </div>
+          <div style="display:flex;gap:6px">
+            <button class="pu-metric-btn active" id="epum-rev" onclick="setExecMetric('rev')">Revenue</button>
+            <button class="pu-metric-btn" id="epum-rn" onclick="setExecMetric('rn')">Rm Nights</button>
+            <button class="pu-metric-btn" id="epum-adr" onclick="setExecMetric('adr')">ADR</button>
+          </div>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="pu-table" id="exec-pu-table"></table>
+        </div>
+      </div>
+
+      <!-- SPARKLINES -->
+      <div class="section-row">Tendencia Pickup por Propiedad</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px" id="exec-spark-grid"></div>
+    </div>
+
+
+    <!-- OTB PACE -->
+    <div class="view" id="view-pace">
+      <div class="section-row">Evolución OTB Semanal</div>
+
+      <!-- Controls row -->
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px">
+        <div style="display:flex;gap:4px">
+          <button class="pu-week-btn active" id="pace-metric-rev" onclick="setPaceMetric('rev')">Revenue</button>
+          <button class="pu-week-btn" id="pace-metric-rn" onclick="setPaceMetric('rn')">Room Nights</button>
+          <button class="pu-week-btn" id="pace-metric-adr" onclick="setPaceMetric('adr')">ADR</button>
+          <button class="pu-week-btn" id="pace-metric-occ" onclick="setPaceMetric('occ')">Occ %</button>
+        </div>
+      </div>
+
+      <!-- Pace table -->
+      <div class="card" style="overflow-x:auto">
+        <table class="dtbl" id="pace-table" style="font-size:11px"></table>
+      </div>
+
+      <!-- Pace trend charts per hotel -->
+      <div id="pace-charts" style="margin-top:16px"></div>
+    </div>
+
+    <!-- TABLA -->
+    <div class="view" id="view-tabla">
+      <div class="section-row">Tabla Mensual Completa</div>
+      <div class="card" style="overflow-x:auto">
+        <div class="card-title" style="margin-bottom:4px">Detalle por Mes</div>
+        <div class="card-sub" id="tabla-sub">Todas las propiedades · 12 meses</div>
+        <table class="dtbl" id="dtbl"></table>
+      </div>
+    </div>
+
+    <!-- TABLA 2 -->
+    <div class="view" id="view-tabla2">
+      <div class="section-row">Tabla Mensual Completa — Copia</div>
+      <div class="card" style="overflow-x:auto">
+        <div class="card-title" style="margin-bottom:4px">Detalle por Mes 2</div>
+        <div class="card-sub" id="tabla2-sub">Todas las propiedades · 12 meses</div>
+        <table class="dtbl" id="dtbl2"></table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SHEETS_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vRObEQleJUDAvJYNrRd53OHLeryJWmgdb9-BlQndx4L3Uc9UBQQqs6WWWZFnl70Rs2ZcWLZWj-h_RJi/pub?gid=729579954&single=true&output=csv';
+const PROXY='https://corsproxy.io/?url=';
+
+async function loadData(){
+  const statusEl=document.getElementById('data-status');
+  try{
+    statusEl.textContent='↻ Actualizando datos...';statusEl.style.color='#d97706';
+    const res=await fetch(PROXY+encodeURIComponent(SHEETS_URL));
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const text=await res.text();
+    const parsed=parseCSV(text);
+    if(parsed.length<10) throw new Error('Datos insuficientes');
+    RAW.length=0;
+    parsed.forEach(r=>RAW.push(r));
+    const now=new Date();
+    statusEl.textContent='✓ Datos actualizados · '+now.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
+    statusEl.style.color='#059669';
+  }catch(e){
+    statusEl.textContent='';
+  }
+  renderAll();
+}
+
+const RAW=[
+{mo:'Jan',h:'Amomoxtli',lyRN:661,lyADR:6510,lyOcc:63,lyRev:4303375,otbRN:592,otbADR:6664,otbOcc:56,otbRev:3945153,puRev:0,bdgtRN:740,bdgtADR:6670,bdgtOcc:70,bdgtRev:4935800,fcstRN:650,fcstADR:6600,fcstOcc:62,fcstRev:4290000},
+{mo:'Jan',h:'Anticavilla',lyRN:154,lyADR:4597,lyOcc:31,lyRev:707905,otbRN:132,otbADR:4868,otbOcc:27,otbRev:642576,puRev:0,bdgtRN:180,bdgtADR:4650,bdgtOcc:36,bdgtRev:837000,fcstRN:160,fcstADR:4707,fcstOcc:32,fcstRev:753120},
+{mo:'Jan',h:'Boca de Agua',lyRN:236,lyADR:9267,lyOcc:35,lyRev:2187019,otbRN:317,otbADR:6757,otbOcc:46,otbRev:2141969,puRev:0,bdgtRN:410,bdgtADR:8850,bdgtOcc:60,bdgtRev:3628500,fcstRN:300,fcstADR:7200,fcstOcc:44,fcstRev:2160000},
+{mo:'Jan',h:'Casona',lyRN:340,lyADR:7793,lyOcc:34,lyRev:2649562,otbRN:675,otbADR:7487,otbOcc:68,otbRev:5053725,puRev:0,bdgtRN:640,bdgtADR:7560,bdgtOcc:65,bdgtRev:4838400,fcstRN:675,fcstADR:7487,fcstOcc:68,fcstRev:5053725},
+{mo:'Jan',h:'El Santuario',lyRN:909,lyADR:5400,lyOcc:22,lyRev:4908946,otbRN:1293,otbADR:4916,otbOcc:31,otbRev:6356634,puRev:0,bdgtRN:1250,bdgtADR:5400,bdgtOcc:30,bdgtRev:6750000,fcstRN:1293,fcstADR:4916,fcstOcc:31,fcstRev:6356634},
+{mo:'Jan',h:'MDS',lyRN:469,lyADR:3730,lyOcc:30,lyRev:1749227,otbRN:486,otbADR:3368,otbOcc:31,otbRev:1636848,puRev:0,bdgtRN:515,bdgtADR:3900,bdgtOcc:33,bdgtRev:2008500,fcstRN:480,fcstADR:3400,fcstOcc:31,fcstRev:1632000},
+{mo:'Jan',h:'Numu',lyRN:570,lyADR:6955,lyOcc:42,lyRev:3964401,otbRN:657,otbADR:7321,otbOcc:48,otbRev:4809897,puRev:0,bdgtRN:610,bdgtADR:7300,bdgtOcc:45,bdgtRev:4453000,fcstRN:685,fcstADR:7400,fcstOcc:50,fcstRev:5069000},
+{mo:'Jan',h:'Santa Fé',lyRN:1371,lyADR:2860,lyOcc:73,lyRev:3920745,otbRN:1230,otbADR:3079,otbOcc:65,otbRev:3787022,puRev:0,bdgtRN:1240,bdgtADR:3050,bdgtOcc:66,bdgtRev:3782000,fcstRN:1250,fcstADR:3030,fcstOcc:66,fcstRev:3787500},
+{mo:'Jan',h:'Tropicana',lyRN:796,lyADR:3700,lyOcc:37,lyRev:2944942,otbRN:1454,otbADR:3675,otbOcc:67,otbRev:5343450,puRev:0,bdgtRN:1400,bdgtADR:3780,bdgtOcc:65,bdgtRev:5292000,fcstRN:1480,fcstADR:3800,fcstOcc:68,fcstRev:5624000},
+{mo:'Feb',h:'Amomoxtli',lyRN:714,lyADR:6487,lyOcc:72,lyRev:4631856,otbRN:652,otbADR:6700,otbOcc:66,otbRev:4368400,puRev:0,bdgtRN:730,bdgtADR:6650,bdgtOcc:74,bdgtRev:4854500,fcstRN:750,fcstADR:6650,fcstOcc:76,fcstRev:4987500},
+{mo:'Feb',h:'Anticavilla',lyRN:238,lyADR:4843,lyOcc:51,lyRev:1152650,otbRN:186,otbADR:4851,otbOcc:40,otbRev:902286,puRev:0,bdgtRN:250,bdgtADR:4990,bdgtOcc:54,bdgtRev:1247500,fcstRN:209,fcstADR:4675,fcstOcc:45,fcstRev:977075},
+{mo:'Feb',h:'Boca de Agua',lyRN:246,lyADR:7957,lyOcc:39,lyRev:1957378,otbRN:343,otbADR:6787,otbOcc:54,otbRev:2327941,puRev:0,bdgtRN:440,bdgtADR:8000,bdgtOcc:69,bdgtRev:3520000,fcstRN:385,fcstADR:6680,fcstOcc:60,fcstRev:2571800},
+{mo:'Feb',h:'Casona',lyRN:543,lyADR:8419,lyOcc:59,lyRev:4571755,otbRN:638,otbADR:8663,otbOcc:69,otbRev:5526994,puRev:0,bdgtRN:640,bdgtADR:8650,bdgtOcc:69,bdgtRev:5536000,fcstRN:638,fcstADR:8663,fcstOcc:69,fcstRev:5526994},
+{mo:'Feb',h:'El Santuario',lyRN:1118,lyADR:5375,lyOcc:29,lyRev:6009011,otbRN:1009,otbADR:5407,otbOcc:26,otbRev:5456107,puRev:0,bdgtRN:1580,bdgtADR:5100,bdgtOcc:41,bdgtRev:8058000,fcstRN:1009,fcstADR:5407,fcstOcc:26,fcstRev:5456107},
+{mo:'Feb',h:'MDS',lyRN:380,lyADR:4077,lyOcc:26,lyRev:1549305,otbRN:507,otbADR:3450,otbOcc:35,otbRev:1749150,puRev:0,bdgtRN:450,bdgtADR:4200,bdgtOcc:31,bdgtRev:1890000,fcstRN:510,fcstADR:3500,fcstOcc:35,fcstRev:1785000},
+{mo:'Feb',h:'Numu',lyRN:671,lyADR:7326,lyOcc:53,lyRev:4915619,otbRN:779,otbADR:7338,otbOcc:61,otbRev:5716302,puRev:0,bdgtRN:700,bdgtADR:8100,bdgtOcc:55,bdgtRev:5670000,fcstRN:833,fcstADR:8018,fcstOcc:65,fcstRev:6678994},
+{mo:'Feb',h:'Santa Fé',lyRN:1223,lyADR:2628,lyOcc:69,lyRev:3213906,otbRN:1093,otbADR:2884,otbOcc:62,otbRev:3152332,puRev:0,bdgtRN:1280,bdgtADR:3080,bdgtOcc:72,bdgtRev:3942400,fcstRN:1200,fcstADR:2700,fcstOcc:68,fcstRev:3240000},
+{mo:'Feb',h:'Tropicana',lyRN:735,lyADR:3669,lyOcc:36,lyRev:2696736,otbRN:1452,otbADR:3941,otbOcc:72,otbRev:5721606,puRev:0,bdgtRN:1450,bdgtADR:3700,bdgtOcc:71,bdgtRev:5365000,fcstRN:1530,fcstADR:3620,fcstOcc:75,fcstRev:5538600},
+{mo:'Mar',h:'Amomoxtli',lyRN:860,lyADR:6571,lyOcc:82,lyRev:5650728,otbRN:698,otbADR:6586,otbOcc:66,otbRev:4597028,puRev:142811,bdgtRN:880,bdgtADR:6770,bdgtOcc:83,bdgtRev:5957600,fcstRN:630,fcstADR:6600,fcstOcc:60,fcstRev:4158000},
+{mo:'Mar',h:'Anticavilla',lyRN:192,lyADR:5106,lyOcc:39,lyRev:980434,otbRN:181,otbADR:5055,otbOcc:36,otbRev:914955,puRev:22292,bdgtRN:233,bdgtADR:5060,bdgtOcc:47,bdgtRev:1178980,fcstRN:174,fcstADR:4891,fcstOcc:35,fcstRev:851034},
+{mo:'Mar',h:'Boca de Agua',lyRN:307,lyADR:6882,lyOcc:45,lyRev:2112624,otbRN:227,otbADR:6276,otbOcc:33,otbRev:1424652,puRev:41884,bdgtRN:480,bdgtADR:7900,bdgtOcc:70,bdgtRev:3792000,fcstRN:205,fcstADR:6800,fcstOcc:30,fcstRev:1394000},
+{mo:'Mar',h:'Casona',lyRN:631,lyADR:8055,lyOcc:64,lyRev:5082689,otbRN:676,otbADR:7866,otbOcc:68,otbRev:5317416,puRev:53583,bdgtRN:717,bdgtADR:8200,bdgtOcc:72,bdgtRev:5879400,fcstRN:660,fcstADR:7800,fcstOcc:67,fcstRev:5148000},
+{mo:'Mar',h:'El Santuario',lyRN:1522,lyADR:5326,lyOcc:37,lyRev:8105989,otbRN:1327,otbADR:5146,otbOcc:32,otbRev:6828742,puRev:239124,bdgtRN:1800,bdgtADR:5300,bdgtOcc:43,bdgtRev:9540000,fcstRN:1300,fcstADR:5100,fcstOcc:31,fcstRev:6630000},
+{mo:'Mar',h:'MDS',lyRN:476,lyADR:4020,lyOcc:31,lyRev:1913306,otbRN:412,otbADR:3831,otbOcc:27,otbRev:1578372,puRev:32250,bdgtRN:524,bdgtADR:4200,bdgtOcc:34,bdgtRev:2200800,fcstRN:460,fcstADR:4100,fcstOcc:30,fcstRev:1886000},
+{mo:'Mar',h:'Numu',lyRN:616,lyADR:7724,lyOcc:45,lyRev:4758003,otbRN:729,otbADR:6844,otbOcc:53,otbRev:4989276,puRev:123072,bdgtRN:760,bdgtADR:8400,bdgtOcc:56,bdgtRev:6384000,fcstRN:733,fcstADR:6786,fcstOcc:54,fcstRev:4974138},
+{mo:'Mar',h:'Santa Fé',lyRN:1279,lyADR:2467,lyOcc:68,lyRev:3155007,otbRN:1524,otbADR:2528,otbOcc:81,otbRev:3852672,puRev:85013,bdgtRN:1370,bdgtADR:3090,bdgtOcc:72,bdgtRev:4233300,fcstRN:1600,fcstADR:2430,fcstOcc:85,fcstRev:3888000},
+{mo:'Mar',h:'Tropicana',lyRN:1138,lyADR:4141,lyOcc:52,lyRev:4712675,otbRN:1552,otbADR:3978,otbOcc:72,otbRev:6173080,puRev:103393,bdgtRN:1550,bdgtADR:4050,bdgtOcc:71,bdgtRev:6277500,fcstRN:1550,fcstADR:4000,fcstOcc:71,fcstRev:6200000},
+{mo:'Apr',h:'Amomoxtli',lyRN:692,lyADR:6859,lyOcc:68,lyRev:4746130,otbRN:614,otbADR:6651,otbOcc:60,otbRev:4083714,puRev:538060,bdgtRN:750,bdgtADR:6750,bdgtOcc:74,bdgtRev:5062500,fcstRN:730,fcstADR:6700,fcstOcc:72,fcstRev:4891000},
+{mo:'Apr',h:'Anticavilla',lyRN:207,lyADR:4626,lyOcc:43,lyRev:957645,otbRN:129,otbADR:4929,otbOcc:27,otbRev:635841,puRev:218483,bdgtRN:237,bdgtADR:5141,bdgtOcc:49,bdgtRev:1218417,fcstRN:159,fcstADR:4891,fcstOcc:33,fcstRev:777669},
+{mo:'Apr',h:'Boca de Agua',lyRN:291,lyADR:7248,lyOcc:44,lyRev:2109151,otbRN:192,otbADR:8010,otbOcc:29,otbRev:1537920,puRev:229015,bdgtRN:350,bdgtADR:7300,bdgtOcc:53,bdgtRev:2555000,fcstRN:230,fcstADR:8000,fcstOcc:35,fcstRev:1840000},
+{mo:'Apr',h:'Casona',lyRN:364,lyADR:7461,lyOcc:38,lyRev:2715712,otbRN:596,otbADR:6800,otbOcc:62,otbRev:4052800,puRev:154570,bdgtRN:531,bdgtADR:7600,bdgtOcc:55,bdgtRev:4035600,fcstRN:630,fcstADR:6800,fcstOcc:66,fcstRev:4284000},
+{mo:'Apr',h:'El Santuario',lyRN:927,lyADR:6015,lyOcc:23,lyRev:5575561,otbRN:1020,otbADR:5193,otbOcc:25,otbRev:5296860,puRev:1599378,bdgtRN:1200,bdgtADR:4900,bdgtOcc:30,bdgtRev:5880000,fcstRN:1400,fcstADR:5150,fcstOcc:35,fcstRev:7210000},
+{mo:'Apr',h:'MDS',lyRN:343,lyADR:4200,lyOcc:23,lyRev:1440489,otbRN:256,otbADR:4415,otbOcc:17,otbRev:1130240,puRev:109398,bdgtRN:430,bdgtADR:4100,bdgtOcc:29,bdgtRev:1763000,fcstRN:330,fcstADR:4200,fcstOcc:22,fcstRev:1386000},
+{mo:'Apr',h:'Numu',lyRN:717,lyADR:7589,lyOcc:54,lyRev:5441442,otbRN:612,otbADR:7446,otbOcc:46,otbRev:4556952,puRev:223149,bdgtRN:720,bdgtADR:7900,bdgtOcc:55,bdgtRev:5688000,fcstRN:665,fcstADR:8046,fcstOcc:50,fcstRev:5350590},
+{mo:'Apr',h:'Santa Fé',lyRN:1332,lyADR:2666,lyOcc:73,lyRev:3551599,otbRN:830,otbADR:2896,otbOcc:45,otbRev:2403680,puRev:187817,bdgtRN:1300,bdgtADR:3020,bdgtOcc:71,bdgtRev:3926000,fcstRN:1100,fcstADR:2850,fcstOcc:60,fcstRev:3135000},
+{mo:'Apr',h:'Tropicana',lyRN:820,lyADR:3651,lyOcc:39,lyRev:2994189,otbRN:748,otbADR:3404,otbOcc:36,otbRev:2546192,puRev:206127,bdgtRN:1103,bdgtADR:3648,bdgtOcc:53,bdgtRev:4023744,fcstRN:950,fcstADR:3400,fcstOcc:45,fcstRev:3230000},
+{mo:'May',h:'Amomoxtli',lyRN:706,lyADR:6488,lyOcc:67,lyRev:4580845,otbRN:353,otbADR:6133,otbOcc:33,otbRev:2164949,puRev:258317,bdgtRN:750,bdgtADR:6600,bdgtOcc:71,bdgtRev:4950000,fcstRN:530,fcstADR:6500,fcstOcc:50,fcstRev:3445000},
+{mo:'May',h:'Anticavilla',lyRN:174,lyADR:5073,lyOcc:35,lyRev:882723,otbRN:31,otbADR:4830,otbOcc:6,otbRev:149730,puRev:0,bdgtRN:188,bdgtADR:5010,bdgtOcc:38,bdgtRev:941880,fcstRN:174,fcstADR:4611,fcstOcc:35,fcstRev:802314},
+{mo:'May',h:'Boca de Agua',lyRN:200,lyADR:5652,lyOcc:29,lyRev:1130438,otbRN:60,otbADR:7492,otbOcc:9,otbRev:449520,puRev:85884,bdgtRN:270,bdgtADR:5900,bdgtOcc:40,bdgtRev:1593000,fcstRN:200,fcstADR:5800,fcstOcc:29,fcstRev:1160000},
+{mo:'May',h:'Casona',lyRN:456,lyADR:6701,lyOcc:46,lyRev:3055818,otbRN:206,otbADR:6783,otbOcc:21,otbRev:1397298,puRev:0,bdgtRN:580,bdgtADR:7350,bdgtOcc:58,bdgtRev:4263000,fcstRN:550,fcstADR:7200,fcstOcc:55,fcstRev:3960000},
+{mo:'May',h:'El Santuario',lyRN:1153,lyADR:5698,lyOcc:28,lyRev:6569607,otbRN:300,otbADR:4787,otbOcc:7,otbRev:1436100,puRev:98076,bdgtRN:1300,bdgtADR:5000,bdgtOcc:31,bdgtRev:6500000,fcstRN:1200,fcstADR:5700,fcstOcc:29,fcstRev:6840000},
+{mo:'May',h:'MDS',lyRN:351,lyADR:4000,lyOcc:23,lyRev:1404021,otbRN:54,otbADR:4577,otbOcc:3,otbRev:247158,puRev:5054,bdgtRN:430,bdgtADR:4100,bdgtOcc:28,bdgtRev:1763000,fcstRN:400,fcstADR:4100,fcstOcc:26,fcstRev:1640000},
+{mo:'May',h:'Numu',lyRN:678,lyADR:8354,lyOcc:50,lyRev:5663874,otbRN:411,otbADR:6315,otbOcc:30,otbRev:2595465,puRev:192379,bdgtRN:710,bdgtADR:8400,bdgtOcc:52,bdgtRev:5964000,fcstRN:650,fcstADR:7362,fcstOcc:48,fcstRev:4785300},
+{mo:'May',h:'Santa Fé',lyRN:1145,lyADR:2280,lyOcc:61,lyRev:2610770,otbRN:208,otbADR:2756,otbOcc:11,otbRev:573248,puRev:94619,bdgtRN:1200,bdgtADR:2850,bdgtOcc:63,bdgtRev:3420000,fcstRN:1200,fcstADR:2500,fcstOcc:63,fcstRev:3000000},
+{mo:'May',h:'Tropicana',lyRN:654,lyADR:4330,lyOcc:30,lyRev:2832110,otbRN:502,otbADR:3941,otbOcc:23,otbRev:1978131,puRev:34262,bdgtRN:1100,bdgtADR:4260,bdgtOcc:51,bdgtRev:4686000,fcstRN:1000,fcstADR:4100,fcstOcc:46,fcstRev:4100000},
+{mo:'Jun',h:'Amomoxtli',lyRN:716,lyADR:6014,lyOcc:70,lyRev:4305702,otbRN:59,otbADR:5470,otbOcc:6,otbRev:322730,puRev:322730,bdgtRN:740,bdgtADR:6200,bdgtOcc:73,bdgtRev:4588000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Jun',h:'Anticavilla',lyRN:144,lyADR:4689,lyOcc:30,lyRev:675158,otbRN:4,otbADR:3967,otbOcc:1,otbRev:15868,puRev:15868,bdgtRN:189,bdgtADR:4961,bdgtOcc:39,bdgtRev:937629,fcstRN:162,fcstADR:4843,fcstOcc:34,fcstRev:784566},
+{mo:'Jun',h:'Boca de Agua',lyRN:153,lyADR:6619,lyOcc:23,lyRev:1012684,otbRN:20,otbADR:7910,otbOcc:3,otbRev:158200,puRev:0,bdgtRN:240,bdgtADR:5900,bdgtOcc:36,bdgtRev:1416000,fcstRN:165,fcstADR:5800,fcstOcc:25,fcstRev:957000},
+{mo:'Jun',h:'Casona',lyRN:412,lyADR:5649,lyOcc:43,lyRev:2327375,otbRN:41,otbADR:11867,otbOcc:4,otbRev:486547,puRev:194233,bdgtRN:815,bdgtADR:13500,bdgtOcc:85,bdgtRev:11002500,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Jun',h:'El Santuario',lyRN:1092,lyADR:5156,lyOcc:27,lyRev:5630337,otbRN:27,otbADR:6529,otbOcc:1,otbRev:176283,puRev:176283,bdgtRN:1210,bdgtADR:5200,bdgtOcc:30,bdgtRev:6292000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Jun',h:'MDS',lyRN:212,lyADR:4105,lyOcc:14,lyRev:870168,otbRN:6,otbADR:5553,otbOcc:0,otbRev:33318,puRev:33318,bdgtRN:320,bdgtADR:4150,bdgtOcc:21,bdgtRev:1328000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Jun',h:'Numu',lyRN:549,lyADR:5927,lyOcc:42,lyRev:3253878,otbRN:189,otbADR:6194,otbOcc:14,otbRev:1170666,puRev:69738,bdgtRN:660,bdgtADR:7000,bdgtOcc:50,bdgtRev:4620000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Jun',h:'Santa Fé',lyRN:694,lyADR:2397,lyOcc:38,lyRev:1663664,otbRN:64,otbADR:2692,otbOcc:3,otbRev:172288,puRev:23941,bdgtRN:1090,bdgtADR:3090,bdgtOcc:60,bdgtRev:3368100,fcstRN:700,fcstADR:2450,fcstOcc:38,fcstRev:1715000},
+{mo:'Jun',h:'Tropicana',lyRN:306,lyADR:2532,lyOcc:15,lyRev:774766,otbRN:108,otbADR:2794,otbOcc:5,otbRev:301698,puRev:15873,bdgtRN:920,bdgtADR:3100,bdgtOcc:44,bdgtRev:2852000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Jul',h:'Amomoxtli',lyRN:746,lyADR:6089,lyOcc:71,lyRev:4542105,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:750,bdgtADR:6050,bdgtOcc:71,bdgtRev:4537500,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Jul',h:'Anticavilla',lyRN:194,lyADR:4800,lyOcc:39,lyRev:931167,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:206,bdgtADR:4936,bdgtOcc:42,bdgtRev:1016816,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Jul',h:'Boca de Agua',lyRN:247,lyADR:5198,lyOcc:36,lyRev:1283973,otbRN:36,otbADR:7263,otbOcc:5,otbRev:261468,puRev:261468,bdgtRN:240,bdgtADR:5900,bdgtOcc:35,bdgtRev:1416000,fcstRN:205,fcstADR:5800,fcstOcc:30,fcstRev:1189000},
+{mo:'Jul',h:'Casona',lyRN:257,lyADR:6058,lyOcc:26,lyRev:1556869,otbRN:10,otbADR:5788,otbOcc:1,otbRev:118670,puRev:0,bdgtRN:600,bdgtADR:9405,bdgtOcc:60,bdgtRev:5643000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Jul',h:'El Santuario',lyRN:667,lyADR:5217,lyOcc:16,lyRev:3479483,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:1030,bdgtADR:5300,bdgtOcc:25,bdgtRev:5459000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Jul',h:'MDS',lyRN:293,lyADR:3757,lyOcc:19,lyRev:1100714,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:380,bdgtADR:3900,bdgtOcc:25,bdgtRev:1482000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Jul',h:'Numu',lyRN:453,lyADR:5889,lyOcc:33,lyRev:2667503,otbRN:88,otbADR:6293,otbOcc:6,otbRev:553784,puRev:553784,bdgtRN:490,bdgtADR:6500,bdgtOcc:36,bdgtRev:3185000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Jul',h:'Santa Fé',lyRN:1134,lyADR:2553,lyOcc:60,lyRev:2894645,otbRN:94,otbADR:2842,otbOcc:5,otbRev:267148,puRev:7343,bdgtRN:1150,bdgtADR:3200,bdgtOcc:61,bdgtRev:3680000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Jul',h:'Tropicana',lyRN:562,lyADR:2841,lyOcc:26,lyRev:1596773,otbRN:65,otbADR:2572,otbOcc:3,otbRev:167148,puRev:12044,bdgtRN:1055,bdgtADR:2913,bdgtOcc:49,bdgtRev:3073215,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Aug',h:'Amomoxtli',lyRN:776,lyADR:6132,lyOcc:74,lyRev:4758502,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:790,bdgtADR:6200,bdgtOcc:75,bdgtRev:4898000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Aug',h:'Anticavilla',lyRN:127,lyADR:4951,lyOcc:26,lyRev:628810,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:160,bdgtADR:5149,bdgtOcc:32,bdgtRev:823840,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Aug',h:'Boca de Agua',lyRN:405,lyADR:4918,lyOcc:59,lyRev:1991628,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:290,bdgtADR:6000,bdgtOcc:43,bdgtRev:1740000,fcstRN:270,fcstADR:5900,fcstOcc:40,fcstRev:1593000},
+{mo:'Aug',h:'Casona',lyRN:284,lyADR:6121,lyOcc:29,lyRev:1738421,otbRN:4,otbADR:7430,otbOcc:0,otbRev:29720,puRev:0,bdgtRN:360,bdgtADR:6500,bdgtOcc:36,bdgtRev:2340000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Aug',h:'El Santuario',lyRN:783,lyADR:5420,lyOcc:19,lyRev:4243860,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:1050,bdgtADR:5300,bdgtOcc:25,bdgtRev:5565000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Aug',h:'MDS',lyRN:343,lyADR:3734,lyOcc:22,lyRev:1280762,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:330,bdgtADR:3900,bdgtOcc:21,bdgtRev:1287000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Aug',h:'Numu',lyRN:584,lyADR:6281,lyOcc:43,lyRev:3668139,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:500,bdgtADR:6300,bdgtOcc:37,bdgtRev:3150000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Aug',h:'Santa Fé',lyRN:993,lyADR:2493,lyOcc:53,lyRev:2475062,otbRN:122,otbADR:2852,otbOcc:6,otbRev:347944,puRev:0,bdgtRN:1040,bdgtADR:3001,bdgtOcc:55,bdgtRev:3121040,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Aug',h:'Tropicana',lyRN:245,lyADR:2693,lyOcc:11,lyRev:659883,otbRN:36,otbADR:2165,otbOcc:2,otbRev:77922,puRev:0,bdgtRN:744,bdgtADR:2843,bdgtOcc:34,bdgtRev:2115192,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Sep',h:'Amomoxtli',lyRN:633,lyADR:6292,lyOcc:62,lyRev:3982526,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:640,bdgtADR:6400,bdgtOcc:63,bdgtRev:4096000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Sep',h:'Anticavilla',lyRN:185,lyADR:4838,lyOcc:39,lyRev:895110,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:192,bdgtADR:4900,bdgtOcc:40,bdgtRev:940800,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Sep',h:'Boca de Agua',lyRN:152,lyADR:4087,lyOcc:24,lyRev:621203,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:280,bdgtADR:6000,bdgtOcc:44,bdgtRev:1680000,fcstRN:190,fcstADR:5900,fcstOcc:30,fcstRev:1121000},
+{mo:'Sep',h:'Casona',lyRN:409,lyADR:6651,lyOcc:43,lyRev:2720087,otbRN:11,otbADR:7454,otbOcc:1,otbRev:81994,puRev:0,bdgtRN:486,bdgtADR:6714,bdgtOcc:51,bdgtRev:3263004,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Sep',h:'El Santuario',lyRN:848,lyADR:5127,lyOcc:21,lyRev:4347696,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:1400,bdgtADR:5100,bdgtOcc:35,bdgtRev:7140000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Sep',h:'MDS',lyRN:266,lyADR:3926,lyOcc:18,lyRev:1044414,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:390,bdgtADR:4000,bdgtOcc:26,bdgtRev:1560000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Sep',h:'Numu',lyRN:638,lyADR:6354,lyOcc:48,lyRev:4054145,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:690,bdgtADR:6700,bdgtOcc:52,bdgtRev:4623000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Sep',h:'Santa Fé',lyRN:397,lyADR:2212,lyOcc:22,lyRev:878164,otbRN:4,otbADR:2872,otbOcc:0,otbRev:11488,puRev:0,bdgtRN:960,bdgtADR:2900,bdgtOcc:52,bdgtRev:2784000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Sep',h:'Tropicana',lyRN:336,lyADR:2517,lyOcc:16,lyRev:845794,otbRN:98,otbADR:2646,otbOcc:5,otbRev:259259,puRev:222241,bdgtRN:600,bdgtADR:2784,bdgtOcc:29,bdgtRev:1670400,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Oct',h:'Amomoxtli',lyRN:684,lyADR:6718,lyOcc:65,lyRev:4595064,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:750,bdgtADR:6600,bdgtOcc:71,bdgtRev:4950000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Oct',h:'Anticavilla',lyRN:215,lyADR:4690,lyOcc:43,lyRev:1008415,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:230,bdgtADR:4696,bdgtOcc:46,bdgtRev:1080080,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Oct',h:'Boca de Agua',lyRN:194,lyADR:4543,lyOcc:30,lyRev:881332,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:330,bdgtADR:6300,bdgtOcc:51,bdgtRev:2079000,fcstRN:260,fcstADR:6000,fcstOcc:40,fcstRev:1560000},
+{mo:'Oct',h:'Casona',lyRN:739,lyADR:7564,lyOcc:74,lyRev:5589678,otbRN:58,otbADR:8837,otbOcc:6,otbRev:512546,puRev:110741,bdgtRN:740,bdgtADR:9017,bdgtOcc:75,bdgtRev:6672580,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Oct',h:'El Santuario',lyRN:1096,lyADR:4917,lyOcc:26,lyRev:5388933,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:1650,bdgtADR:5200,bdgtOcc:40,bdgtRev:8580000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Oct',h:'MDS',lyRN:444,lyADR:3816,lyOcc:29,lyRev:1694295,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:570,bdgtADR:4300,bdgtOcc:37,bdgtRev:2451000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Oct',h:'Numu',lyRN:681,lyADR:8090,lyOcc:50,lyRev:5508956,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:750,bdgtADR:8300,bdgtOcc:55,bdgtRev:6225000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Oct',h:'Santa Fé',lyRN:644,lyADR:2158,lyOcc:34,lyRev:1389829,otbRN:19,otbADR:3032,otbOcc:1,otbRev:57608,puRev:0,bdgtRN:1067,bdgtADR:3390,bdgtOcc:56,bdgtRev:3617130,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Oct',h:'Tropicana',lyRN:583,lyADR:2508,lyOcc:27,lyRev:1462071,otbRN:82,otbADR:3164,otbOcc:4,otbRev:259407,puRev:93092,bdgtRN:1200,bdgtADR:3250,bdgtOcc:55,bdgtRev:3900000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Nov',h:'Amomoxtli',lyRN:757,lyADR:6622,lyOcc:74,lyRev:5012491,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:730,bdgtADR:6850,bdgtOcc:72,bdgtRev:5000500,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Nov',h:'Anticavilla',lyRN:242,lyADR:4882,lyOcc:50,lyRev:1181335,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:260,bdgtADR:4794,bdgtOcc:54,bdgtRev:1246440,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Nov',h:'Boca de Agua',lyRN:285,lyADR:5787,lyOcc:43,lyRev:1649272,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:450,bdgtADR:7500,bdgtOcc:68,bdgtRev:3375000,fcstRN:300,fcstADR:7300,fcstOcc:45,fcstRev:2190000},
+{mo:'Nov',h:'Casona',lyRN:696,lyADR:7047,lyOcc:73,lyRev:4904406,otbRN:25,otbADR:7807,otbOcc:3,otbRev:195175,puRev:0,bdgtRN:744,bdgtADR:8202,bdgtOcc:78,bdgtRev:6102288,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Nov',h:'El Santuario',lyRN:1642,lyADR:5004,lyOcc:41,lyRev:8216683,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:1600,bdgtADR:5300,bdgtOcc:40,bdgtRev:8480000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Nov',h:'MDS',lyRN:522,lyADR:3645,lyOcc:35,lyRev:1902476,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:680,bdgtADR:4300,bdgtOcc:45,bdgtRev:2924000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Nov',h:'Numu',lyRN:768,lyADR:8773,lyOcc:58,lyRev:6737626,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:860,bdgtADR:8700,bdgtOcc:65,bdgtRev:7482000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Nov',h:'Santa Fé',lyRN:1289,lyADR:2464,lyOcc:70,lyRev:3176096,otbRN:121,otbADR:1797,otbOcc:7,otbRev:217437,puRev:8459,bdgtRN:1290,bdgtADR:3680,bdgtOcc:70,bdgtRev:4747200,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Nov',h:'Tropicana',lyRN:1083,lyADR:3356,lyOcc:52,lyRev:3634635,otbRN:671,otbADR:3663,otbOcc:32,otbRev:2457873,puRev:1480,bdgtRN:1450,bdgtADR:3960,bdgtOcc:69,bdgtRev:5742000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Dec',h:'Amomoxtli',lyRN:661,lyADR:7219,lyOcc:63,lyRev:4771700,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:770,bdgtADR:6980,bdgtOcc:73,bdgtRev:5374600,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Dec',h:'Anticavilla',lyRN:191,lyADR:5123,lyOcc:39,lyRev:978482,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:270,bdgtADR:5100,bdgtOcc:54,bdgtRev:1377000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Dec',h:'Boca de Agua',lyRN:345,lyADR:8208,lyOcc:51,lyRev:2831760,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:410,bdgtADR:10800,bdgtOcc:60,bdgtRev:4428000,fcstRN:350,fcstADR:10000,fcstOcc:51,fcstRev:3500000},
+{mo:'Dec',h:'Casona',lyRN:632,lyADR:6982,lyOcc:64,lyRev:4412725,otbRN:5,otbADR:8109,otbOcc:1,otbRev:40545,puRev:0,bdgtRN:680,bdgtADR:7550,bdgtOcc:69,bdgtRev:5134000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Dec',h:'El Santuario',lyRN:945,lyADR:5335,lyOcc:23,lyRev:5041103,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:1450,bdgtADR:6000,bdgtOcc:35,bdgtRev:8700000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Dec',h:'MDS',lyRN:346,lyADR:3828,lyOcc:22,lyRev:1324602,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:470,bdgtADR:4350,bdgtOcc:30,bdgtRev:2044500,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Dec',h:'Numu',lyRN:750,lyADR:8852,lyOcc:55,lyRev:6638625,otbRN:0,otbADR:0,otbOcc:0,otbRev:0,puRev:0,bdgtRN:720,bdgtADR:9800,bdgtOcc:53,bdgtRev:7056000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Dec',h:'Santa Fé',lyRN:1319,lyADR:3046,lyOcc:70,lyRev:4017674,otbRN:7,otbADR:3230,otbOcc:0,otbRev:22610,puRev:0,bdgtRN:1300,bdgtADR:3900,bdgtOcc:69,bdgtRev:5070000,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0},
+{mo:'Dec',h:'Tropicana',lyRN:1374,lyADR:3929,lyOcc:63,lyRev:5398487,otbRN:554,otbADR:3645,otbOcc:26,otbRev:2019053,puRev:6623,bdgtRN:1480,bdgtADR:4230,bdgtOcc:68,bdgtRev:6260400,fcstRN:0,fcstADR:0,fcstOcc:0,fcstRev:0}
+];
+
+const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const Q={q1:['Jan','Feb','Mar'],q2:['Apr','May','Jun'],q3:['Jul','Aug','Sep'],q4:['Oct','Nov','Dec']};
+const H_COLORS={'Amomoxtli':'#38bdf8','Anticavilla':'#a78bfa','Boca de Agua':'#34d399','Casona':'#fbbf24','El Santuario':'#fb923c','MDS':'#fb7185','Numu':'#f472b6','Santa Fé':'#60a5fa','Tropicana':'#4ade80'};
+
+let curHotel='all', curView='overview';
+let activeMos=new Set(MONTHS); // all selected by default
+
+/* ── MONTH FILTER ── */
+function setMonthFilter(preset){
+  ['all','none','q1','q2','q3','q4'].forEach(id=>{const el=document.getElementById('mo-'+id);if(el)el.classList.remove('active')});
+  document.getElementById('mo-'+preset).classList.add('active');
+  if(preset==='all') activeMos=new Set(MONTHS);
+  else if(preset==='none') activeMos=new Set();
+  else activeMos=new Set(Q[preset]);
+  MONTHS.forEach(m=>{
+    const btn=document.getElementById('mo-'+m);
+    btn.classList.toggle('active', activeMos.has(m));
+    btn.classList.remove('range-active');
+  });
+  // special red style for Ninguno when active
+  const noneBtn=document.getElementById('mo-none');
+  if(preset==='none'){noneBtn.style.background='#e11d48';noneBtn.style.borderColor='#e11d48';noneBtn.style.color='#fff';}
+  else{noneBtn.style.background='';noneBtn.style.borderColor='#fca5a5';noneBtn.style.color='#e11d48';}
+  updateBadge(); renderAll();
+}
+
+function toggleMonth(m){
+  ['all','none','q1','q2','q3','q4'].forEach(id=>{const el=document.getElementById('mo-'+id);if(el){el.classList.remove('active');el.style.background='';el.style.borderColor='';el.style.color='';}});
+  // reset none btn style
+  const noneBtn=document.getElementById('mo-none');
+  noneBtn.style.borderColor='#fca5a5';noneBtn.style.color='#e11d48';
+  if(activeMos.has(m)&&activeMos.size>0) activeMos.delete(m);
+  else activeMos.add(m);
+  MONTHS.forEach(mo=>{
+    document.getElementById('mo-'+mo).classList.toggle('active', activeMos.has(mo));
+  });
+  // check presets
+  const s=JSON.stringify([...activeMos].sort());
+  if(activeMos.size===0){document.getElementById('mo-none').classList.add('active');noneBtn.style.background='#e11d48';noneBtn.style.borderColor='#e11d48';noneBtn.style.color='#fff';}
+  else if(s===JSON.stringify([...MONTHS].sort())) document.getElementById('mo-all').classList.add('active');
+  else if(s===JSON.stringify([...Q.q1].sort())) document.getElementById('mo-q1').classList.add('active');
+  else if(s===JSON.stringify([...Q.q2].sort())) document.getElementById('mo-q2').classList.add('active');
+  else if(s===JSON.stringify([...Q.q3].sort())) document.getElementById('mo-q3').classList.add('active');
+  else if(s===JSON.stringify([...Q.q4].sort())) document.getElementById('mo-q4').classList.add('active');
+  updateBadge(); renderAll();
+}
+
+function updateBadge(){
+  const badge=document.getElementById('month-active-badge');
+  if(activeMos.size===12){badge.innerHTML='';return;}
+  const label=activeMos.size===1?[...activeMos][0]:`${activeMos.size} meses`;
+  badge.innerHTML=`<span class="month-filter-active">📅 ${label} <button onclick="setMonthFilter('all')">✕</button></span>`;
+}
+
+/* ── HELPERS ── */
+function fmtM(n){if(!n&&n!==0)return'—';const a=Math.abs(n),s=n<0?'-':'';if(a>=1e6)return s+'$'+(a/1e6).toFixed(1)+'M';if(a>=1e3)return s+'$'+(a/1000).toFixed(0)+'K';return s+'$'+Math.round(a).toLocaleString()}
+function fmtA(n){return n?'$'+Math.round(n).toLocaleString('es-MX'):'—'}
+function sm(a,k){return a.reduce((s,d)=>s+(d[k]||0),0)}
+function av(a,k){const f=a.filter(d=>d[k]>0);return f.length?Math.round(sm(f,k)/f.length):0}
+
+function getData(){
+  const base=curHotel==='all'?RAW:RAW.filter(d=>d.h===curHotel);
+  return base.filter(d=>activeMos.has(d.mo));
+}
+
+function byMonth(){
+  const data=getData();
+  return [...activeMos].sort((a,b)=>MONTHS.indexOf(a)-MONTHS.indexOf(b)).map(m=>{
+    const rows=data.filter(d=>d.mo===m);
+    if(!rows.length)return null;
+    return{mo:m,lyRN:sm(rows,'lyRN'),lyADR:av(rows,'lyADR'),lyOcc:av(rows,'lyOcc'),lyRev:sm(rows,'lyRev'),otbRN:sm(rows,'otbRN'),otbADR:av(rows,'otbADR'),otbOcc:av(rows,'otbOcc'),otbRev:sm(rows,'otbRev'),puRev:sm(rows,'puRev'),bdgtRN:sm(rows,'bdgtRN'),bdgtADR:av(rows,'bdgtADR'),bdgtOcc:av(rows,'bdgtOcc'),bdgtRev:sm(rows,'bdgtRev'),fcstRN:sm(rows,'fcstRN'),fcstADR:av(rows,'fcstADR'),fcstOcc:av(rows,'fcstOcc'),fcstRev:sm(rows,'fcstRev')};
+  }).filter(Boolean);
+}
+
+/* ── KPIs ── */
+function renderKPIs(){
+  const bm=byMonth(),col=H_COLORS[curHotel]||'#d97706';
+  const lyRev=sm(bm,'lyRev'),otbRev=sm(bm,'otbRev'),bdgtRev=sm(bm,'bdgtRev');
+  const fcstRevOnly=sm(bm.filter(d=>d.fcstRev>0),'fcstRev');
+  const fcstRev=fcstRevOnly+sm(bm.filter(d=>!d.fcstRev),'bdgtRev');
+  const lyADR=av(bm.filter(d=>d.lyADR>0),'lyADR');
+  const otbADR=av(bm.filter(d=>d.otbADR>0),'otbADR');
+  const bdgtADR=av(bm.filter(d=>d.bdgtADR>0),'bdgtADR');
+  const lyOcc=av(bm.filter(d=>d.lyOcc>0),'lyOcc');
+  const otbOcc=av(bm.filter(d=>d.otbOcc>0),'otbOcc');
+  const bdgtOcc=av(bm.filter(d=>d.bdgtOcc>0),'bdgtOcc');
+  const fcstOcc=av(bm.filter(d=>d.fcstOcc>0),'fcstOcc');
+  const puTot=sm(bm,'puRev');
+  // Order: LY → OTB → Budget → FCST
+  const kpis=[
+    {l:'LY Revenue 2025',v:fmtM(lyRev),d:`ADR: ${fmtA(lyADR)} · Occ: ${lyOcc}%`,cls:'neu',c:'#94a3b8'},
+    {l:'OTB Revenue 2026',v:fmtM(otbRev),d:`${otbRev&&lyRev?((otbRev/lyRev*100).toFixed(0)):'0'}% del LY · ADR: ${fmtA(otbADR)}`,cls:otbRev>lyRev?'up':'neu',c:'#0284c7'},
+    {l:'Budget Revenue',v:fmtM(bdgtRev),d:`ADR: ${fmtA(bdgtADR)} · Occ: ${bdgtOcc}%`,cls:'neu',c:'#7c3aed'},
+    {l:'FCST Revenue',v:fmtM(fcstRev),d:`${lyRev?((fcstRev/lyRev-1)*100).toFixed(1):0}% vs LY · ${bdgtRev?Math.round(fcstRev/bdgtRev*100):0}% del BDGT`,cls:fcstRev>=bdgtRev?'up':'dn',c:col},
+  ];
+  document.getElementById('kpi-strip').innerHTML=kpis.map(k=>`<div class="kpi anim" style="--kpi-color:${k.c}"><div class="kpi-lbl">${k.l}</div><div class="kpi-val">${k.v}</div><div class="kpi-delta ${k.cls}">${k.d}</div></div>`).join('')
+}
+
+function renderRevChart(elId){
+  const bm=byMonth();
+  const vals=bm.flatMap(d=>[d.lyRev,d.otbRev,d.bdgtRev,d.fcstRev]).filter(v=>v>0);
+  const mx=vals.length?Math.max(...vals):1;
+  const H=158,showLbl=bm.length<=3,ticks=4;
+  const yAxis=Array.from({length:ticks+1},(_,i)=>`<span class="rev-ytick">${fmtM(mx*(ticks-i)/ticks)}</span>`).join('');
+  const gridLines=Array.from({length:ticks},(_,i)=>`<div class="rev-gridline" style="bottom:calc(20px + ${(i+1)/ticks*H}px)"></div>`).join('');
+  const groups=bm.map(d=>{
+    const bars=[
+      {v:d.lyRev||0,   c:'#cbd5e1',lc:'#94a3b8',tip:'LY'},
+      {v:d.otbRev||0,  c:'#0284c7',lc:'#0284c7',tip:'OTB'},
+      {v:d.bdgtRev||0, c:'#475569',lc:'#334155',tip:'BDGT'},
+      {v:d.fcstRev||0, c:'#d97706',lc:'#d97706',tip:'FCST'},
+    ].map(b=>{
+      const h=Math.round(b.v/mx*H);
+      const lbl=showLbl&&b.v?`<span class="rev-vallabel" style="color:${b.lc}">${fmtM(b.v)}</span>`:'';
+      return`<div class="rev-vbar" style="height:${h}px;background:${b.c};opacity:${b.v?'.9':'0'}" data-tip="${b.tip}: ${fmtM(b.v)}">${lbl}</div>`;
+    }).join('');
+    return`<div class="rev-group">${bars}<span class="rev-mlabel">${d.mo}</span></div>`;
+  }).join('');
+  const el=document.getElementById(elId);if(!el)return;
+  el.innerHTML=`<div class="rev-inner"><div class="rev-yaxis">${yAxis}</div>${gridLines}${groups}</div>`;
+}
+function renderRev(){renderRevChart('rev-chart');}
+
+function renderOccChart(elId){
+  const bm=byMonth();
+  const H=138,showLbl=bm.length<=3;
+  const gridLines=[25,50,75,100].map(pct=>`<div class="occ-gridline" style="bottom:calc(20px + ${pct/100*H}px)"></div>`).join('');
+  const groups=bm.map(d=>{
+    const bars=[
+      {v:d.lyOcc||0,  c:'#cbd5e1',lc:'#94a3b8',tip:'LY'},
+      {v:d.otbOcc||0, c:'#0284c7',lc:'#0284c7',tip:'OTB'},
+      {v:d.bdgtOcc||0,c:'#475569',lc:'#334155',tip:'BDGT'},
+      {v:d.fcstOcc||0,c:'#d97706',lc:'#d97706',tip:'FCST'},
+    ].map(b=>{
+      const h=Math.round(b.v/100*H);
+      const lbl=showLbl&&b.v?`<span class="occ-vallabel" style="color:${b.lc}">${b.v}%</span>`:'';
+      return`<div class="occ-vbar" style="height:${h}px;background:${b.c};opacity:${b.v?'.9':'0'}" data-tip="${b.tip}: ${b.v}%">${lbl}</div>`;
+    }).join('');
+    return`<div class="occ-group">${bars}<span class="occ-mlabel">${d.mo}</span></div>`;
+  }).join('');
+  const el=document.getElementById(elId);if(!el)return;
+  el.innerHTML=`<div class="occ-inner"><div class="occ-yaxis"><span class="occ-ytick">100%</span><span class="occ-ytick">75%</span><span class="occ-ytick">50%</span><span class="occ-ytick">25%</span><span class="occ-ytick">0%</span></div>${gridLines}${groups}</div>`;
+}
+function renderOcc(){renderOccChart('occ-chart');}
+
+function renderPU(){
+  const bm=byMonth(),mx=Math.max(...bm.map(d=>Math.abs(d.puRev)),1);
+  document.getElementById('pu-chart').innerHTML=bm.map(d=>{const p=d.puRev>=0,pct=(Math.abs(d.puRev)/mx*46).toFixed(1);return`<div class="pu-row"><span class="pu-m">${d.mo}</span><div class="pu-track"><div class="pu-axis"></div><div class="pu-bar" style="width:${pct}%;background:${p?'#059669':'#e11d48'};opacity:.85;${p?'left:50%':'right:50%'}"></div></div><span class="pu-val" style="color:${p?'#059669':'#e11d48'}">${d.puRev?fmtM(d.puRev):'—'}</span></div>`}).join('')
+}
+
+function renderHM(){
+  const bm=byMonth();
+  const vals=bm.map(d=>{const ref=d.fcstRev||d.bdgtRev;return d.lyRev?((ref-d.lyRev)/d.lyRev*100):0});
+  const mx=Math.max(...vals.map(Math.abs),1);
+  const el=document.getElementById('hm-grid');if(!el)return;
+  el.style.gridTemplateColumns=`64px repeat(${bm.length},1fr)`;
+  el.innerHTML=`<div class="hm-lbl"></div>${bm.map(d=>`<div class="hm-mth">${d.mo}</div>`).join('')}<div class="hm-lbl" style="font-size:8px">FCST vs LY</div>${vals.map((v,i)=>{
+    const n=v/mx;let r,g,b;
+    if(n>=0){r=Math.round(240-(240-187)*n);g=Math.round(253-(253-247)*n*.3);b=Math.round(244-(244-208)*n*.5);}
+    else{const t=Math.abs(n);r=Math.round(240+(252-240)*t*.5);g=Math.round(253-(253-165)*t);b=Math.round(244-(244-165)*t);}
+    return`<div class="hm-cell" style="background:rgba(${r},${g},${b},${0.5+Math.abs(n)*.5});color:${Math.abs(n)>.3?'#1a202c':'#64748b'}">${v>=0?'+':''}${Math.round(v)}%<div class="hm-tip">${bm[i].mo} · ${v>=0?'+':''}${v.toFixed(1)}%<br>LY: ${fmtM(bm[i].lyRev)}<br>REF: ${fmtM(bm[i].fcstRev||bm[i].bdgtRev)}</div></div>`;
+  }).join('')}`
+}
+
+function renderPaceBar(){
+  const bm=byMonth(),mx=Math.max(...bm.flatMap(d=>[d.lyRN,d.otbRN,d.fcstRN||d.bdgtRN]),1);
+  const el=document.getElementById('pace-chart');if(!el)return;
+  el.innerHTML=bm.map(d=>{const ref=d.fcstRN||d.bdgtRN;return`<div class="bar-row"><span class="bar-m">${d.mo}</span><div class="bar-tracks"><div class="bar-track"><div class="bar-fill" style="width:${(d.lyRN/mx*100).toFixed(1)}%;background:#cbd5e1"></div></div><div class="bar-track"><div class="bar-fill" style="width:${(d.otbRN/mx*100).toFixed(1)}%;background:#0284c7;opacity:.85"></div></div><div class="bar-track"><div class="bar-fill" style="width:${(ref/mx*100).toFixed(1)}%;background:#d97706;opacity:.8"></div></div></div><span class="bar-val">${d.otbRN}</span></div>`}).join('')
+}
+
+function renderGap(){
+  const bm=byMonth();const el=document.getElementById('gap-chart');if(!el)return;
+  el.innerHTML=bm.map(d=>{const gap=d.otbOcc-d.bdgtOcc,pos=gap>=0;return`<div class="gap-item"><span class="gap-m">${d.mo}</span><div class="gap-track"><div class="gap-bdgt" style="width:${d.bdgtOcc}%"></div><div class="gap-otb" style="width:${d.otbOcc}%;background:${pos?'#059669':'#e11d48'};opacity:.75"></div></div><span class="gap-lbl" style="color:${pos?'#059669':'#e11d48'}">${gap>0?'+':''}${gap}pp</span></div>`}).join('')
+}
+
+function renderADRChart(elId){
+  const bm=byMonth();
+  const vals=bm.flatMap(d=>[d.lyADR,d.otbADR,d.bdgtADR,d.fcstADR]).filter(v=>v>0);
+  const mx=vals.length?Math.max(...vals):1;
+  const H=158, showLbl=bm.length<=3, ticks=4;
+  const yAxis=Array.from({length:ticks+1},(_,i)=>`<span class="rev-ytick">${fmtA(Math.round(mx*(ticks-i)/ticks))}</span>`).join('');
+  const gridLines=Array.from({length:ticks},(_,i)=>`<div class="rev-gridline" style="bottom:calc(20px + ${((i+1)/ticks)*H}px)"></div>`).join('');
+  const groups=bm.map(d=>{
+    const bars=[
+      {v:d.lyADR||0,   c:'#cbd5e1',lc:'#94a3b8',tip:'LY'},
+      {v:d.otbADR||0,  c:'#0284c7',lc:'#0284c7',tip:'OTB'},
+      {v:d.bdgtADR||0, c:'#475569',lc:'#334155',tip:'BDGT'},
+      {v:d.fcstADR||0, c:'#d97706',lc:'#d97706',tip:'FCST'},
+    ].map(b=>{
+      const h=Math.round(b.v/mx*H);
+      const lbl=showLbl&&b.v?`<span class="rev-vallabel" style="color:${b.lc}">${fmtA(b.v)}</span>`:'';
+      return`<div class="rev-vbar" style="height:${h}px;background:${b.c};opacity:${b.v?'.9':'0'}" data-tip="${b.tip}: ${fmtA(b.v)}">${lbl}</div>`;
+    }).join('');
+    return`<div class="rev-group">${bars}<span class="rev-mlabel">${d.mo}</span></div>`;
+  }).join('');
+  const el=document.getElementById(elId);if(!el)return;
+  el.innerHTML=`<div class="rev-inner"><div class="rev-yaxis">${yAxis}</div>${gridLines}${groups}</div>`;
+}
+
+function renderRevPARChart(elId){
+  const bm=byMonth();
+  const rp=bm.map(d=>({mo:d.mo,ly:Math.round((d.lyADR||0)*((d.lyOcc||0)/100)),otb:Math.round((d.otbADR||0)*((d.otbOcc||0)/100)),bdgt:Math.round((d.bdgtADR||0)*((d.bdgtOcc||0)/100)),fcst:d.fcstADR?Math.round(d.fcstADR*(d.fcstOcc/100)):0}));
+  const vals=rp.flatMap(r=>[r.ly,r.otb,r.bdgt,r.fcst]).filter(v=>v>0);
+  const mx=vals.length?Math.max(...vals):1;
+  const H=158, showLbl=bm.length<=3, ticks=4;
+  const yAxis=Array.from({length:ticks+1},(_,i)=>`<span class="rev-ytick">${fmtA(Math.round(mx*(ticks-i)/ticks))}</span>`).join('');
+  const gridLines=Array.from({length:ticks},(_,i)=>`<div class="rev-gridline" style="bottom:calc(20px + ${((i+1)/ticks)*H}px)"></div>`).join('');
+  const groups=rp.map(r=>{
+    const bars=[
+      {v:r.ly,  c:'#cbd5e1',lc:'#94a3b8',tip:'LY RevPAR'},
+      {v:r.otb, c:'#0284c7',lc:'#0284c7',tip:'OTB RevPAR'},
+      {v:r.bdgt,c:'#475569',lc:'#334155',tip:'BDGT RevPAR'},
+      {v:r.fcst,c:'#d97706',lc:'#d97706',tip:'FCST RevPAR'},
+    ].map(b=>{
+      const h=Math.round(b.v/mx*H);
+      const lbl=showLbl&&b.v?`<span class="rev-vallabel" style="color:${b.lc}">${fmtA(b.v)}</span>`:'';
+      return`<div class="rev-vbar" style="height:${h}px;background:${b.c};opacity:${b.v?'.9':'0'}" data-tip="${b.tip}: ${fmtA(b.v)}">${lbl}</div>`;
+    }).join('');
+    return`<div class="rev-group">${bars}<span class="rev-mlabel">${r.mo}</span></div>`;
+  }).join('');
+  const el=document.getElementById(elId);if(!el)return;
+  el.innerHTML=`<div class="rev-inner"><div class="rev-yaxis">${yAxis}</div>${gridLines}${groups}</div>`;
+}
+
+function renderADR(){renderADRChart('adr-chart');renderADRChart('adr-chart-ov');}
+function renderRevPAR(){renderRevPARChart('revpar-chart');renderRevPARChart('revpar-chart-ov');}
+
+function renderADRDelta(){
+  const bm=byMonth();
+  const mx=Math.max(...bm.map(d=>Math.abs((d.otbADR||d.fcstADR||d.bdgtADR)-d.lyADR)),1);
+  const el=document.getElementById('adr-delta-chart');if(!el)return;
+  el.innerHTML=bm.map(d=>{
+    const ref=d.otbADR||d.fcstADR||d.bdgtADR;
+    const delta=ref-d.lyADR;
+    const p=delta>=0;
+    const pct=(Math.abs(delta)/mx*46).toFixed(1);
+    return`<div class="pu-row"><span class="pu-m">${d.mo}</span><div class="pu-track"><div class="pu-axis"></div><div class="pu-bar" style="width:${pct}%;background:${p?'#059669':'#e11d48'};opacity:.85;${p?'left:50%':'right:50%'}"></div></div><span class="pu-val" style="color:${p?'#059669':'#e11d48'}">${delta?fmtA(Math.round(delta)):'—'}</span></div>`;
+  }).join('');
+}
+
+function renderTabla(){
+  const el=document.getElementById('dtbl');if(!el)return;
+  const mos=[...activeMos].sort((a,b)=>MONTHS.indexOf(a)-MONTHS.indexOf(b));
+  const sep='border-left:2px solid var(--border2);';
+  const hotelsToShow = curHotel==='all' ? HOTELS_ALL_LIST : [curHotel];
+
+  // Column header HTML reused per hotel block
+  // LY: ADR · Occ · Rev | OTB: ADR · Occ · Rev | BDGT: ADR · Occ · Rev | FCST: ADR · Occ · Rev
+  const colHeader=()=>`
+    <tr style="background:#f8f9fa">
+      <th style="min-width:80px;font-size:9px;color:var(--dim);font-weight:500;padding:5px 8px;border-bottom:1px solid var(--border2)">Mes</th>
+      <th style="font-size:9px;color:#94a3b8;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">ADR LY</th>
+      <th style="font-size:9px;color:#94a3b8;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">Occ LY</th>
+      <th style="font-size:9px;color:#94a3b8;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">Rev LY</th>
+      <th style="font-size:9px;color:#0284c7;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2);${sep}">ADR OTB</th>
+      <th style="font-size:9px;color:#0284c7;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">Occ OTB</th>
+      <th style="font-size:9px;color:#0284c7;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">Rev OTB</th>
+      <th style="font-size:9px;color:#475569;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2);${sep}">ADR Bdgt</th>
+      <th style="font-size:9px;color:#475569;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">Occ Bdgt</th>
+      <th style="font-size:9px;color:#475569;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">Rev Bdgt</th>
+      <th style="font-size:9px;color:#d97706;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2);${sep}">ADR Fcst</th>
+      <th style="font-size:9px;color:#d97706;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">Occ Fcst</th>
+      <th style="font-size:9px;color:#d97706;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">Rev Fcst</th>
+    </tr>`;
+
+  let html='<thead></thead><tbody>';
+
+  const grand={lyRev:0,lyADRs:[],lyOccs:[],otbRev:0,otbADRs:[],otbOccs:[],bdgtRev:0,bdgtADRs:[],bdgtOccs:[],fcstRev:0,fcstADRs:[],fcstOccs:[]};
+
+  hotelsToShow.forEach((h,hi)=>{
+    const col=H_COLORS[h]||'#94a3b8';
+    const hRows=RAW.filter(r=>r.h===h&&mos.includes(r.mo))
+      .sort((a,b)=>MONTHS.indexOf(a.mo)-MONTHS.indexOf(b.mo));
+    if(!hRows.length) return;
+
+    // Spacing between hotel blocks (except first)
+    if(hi>0) html+=`<tr><td colspan="13" style="padding:6px 0;background:var(--bg);border:none"></td></tr>`;
+
+    // Hotel name row — full width, styled as card header
+    html+=`<tr>
+      <td colspan="13" style="padding:10px 12px 0;background:#fff;border-top:2px solid ${col};border-bottom:none">
+        <span style="display:inline-flex;align-items:center;gap:8px;font-family:'IBM Plex Sans',sans-serif;font-size:13px;font-weight:700;color:#1e2535">
+          <span style="width:10px;height:10px;border-radius:50%;background:${col};flex-shrink:0;display:inline-block"></span>
+          ${h}
+        </span>
+      </td>
+    </tr>`;
+
+    // Column headers right below hotel name
+    html+=colHeader();
+
+    const ht={lyRev:0,lyADRs:[],lyOccs:[],otbRev:0,otbADRs:[],otbOccs:[],bdgtRev:0,bdgtADRs:[],bdgtOccs:[],fcstRev:0,fcstADRs:[],fcstOccs:[]};
+
+    hRows.forEach(d=>{
+      const fcst=d.fcstRev||0;
+      html+=`<tr>
+        <td style="padding-left:14px;font-size:11px;color:var(--text);font-weight:500">${d.mo}</td>
+        <td>${fmtA(d.lyADR)}</td><td>${d.lyOcc}%</td><td>${fmtM(d.lyRev)}</td>
+        <td style="color:#0284c7;${sep}">${d.otbADR?fmtA(d.otbADR):'—'}</td><td style="color:#0284c7">${d.otbOcc}%</td><td style="color:#0284c7">${fmtM(d.otbRev)}</td>
+        <td style="${sep}">${d.bdgtADR?fmtA(d.bdgtADR):'—'}</td><td>${d.bdgtOcc||0}%</td><td>${fmtM(d.bdgtRev)}</td>
+        <td style="color:#d97706;${sep}">${d.fcstADR?fmtA(d.fcstADR):'—'}</td><td style="color:#d97706">${d.fcstOcc||0}%</td><td style="color:#d97706">${fcst?fmtM(fcst):'—'}</td>
+      </tr>`;
+      ht.lyRev+=d.lyRev; if(d.lyADR>0)ht.lyADRs.push(d.lyADR); if(d.lyOcc>0)ht.lyOccs.push(d.lyOcc);
+      ht.otbRev+=d.otbRev; if(d.otbADR>0)ht.otbADRs.push(d.otbADR); if(d.otbOcc>0)ht.otbOccs.push(d.otbOcc);
+      ht.bdgtRev+=d.bdgtRev; if(d.bdgtADR>0)ht.bdgtADRs.push(d.bdgtADR); if(d.bdgtOcc>0)ht.bdgtOccs.push(d.bdgtOcc);
+      ht.fcstRev+=fcst; if(d.fcstADR>0)ht.fcstADRs.push(d.fcstADR); if(d.fcstOcc>0)ht.fcstOccs.push(d.fcstOcc);
+    });
+
+    // Hotel subtotal row
+    const avg=arr=>arr.length?Math.round(arr.reduce((a,b)=>a+b,0)/arr.length):0;
+    const hlyADR=avg(ht.lyADRs), hlyOcc=avg(ht.lyOccs);
+    const hotbADR=avg(ht.otbADRs), hotbOcc=avg(ht.otbOccs);
+    const hbdgtADR=avg(ht.bdgtADRs), hbdgtOcc=avg(ht.bdgtOccs);
+    const hfcstADR=avg(ht.fcstADRs), hfcstOcc=avg(ht.fcstOccs);
+    html+=`<tr style="background:${col}18;border-top:1px solid ${col}55">
+      <td style="font-weight:700;font-size:11px;color:${col};padding-left:14px">Total ${h}</td>
+      <td style="font-weight:600">${fmtA(hlyADR)}</td><td style="font-weight:600">${hlyOcc}%</td><td style="font-weight:600">${fmtM(ht.lyRev)}</td>
+      <td style="color:#0284c7;font-weight:600;${sep}">${fmtA(hotbADR)}</td><td style="color:#0284c7;font-weight:600">${hotbOcc}%</td><td style="color:#0284c7;font-weight:600">${fmtM(ht.otbRev)}</td>
+      <td style="font-weight:600;${sep}">${fmtA(hbdgtADR)}</td><td style="font-weight:600">${hbdgtOcc}%</td><td style="font-weight:600">${fmtM(ht.bdgtRev)}</td>
+      <td style="color:#d97706;font-weight:600;${sep}">${fmtA(hfcstADR)}</td><td style="color:#d97706;font-weight:600">${hfcstOcc}%</td><td style="color:#d97706;font-weight:600">${ht.fcstRev?fmtM(ht.fcstRev):'—'}</td>
+    </tr>`;
+
+    grand.lyRev+=ht.lyRev; grand.lyADRs.push(...ht.lyADRs); grand.lyOccs.push(...ht.lyOccs);
+    grand.otbRev+=ht.otbRev; grand.otbADRs.push(...ht.otbADRs); grand.otbOccs.push(...ht.otbOccs);
+    grand.bdgtRev+=ht.bdgtRev; grand.bdgtADRs.push(...ht.bdgtADRs); grand.bdgtOccs.push(...ht.bdgtOccs);
+    grand.fcstRev+=ht.fcstRev; grand.fcstADRs.push(...ht.fcstADRs); grand.fcstOccs.push(...ht.fcstOccs);
+  });
+
+  if(hotelsToShow.length>1){
+    const avg=arr=>arr.length?Math.round(arr.reduce((a,b)=>a+b,0)/arr.length):0;
+    const glyADR=avg(grand.lyADRs), glyOcc=avg(grand.lyOccs);
+    const gotbADR=avg(grand.otbADRs), gotbOcc=avg(grand.otbOccs);
+    const gbdgtADR=avg(grand.bdgtADRs), gbdgtOcc=avg(grand.bdgtOccs);
+    const gfcstADR=avg(grand.fcstADRs), gfcstOcc=avg(grand.fcstOccs);
+    html+=`<tr><td colspan="13" style="padding:6px 0;background:var(--bg);border:none"></td></tr>`;
+    html+=`<tr class="total-row">
+      <td>TOTAL PORTFOLIO</td>
+      <td>${fmtA(glyADR)}</td><td>${glyOcc}%</td><td>${fmtM(grand.lyRev)}</td>
+      <td style="${sep}">${fmtA(gotbADR)}</td><td>${gotbOcc}%</td><td>${fmtM(grand.otbRev)}</td>
+      <td style="${sep}">${fmtA(gbdgtADR)}</td><td>${gbdgtOcc}%</td><td>${fmtM(grand.bdgtRev)}</td>
+      <td style="${sep}">${fmtA(gfcstADR)}</td><td>${gfcstOcc}%</td><td>${grand.fcstRev?fmtM(grand.fcstRev):'—'}</td>
+    </tr>`;
+  }
+
+  html+='</tbody>';
+  el.innerHTML=html;
+}
+
+const HOTELS_ALL_LIST=['Amomoxtli','Anticavilla','Boca de Agua','Casona','El Santuario','MDS','Numu','Santa Fé','Tropicana'];
+
+function renderTabla2(){
+  const el=document.getElementById('dtbl2');if(!el)return;
+  const mos=[...activeMos].sort((a,b)=>MONTHS.indexOf(a)-MONTHS.indexOf(b));
+  const sep='border-left:2px solid var(--border2);';
+  const hotelsToShow=curHotel==='all'?HOTELS_ALL_LIST:[curHotel];
+  const colHeader=()=>`
+    <tr style="background:#f8f9fa">
+      <th style="min-width:80px;font-size:9px;color:var(--dim);font-weight:500;padding:5px 8px;border-bottom:1px solid var(--border2)">Mes</th>
+      <th style="font-size:9px;color:#94a3b8;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">ADR LY</th>
+      <th style="font-size:9px;color:#94a3b8;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">Occ LY</th>
+      <th style="font-size:9px;color:#94a3b8;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">Rev LY</th>
+      <th style="font-size:9px;color:#0284c7;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2);${sep}">ADR OTB</th>
+      <th style="font-size:9px;color:#0284c7;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">Occ OTB</th>
+      <th style="font-size:9px;color:#0284c7;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">Rev OTB</th>
+      <th style="font-size:9px;color:#475569;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2);${sep}">ADR Bdgt</th>
+      <th style="font-size:9px;color:#475569;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">Occ Bdgt</th>
+      <th style="font-size:9px;color:#475569;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">Rev Bdgt</th>
+      <th style="font-size:9px;color:#d97706;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2);${sep}">ADR Fcst</th>
+      <th style="font-size:9px;color:#d97706;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">Occ Fcst</th>
+      <th style="font-size:9px;color:#d97706;font-weight:600;text-align:right;padding:5px 8px;border-bottom:1px solid var(--border2)">Rev Fcst</th>
+    </tr>`;
+  let html='<thead></thead><tbody>';
+  const grand={lyRev:0,lyADRs:[],lyOccs:[],otbRev:0,otbADRs:[],otbOccs:[],bdgtRev:0,bdgtADRs:[],bdgtOccs:[],fcstRev:0,fcstADRs:[],fcstOccs:[]};
+  hotelsToShow.forEach((h,hi)=>{
+    const col=H_COLORS[h]||'#94a3b8';
+    const hRows=RAW.filter(r=>r.h===h&&mos.includes(r.mo)).sort((a,b)=>MONTHS.indexOf(a.mo)-MONTHS.indexOf(b.mo));
+    if(!hRows.length) return;
+    if(hi>0) html+=`<tr><td colspan="13" style="padding:6px 0;background:var(--bg);border:none"></td></tr>`;
+    html+=`<tr><td colspan="13" style="padding:10px 12px 0;background:#fff;border-top:2px solid ${col};border-bottom:none">
+      <span style="display:inline-flex;align-items:center;gap:8px;font-family:'IBM Plex Sans',sans-serif;font-size:13px;font-weight:700;color:#1e2535">
+        <span style="width:10px;height:10px;border-radius:50%;background:${col};flex-shrink:0;display:inline-block"></span>${h}
+      </span></td></tr>`;
+    html+=colHeader();
+    const ht={lyRev:0,lyADRs:[],lyOccs:[],otbRev:0,otbADRs:[],otbOccs:[],bdgtRev:0,bdgtADRs:[],bdgtOccs:[],fcstRev:0,fcstADRs:[],fcstOccs:[]};
+    hRows.forEach(d=>{
+      const fcst=d.fcstRev||0;
+      html+=`<tr>
+        <td style="padding-left:14px;font-size:11px;color:var(--text);font-weight:500">${d.mo}</td>
+        <td>${fmtA(d.lyADR)}</td><td>${d.lyOcc}%</td><td>${fmtM(d.lyRev)}</td>
+        <td style="color:#0284c7;${sep}">${d.otbADR?fmtA(d.otbADR):'—'}</td><td style="color:#0284c7">${d.otbOcc}%</td><td style="color:#0284c7">${fmtM(d.otbRev)}</td>
+        <td style="${sep}">${d.bdgtADR?fmtA(d.bdgtADR):'—'}</td><td>${d.bdgtOcc||0}%</td><td>${fmtM(d.bdgtRev)}</td>
+        <td style="color:#d97706;${sep}">${d.fcstADR?fmtA(d.fcstADR):'—'}</td><td style="color:#d97706">${d.fcstOcc||0}%</td><td style="color:#d97706">${fcst?fmtM(fcst):'—'}</td>
+      </tr>`;
+      ht.lyRev+=d.lyRev; if(d.lyADR>0)ht.lyADRs.push(d.lyADR); if(d.lyOcc>0)ht.lyOccs.push(d.lyOcc);
+      ht.otbRev+=d.otbRev; if(d.otbADR>0)ht.otbADRs.push(d.otbADR); if(d.otbOcc>0)ht.otbOccs.push(d.otbOcc);
+      ht.bdgtRev+=d.bdgtRev; if(d.bdgtADR>0)ht.bdgtADRs.push(d.bdgtADR); if(d.bdgtOcc>0)ht.bdgtOccs.push(d.bdgtOcc);
+      ht.fcstRev+=fcst; if(d.fcstADR>0)ht.fcstADRs.push(d.fcstADR); if(d.fcstOcc>0)ht.fcstOccs.push(d.fcstOcc);
+    });
+    const avg=arr=>arr.length?Math.round(arr.reduce((a,b)=>a+b,0)/arr.length):0;
+    html+=`<tr style="background:${col}18;border-top:1px solid ${col}55">
+      <td style="font-weight:700;font-size:11px;color:${col};padding-left:14px">Total ${h}</td>
+      <td style="font-weight:600">${fmtA(avg(ht.lyADRs))}</td><td style="font-weight:600">${avg(ht.lyOccs)}%</td><td style="font-weight:600">${fmtM(ht.lyRev)}</td>
+      <td style="color:#0284c7;font-weight:600;${sep}">${fmtA(avg(ht.otbADRs))}</td><td style="color:#0284c7;font-weight:600">${avg(ht.otbOccs)}%</td><td style="color:#0284c7;font-weight:600">${fmtM(ht.otbRev)}</td>
+      <td style="font-weight:600;${sep}">${fmtA(avg(ht.bdgtADRs))}</td><td style="font-weight:600">${avg(ht.bdgtOccs)}%</td><td style="font-weight:600">${fmtM(ht.bdgtRev)}</td>
+      <td style="color:#d97706;font-weight:600;${sep}">${fmtA(avg(ht.fcstADRs))}</td><td style="color:#d97706;font-weight:600">${avg(ht.fcstOccs)}%</td><td style="color:#d97706;font-weight:600">${ht.fcstRev?fmtM(ht.fcstRev):'—'}</td>
+    </tr>`;
+    grand.lyRev+=ht.lyRev; grand.lyADRs.push(...ht.lyADRs); grand.lyOccs.push(...ht.lyOccs);
+    grand.otbRev+=ht.otbRev; grand.otbADRs.push(...ht.otbADRs); grand.otbOccs.push(...ht.otbOccs);
+    grand.bdgtRev+=ht.bdgtRev; grand.bdgtADRs.push(...ht.bdgtADRs); grand.bdgtOccs.push(...ht.bdgtOccs);
+    grand.fcstRev+=ht.fcstRev; grand.fcstADRs.push(...ht.fcstADRs); grand.fcstOccs.push(...ht.fcstOccs);
+  });
+  if(hotelsToShow.length>1){
+    const avg=arr=>arr.length?Math.round(arr.reduce((a,b)=>a+b,0)/arr.length):0;
+    html+=`<tr><td colspan="13" style="padding:6px 0;background:var(--bg);border:none"></td></tr>`;
+    html+=`<tr class="total-row">
+      <td>TOTAL PORTFOLIO</td>
+      <td>${fmtA(avg(grand.lyADRs))}</td><td>${avg(grand.lyOccs)}%</td><td>${fmtM(grand.lyRev)}</td>
+      <td style="${sep}">${fmtA(avg(grand.otbADRs))}</td><td>${avg(grand.otbOccs)}%</td><td>${fmtM(grand.otbRev)}</td>
+      <td style="${sep}">${fmtA(avg(grand.bdgtADRs))}</td><td>${avg(grand.bdgtOccs)}%</td><td>${fmtM(grand.bdgtRev)}</td>
+      <td style="${sep}">${fmtA(avg(grand.fcstADRs))}</td><td>${avg(grand.fcstOccs)}%</td><td>${grand.fcstRev?fmtM(grand.fcstRev):'—'}</td>
+    </tr>`;
+  }
+  html+='</tbody>';
+  el.innerHTML=html;
+}
+let activeJuntaHotels=new Set(HOTELS_ALL_LIST);
+
+function toggleJuntaHotel(h){
+  if(activeJuntaHotels.has(h)) activeJuntaHotels.delete(h);
+  else activeJuntaHotels.add(h);
+  const id='jh-'+h.replace(/[\s']/g,'_');
+  document.getElementById(id)?.classList.toggle('active', activeJuntaHotels.has(h));
+  renderJunta();
+}
+
+function renderJunta(){
+  // init hotel filter buttons once
+  const filterEl=document.getElementById('junta-hotel-filter');
+  if(filterEl&&!filterEl.dataset.init){
+    filterEl.dataset.init='1';
+    filterEl.innerHTML=HOTELS_ALL_LIST.map(h=>{
+      const col=H_COLORS[h]||'#94a3b8';
+      const id='jh-'+h.replace(/[\s']/g,'_');
+      return`<button id="${id}" class="pu-week-btn active" onclick="toggleJuntaHotel('${h.replace(/'/g,"\\'")}')">
+        <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${col};margin-right:4px;vertical-align:middle"></span>${h}
+      </button>`;
+    }).join('');
+  }
+
+  const el=document.getElementById('junta-tbl');if(!el)return;
+  const HOTELS=HOTELS_ALL_LIST.filter(h=>activeJuntaHotels.has(h));
+  const mos=Array.from(activeMos);
+  const sep='border-left:2px solid var(--border2);';
+  const rows=HOTELS.map(h=>{
+    const hd=RAW.filter(r=>r.h===h&&(mos.length===0||mos.includes(r.mo)));
+    if(!hd.length)return null;
+    const lyRev=sm(hd,'lyRev'),lyADR=av(hd,'lyADR'),lyOcc=av(hd,'lyOcc');
+    const otbRev=sm(hd,'otbRev'),otbADR=av(hd.filter(d=>d.otbADR>0),'otbADR'),otbOcc=av(hd,'otbOcc');
+    const bdgtRev=sm(hd,'bdgtRev'),bdgtADR=av(hd,'bdgtADR'),bdgtOcc=av(hd,'bdgtOcc');
+    const fcstRev=sm(hd,'fcstRev')||sm(hd,'bdgtRev'),fcstADR=av(hd.filter(d=>d.fcstADR>0),'fcstADR')||bdgtADR,fcstOcc=av(hd,'fcstOcc')||bdgtOcc;
+    const col=H_COLORS[h]||'#94a3b8';
+    const vsLY=lyRev?((otbRev-lyRev)/lyRev*100):0;
+    return{h,col,lyRev,lyADR,lyOcc,otbRev,otbADR,otbOcc,bdgtRev,bdgtADR,bdgtOcc,fcstRev,fcstADR,fcstOcc,vsLY};
+  }).filter(Boolean);
+
+  // totals over selected hotels only
+  const allHD=HOTELS.flatMap(h=>RAW.filter(r=>r.h===h&&(mos.length===0||mos.includes(r.mo))));
+  const tot={
+    lyRev:sm(allHD,'lyRev'), lyADR:av(allHD,'lyADR'), lyOcc:av(allHD,'lyOcc'),
+    otbRev:sm(allHD,'otbRev'), otbADR:av(allHD.filter(d=>d.otbADR>0),'otbADR'), otbOcc:av(allHD,'otbOcc'),
+    bdgtRev:sm(allHD,'bdgtRev'), bdgtADR:av(allHD,'bdgtADR'), bdgtOcc:av(allHD,'bdgtOcc'),
+    fcstRev:sm(allHD,'fcstRev')||sm(allHD,'bdgtRev'), fcstADR:av(allHD.filter(d=>d.fcstADR>0),'fcstADR'), fcstOcc:av(allHD,'fcstOcc'),
+  };
+  const totVsLY=tot.lyRev?((tot.otbRev-tot.lyRev)/tot.lyRev*100):0;
+  el.innerHTML=`
+  <thead>
+    <tr style="border-bottom:none">
+      <th style="min-width:130px"></th>
+      <th colspan="3" style="text-align:center;color:#94a3b8;background:#f8f9fa;padding-bottom:4px">LY 2025</th>
+      <th colspan="4" style="text-align:center;color:#0284c7;background:#eff8ff;padding-bottom:4px;${sep}">OTB 2026</th>
+      <th colspan="4" style="text-align:center;color:#475569;background:#f8f9fa;padding-bottom:4px;${sep}">BDGT</th>
+      <th colspan="3" style="text-align:center;color:#d97706;background:#fffbeb;padding-bottom:4px;${sep}">FCST</th>
+    </tr>
+    <tr>
+      <th>Hotel</th>
+      <th>Rev</th><th>ADR</th><th>Occ</th>
+      <th style="${sep}">Rev</th><th>ADR</th><th>Occ</th><th style="font-size:10px;color:#64748b">vs LY</th>
+      <th style="${sep}">Rev</th><th>ADR</th><th>Occ</th><th style="font-size:10px;color:#64748b">OTB/BDGT</th>
+      <th style="${sep}">Rev</th><th>ADR</th><th>Occ</th>
+    </tr>
+  </thead>
+  <tbody>
+    ${rows.map(r=>{const p=r.vsLY>=0;const ach=r.bdgtRev?((r.otbRev/r.bdgtRev)*100):0;const achP=ach>=100;return`<tr>
+      <td><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:${r.col};flex-shrink:0"></span>${r.h}</span></td>
+      <td>${fmtM(r.lyRev)}</td><td>${fmtA(r.lyADR)}</td><td>${r.lyOcc.toFixed(0)}%</td>
+      <td style="color:#0284c7;${sep}">${fmtM(r.otbRev)}</td><td style="color:#0284c7">${fmtA(r.otbADR)}</td><td style="color:#0284c7">${r.otbOcc.toFixed(0)}%</td>
+      <td><span style="font-size:10px;font-weight:600;color:${p?'#059669':'#e11d48'}">${p?'+':''}${r.vsLY.toFixed(1)}%</span></td>
+      <td style="${sep}">${fmtM(r.bdgtRev)}</td><td>${fmtA(r.bdgtADR)}</td><td>${r.bdgtOcc.toFixed(0)}%</td>
+      <td><span style="font-size:10px;font-weight:600;color:${achP?'#059669':'#e11d48'}">${r.bdgtRev?ach.toFixed(1)+'%':'—'}</span></td>
+      <td style="color:#d97706;${sep}">${fmtM(r.fcstRev)}</td><td style="color:#d97706">${fmtA(r.fcstADR)}</td><td style="color:#d97706">${r.fcstOcc.toFixed(0)}%</td>
+    </tr>`;}).join('')}
+    <tr class="total-row">
+      <td>TOTAL PORTFOLIO</td>
+      <td>${fmtM(tot.lyRev)}</td><td>${fmtA(tot.lyADR)}</td><td>${tot.lyOcc.toFixed(0)}%</td>
+      <td style="${sep}">${fmtM(tot.otbRev)}</td><td>${fmtA(tot.otbADR)}</td><td>${tot.otbOcc.toFixed(0)}%</td>
+      <td><span style="font-size:10px;font-weight:700;color:${totVsLY>=0?'#059669':'#e11d48'}">${totVsLY>=0?'+':''}${totVsLY.toFixed(1)}%</span></td>
+      <td style="${sep}">${fmtM(tot.bdgtRev)}</td><td>${fmtA(tot.bdgtADR)}</td><td>${tot.bdgtOcc.toFixed(0)}%</td>
+      <td>${(()=>{const ach=tot.bdgtRev?((tot.otbRev/tot.bdgtRev)*100):0;const p=ach>=100;return`<span style="font-size:10px;font-weight:700;color:${p?'#059669':'#e11d48'}">${tot.bdgtRev?ach.toFixed(1)+'%':'—'}</span>`})()}</td>
+      <td style="${sep}">${fmtM(tot.fcstRev)}</td><td>${fmtA(tot.fcstADR)}</td><td>${tot.fcstOcc.toFixed(0)}%</td>
+    </tr>
+  </tbody>`;
+}
+
+/* ── PICKUP SEMANAL DATA ── */
+const PU_WEEKS=[
+  {id:'W53',label:'29 Dic–4 Ene'},
+  {id:'W01',label:'05–11 Ene'},
+  {id:'W02',label:'12–18 Ene'},
+  {id:'W03',label:'19–25 Ene'},
+  {id:'W04',label:'26 Ene–1 Feb'},
+  {id:'W05',label:'02–08 Feb'},
+  {id:'W06',label:'09–15 Feb'},
+  {id:'W07',label:'16–22 Feb'},
+  {id:'W08',label:'23 Feb–1 Mar'},
+  {id:'W09',label:'02–08 Mar'},
+  {id:'W10',label:'09–15 Mar'},
+  {id:'W11',label:'16–22 Mar'},
+  {id:'W12',label:'23–29 Mar'},
+  {id:'W13',label:'30 Mar–05 Abr'},
+];
+const PU_RAW={
+  rev:{
+    'Amomoxtli':   [92641,159268,177311,158490,173474,138053,184620,179633,108083,165888,248520,142811,235515,137770],
+    'Anticavilla': [20942,46372,26076,50887,68166,70288,18944,36343,21015,19271,23762,22292,53131,36610],
+    'Boca de Agua':[52051,59956,52418,64473,98346,57184,58584,38567,17910,56269,14315,41884,36278,57700],
+    'Casona':      [151703,164624,226591,169560,174682,82602,126823,138496,-13946,60120,107167,53583,58243,76989],
+    'El Santuario':[242612,227585,326572,377088,350546,104548,132120,212745,150007,287710,264906,239124,251172,266088],
+    'MDS':         [54966,74130,91599,59826,46099,25531,43231,67242,33589,52482,28527,32250,31429,26355],
+    'Numu':        [161838,226760,292903,197984,324025,76083,206859,136086,-2030,187722,155096,123072,63508,111354],
+    'Santa Fé':    [67547,167379,66845,81864,64131,97514,284869,114836,58382,77327,59766,85013,64579,40870],
+    'Tropicana':   [-71535,128709,127224,187608,120868,96911,128339,95784,70467,64533,75363,103393,132588,60674],
+  },
+  rn:{
+    'Amomoxtli':   [12,28,23,21,21,15,15,23,14,20,42,17,25,18],
+    'Anticavilla': [3,7,4,7,7,4,9,5,3,3,4,4,8,6],
+    'Boca de Agua':[8,8,8,9,12,9,11,4,5,10,2,7,7,9],
+    'Casona':      [19,20,25,22,20,15,9,17,-1,8,13,7,7,9],
+    'El Santuario':[46,50,46,64,59,16,22,37,23,55,49,48,42,39],
+    'MDS':         [14,18,28,15,12,9,7,8,8,14,7,7,7,6],
+    'Numu':        [25,31,40,29,22,22,27,20,-1,12,20,18,10,17],
+    'Santa Fé':    [22,56,23,26,21,34,130,38,20,26,18,19,19,12],
+    'Tropicana':   [-9,34,28,58,32,34,38,25,29,17,19,30,30,16],
+  },
+  adr:{
+    'Amomoxtli':   [7720,5747,7806,7651,8205,9117,7260,7859,7642,8476,5857,8401,9314,7654],
+    'Anticavilla': [6663,6242,6294,6984,7574,5591,5766,6876,6687,6745,5941,5381,6887,6250],
+    'Boca de Agua':[6506,8229,6552,7398,8294,6671,5326,2783,3388,5879,6680,6374,5290,6311],
+    'Casona':      [7866,8411,8961,8359,8098,9035,8297,7947,12203,7383,8525,7502,8320,8554],
+    'El Santuario':[5274,4526,5114,4631,5899,6714,5891,5684,6442,5191,5454,4982,5960,6899],
+    'MDS':         [3967,4118,3255,4027,3888,4964,4656,3858,4125,3711,4249,4341,4490,4500],
+    'Numu':        [6586,7417,7375,6929,8130,3458,7542,6662,1421,15644,7867,6731,6443,6606],
+    'Santa Fé':    [3070,2997,2888,3184,3013,2832,2191,2988,2878,2942,3374,3790,3451,3447],
+    'Tropicana':   [8346,4644,3774,3259,3511,3056,3377,3352,2819,3894,3908,3619,4484,3759],
+  }
+};
+const HOTELS_PU=['Amomoxtli','Anticavilla','Boca de Agua','Casona','El Santuario','MDS','Numu','Santa Fé','Tropicana'];
+
+/* ── OTB PACE DATA ── */
+// 11 weekly snapshots oldest→newest: 05/01, 12/01, 19/01, 26/01, 02/02, 09/02, 16/02, 23/02, 02/03, 09/03, 16/03
+const PACE_WEEKS=['05/01','12/01','19/01','26/01','02/02','09/02','16/02','23/02','02/03','09/03','16/03'];
+
+// Structure: PACE_RAW[month][hotel] = array of {rn,adr,occ,rev} per snapshot week (oldest first, 9 snapshots)
+// Months: Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec
+// Hotels: 9 (excl. Perla, La Coleccion which are always 0)
+const PACE_RAW={
+  Jan:{
+    'Amomoxtli':[{rn:432,adr:6518,occ:41,rev:2815815},{rn:484,adr:6620,occ:46,rev:3203848},{rn:533,adr:6652,occ:51,rev:3545633},{rn:575,adr:6644,occ:55,rev:3820300},{rn:592,adr:6664,occ:56,rev:3945153},{rn:592,adr:6664,occ:56,rev:3945153},{rn:592,adr:6664,occ:56,rev:3945153},{rn:592,adr:6664,occ:56,rev:3945153},{rn:592,adr:6664,occ:56,rev:3945153},{rn:592,adr:6664,occ:56,rev:3945153},{rn:592,adr:6664,occ:56,rev:3945153}],
+    'Anticavilla':[{rn:56,adr:5196,occ:11,rev:290959},{rn:80,adr:5106,occ:16,rev:408515},{rn:103,adr:4846,occ:21,rev:499168},{rn:119,adr:4870,occ:24,rev:579530},{rn:132,adr:4868,occ:27,rev:642576},{rn:132,adr:4868,occ:27,rev:642576},{rn:132,adr:4868,occ:27,rev:642576},{rn:132,adr:4868,occ:27,rev:642576},{rn:132,adr:4868,occ:27,rev:642576},{rn:132,adr:4868,occ:27,rev:642576},{rn:132,adr:4868,occ:27,rev:642576}],
+    'Boca de Agua':[{rn:247,adr:7197,occ:36,rev:1777555},{rn:294,adr:6418,occ:43,rev:1886892},{rn:287,adr:7122,occ:42,rev:2044014},{rn:305,adr:7113,occ:45,rev:2169465},{rn:317,adr:6757,occ:46,rev:2141969},{rn:317,adr:6757,occ:46,rev:2141969},{rn:317,adr:6757,occ:46,rev:2141969},{rn:317,adr:6757,occ:46,rev:2141969},{rn:317,adr:6757,occ:46,rev:2141969},{rn:317,adr:6757,occ:46,rev:2141969},{rn:317,adr:6757,occ:46,rev:2141969}],
+    'Casona':[{rn:432,adr:6518,occ:41,rev:2815815},{rn:625,adr:7557,occ:63,rev:4723313},{rn:695,adr:7590,occ:70,rev:5274772},{rn:693,adr:7545,occ:70,rev:5228685},{rn:675,adr:7487,occ:68,rev:5053725},{rn:675,adr:7487,occ:68,rev:5053725},{rn:675,adr:7487,occ:68,rev:5053725},{rn:675,adr:7487,occ:68,rev:5053725},{rn:675,adr:7487,occ:68,rev:5053725},{rn:675,adr:7487,occ:68,rev:5053725},{rn:675,adr:7487,occ:68,rev:5053725}],
+    'El Santuario':[{rn:716,adr:5181,occ:17,rev:3709374},{rn:1021,adr:4822,occ:25,rev:4923721},{rn:1105,adr:4839,occ:27,rev:5346907},{rn:1151,adr:4767,occ:28,rev:5486817},{rn:1293,adr:4916,occ:31,rev:6356634},{rn:1293,adr:4916,occ:31,rev:6356634},{rn:1293,adr:4916,occ:31,rev:6356634},{rn:1293,adr:4916,occ:31,rev:6356634},{rn:1293,adr:4916,occ:31,rev:6356634},{rn:1293,adr:4916,occ:31,rev:6356634},{rn:1293,adr:4916,occ:31,rev:6356634}],
+    'MDS':[{rn:203,adr:3785,occ:13,rev:768357},{rn:256,adr:3748,occ:17,rev:959580},{rn:416,adr:3388,occ:27,rev:1409583},{rn:461,adr:3341,occ:30,rev:1540201},{rn:486,adr:3368,occ:31,rev:1636848},{rn:486,adr:3368,occ:31,rev:1636848},{rn:486,adr:3368,occ:31,rev:1636848},{rn:486,adr:3368,occ:31,rev:1636848},{rn:486,adr:3368,occ:31,rev:1636848},{rn:486,adr:3368,occ:31,rev:1636848},{rn:486,adr:3368,occ:31,rev:1636848}],
+    'Numu':[{rn:593,adr:7107,occ:43,rev:4214617},{rn:615,adr:7296,occ:45,rev:4486757},{rn:661,adr:7409,occ:48,rev:4897475},{rn:676,adr:7292,occ:50,rev:4929392},{rn:657,adr:7321,occ:48,rev:4809897},{rn:657,adr:7321,occ:48,rev:4809897},{rn:657,adr:7321,occ:48,rev:4809897},{rn:657,adr:7321,occ:48,rev:4809897},{rn:657,adr:7321,occ:48,rev:4809897},{rn:657,adr:7321,occ:48,rev:4809897},{rn:657,adr:7321,occ:48,rev:4809897}],
+    'Santa Fé':[{rn:986,adr:2987,occ:52,rev:2945182},{rn:1102,adr:2753,occ:58,rev:3033806},{rn:1155,adr:3030,occ:61,rev:3499650},{rn:1212,adr:3078,occ:64,rev:3730536},{rn:1230,adr:3079,occ:65,rev:3787022},{rn:1230,adr:3079,occ:65,rev:3787022},{rn:1230,adr:3079,occ:65,rev:3787022},{rn:1230,adr:3079,occ:65,rev:3787022},{rn:1230,adr:3079,occ:65,rev:3787022},{rn:1230,adr:3079,occ:65,rev:3787022},{rn:1230,adr:3079,occ:65,rev:3787022}],
+    'Tropicana':[{rn:1214,adr:3819,occ:56,rev:4635987},{rn:1289,adr:3978,occ:59,rev:5126998},{rn:1367,adr:3869,occ:63,rev:5288287},{rn:1455,adr:3811,occ:67,rev:5545005},{rn:1454,adr:3885,occ:67,rev:5648790},{rn:1454,adr:3885,occ:67,rev:5648790},{rn:1454,adr:3675,occ:67,rev:5343450},{rn:1454,adr:3675,occ:67,rev:5343450},{rn:1454,adr:3675,occ:67,rev:5343450},{rn:1454,adr:3675,occ:67,rev:5343450},{rn:1454,adr:3675,occ:67,rev:5343450}],
+  },
+  Feb:{
+    'Amomoxtli':[{rn:386,adr:6613,occ:39,rev:2552672},{rn:416,adr:6530,occ:42,rev:2716447},{rn:436,adr:6475,occ:44,rev:2823043},{rn:495,adr:6515,occ:50,rev:3224925},{rn:567,adr:6559,occ:58,rev:3718806},{rn:611,adr:6797,occ:62,rev:4152967},{rn:621,adr:6726,occ:63,rev:4176846},{rn:632,adr:6722,occ:64,rev:4248304},{rn:652,adr:6700,occ:66,rev:4368400},{rn:652,adr:6700,occ:66,rev:4368400},{rn:652,adr:6700,occ:66,rev:4368400}],
+    'Anticavilla':[{rn:16,adr:5743,occ:3,rev:91884},{rn:18,adr:5615,occ:4,rev:101079},{rn:22,adr:5389,occ:5,rev:118558},{rn:40,adr:5289,occ:9,rev:211560},{rn:73,adr:5353,occ:16,rev:390769},{rn:140,adr:4810,occ:30,rev:673400},{rn:150,adr:4791,occ:32,rev:718650},{rn:173,adr:4781,occ:37,rev:827073},{rn:186,adr:4851,occ:40,rev:902286},{rn:186,adr:4851,occ:40,rev:902286},{rn:186,adr:4851,occ:40,rev:902286}],
+    'Boca de Agua':[{rn:223,adr:5971,occ:35,rev:1331439},{rn:254,adr:6026,occ:40,rev:1530604},{rn:277,adr:6003,occ:43,rev:1662831},{rn:292,adr:5985,occ:46,rev:1747620},{rn:351,adr:5813,occ:55,rev:2040363},{rn:341,adr:6352,occ:53,rev:2166032},{rn:345,adr:6457,occ:54,rev:2227665},{rn:355,adr:6506,occ:56,rev:2309630},{rn:343,adr:6787,occ:54,rev:2327941},{rn:343,adr:6787,occ:54,rev:2327941},{rn:343,adr:6787,occ:54,rev:2327941}],
+    'Casona':[{rn:461,adr:8592,occ:50,rev:3961055},{rn:549,adr:8721,occ:59,rev:4787620},{rn:573,adr:8702,occ:62,rev:4986464},{rn:620,adr:8733,occ:67,rev:5414460},{rn:640,adr:8631,occ:69,rev:5523840},{rn:592,adr:9092,occ:64,rev:5382304},{rn:648,adr:8416,occ:70,rev:5453568},{rn:661,adr:8406,occ:71,rev:5556366},{rn:638,adr:8663,occ:69,rev:5526994},{rn:638,adr:8663,occ:69,rev:5526994},{rn:638,adr:8663,occ:69,rev:5526994}],
+    'El Santuario':[{rn:418,adr:4269,occ:11,rev:1784488},{rn:422,adr:4993,occ:11,rev:2106924},{rn:526,adr:4780,occ:14,rev:2514459},{rn:792,adr:4665,occ:20,rev:3694680},{rn:878,adr:5046,occ:23,rev:4430388},{rn:924,adr:5029,occ:24,rev:4646916},{rn:971,adr:5033,occ:25,rev:4887043},{rn:950,adr:5449,occ:24,rev:5176550},{rn:1009,adr:5407,occ:26,rev:5456107},{rn:1009,adr:5407,occ:26,rev:5456107},{rn:1009,adr:5407,occ:26,rev:5456107}],
+    'MDS':[{rn:274,adr:3267,occ:19,rev:895243},{rn:259,adr:3264,occ:18,rev:845288},{rn:278,adr:3347,occ:19,rev:930397},{rn:260,adr:3529,occ:18,rev:917540},{rn:364,adr:3472,occ:25,rev:1263808},{rn:384,adr:3446,occ:26,rev:1323325},{rn:422,adr:3482,occ:29,rev:1469404},{rn:495,adr:3483,occ:34,rev:1724085},{rn:507,adr:3450,occ:35,rev:1749150},{rn:507,adr:3450,occ:35,rev:1749150},{rn:507,adr:3450,occ:35,rev:1749150}],
+    'Numu':[{rn:687,adr:6448,occ:54,rev:4429968},{rn:697,adr:6989,occ:55,rev:4871640},{rn:661,adr:7113,occ:52,rev:4701911},{rn:682,adr:6966,occ:53,rev:4750812},{rn:758,adr:7444,occ:59,rev:5642552},{rn:781,adr:7254,occ:61,rev:5665374},{rn:803,adr:7339,occ:63,rev:5893217},{rn:812,adr:7311,occ:64,rev:5936532},{rn:779,adr:7338,occ:61,rev:5716302},{rn:779,adr:7338,occ:61,rev:5716302},{rn:779,adr:7338,occ:61,rev:5716302}],
+    'Santa Fé':[{rn:619,adr:2401,occ:35,rev:1486219},{rn:676,adr:2694,occ:38,rev:1821144},{rn:773,adr:2711,occ:44,rev:2095603},{rn:834,adr:2755,occ:47,rev:2297670},{rn:894,adr:2672,occ:51,rev:2388768},{rn:1021,adr:2675,occ:58,rev:2730685},{rn:1102,adr:2683,occ:62,rev:2956666},{rn:1081,adr:2832,occ:61,rev:3061392},{rn:1093,adr:2872,occ:62,rev:3139096},{rn:1093,adr:2884,occ:62,rev:3152332},{rn:1093,adr:2884,occ:62,rev:3152332}],
+    'Tropicana':[{rn:1248,adr:3247,occ:61,rev:4052637},{rn:1239,adr:3811,occ:61,rev:4721829},{rn:1183,adr:3756,occ:58,rev:4442757},{rn:1212,adr:3756,occ:60,rev:4551666},{rn:1288,adr:3737,occ:63,rev:4813256},{rn:1339,adr:3690,occ:66,rev:4940910},{rn:1434,adr:3640,occ:71,rev:5219760},{rn:1446,adr:3693,occ:71,rev:5339355},{rn:1452,adr:3941,occ:72,rev:5721606},{rn:1452,adr:3941,occ:72,rev:5721606},{rn:1452,adr:3941,occ:72,rev:5721606}],
+  },
+  Mar:{
+    'Amomoxtli':[{rn:189,adr:6385,occ:18,rev:1206678},{rn:225,adr:6375,occ:21,rev:1434375},{rn:259,adr:6548,occ:25,rev:1695880},{rn:276,adr:6573,occ:26,rev:1814148},{rn:308,adr:6579,occ:29,rev:2026446},{rn:333,adr:6494,occ:32,rev:2162502},{rn:436,adr:6443,occ:41,rev:2809148},{rn:472,adr:6556,occ:45,rev:3094432},{rn:493,adr:6563,occ:47,rev:3235559},{rn:580,adr:6531,occ:55,rev:3787980},{rn:628,adr:6575,occ:60,rev:4128836}],
+    'Anticavilla':[{rn:46,adr:5540,occ:9,rev:254860},{rn:64,adr:5394,occ:13,rev:345230},{rn:60,adr:5324,occ:12,rev:319412},{rn:76,adr:5455,occ:15,rev:414580},{rn:74,adr:5462,occ:15,rev:404188},{rn:95,adr:5439,occ:19,rev:516706},{rn:101,adr:5399,occ:20,rev:545299},{rn:105,adr:5393,occ:21,rev:566243},{rn:108,adr:5413,occ:22,rev:584604},{rn:128,adr:5294,occ:26,rev:677632},{rn:144,adr:5223,occ:29,rev:752044}],
+    'Boca de Agua':[{rn:90,adr:6306,occ:13,rev:567518},{rn:95,adr:6169,occ:14,rev:586055},{rn:95,adr:6285,occ:14,rev:597075},{rn:110,adr:6723,occ:16,rev:739530},{rn:124,adr:6696,occ:18,rev:830304},{rn:132,adr:6936,occ:19,rev:915552},{rn:157,adr:11362,occ:23,rev:1783834},{rn:177,adr:7793,occ:26,rev:1379361},{rn:197,adr:7246,occ:29,rev:1427462},{rn:193,adr:7584,occ:28,rev:1463712},{rn:189,adr:6757,occ:28,rev:1277073}],
+    'Casona':[{rn:247,adr:7197,occ:36,rev:1777555},{rn:258,adr:8023,occ:26,rev:2069862},{rn:323,adr:8057,occ:33,rev:2602388},{rn:364,adr:8060,occ:37,rev:2933840},{rn:421,adr:8047,occ:42,rev:3387787},{rn:467,adr:8233,occ:47,rev:3845012},{rn:503,adr:8110,occ:51,rev:4079330},{rn:572,adr:8180,occ:58,rev:4678960},{rn:545,adr:7720,occ:55,rev:4207400},{rn:580,adr:7964,occ:58,rev:4619120},{rn:626,adr:7865,occ:63,rev:4923427}],
+    'El Santuario':[{rn:79,adr:4428,occ:2,rev:349817},{rn:129,adr:4543,occ:3,rev:586096},{rn:359,adr:4690,occ:9,rev:1683566},{rn:458,adr:4631,occ:11,rev:2120998},{rn:554,adr:4762,occ:13,rev:2638148},{rn:581,adr:4796,occ:14,rev:2786203},{rn:672,adr:4844,occ:16,rev:3255168},{rn:740,adr:4859,occ:18,rev:3595660},{rn:907,adr:5042,occ:22,rev:4573094},{rn:1006,adr:5056,occ:24,rev:5086336},{rn:1122,adr:5101,occ:27,rev:5723120}],
+    'MDS':[{rn:161,adr:4281,occ:10,rev:689313},{rn:203,adr:4213,occ:13,rev:855192},{rn:231,adr:4264,occ:15,rev:985088},{rn:242,adr:4328,occ:16,rev:1047376},{rn:254,adr:4313,occ:16,rev:1095502},{rn:260,adr:4310,occ:17,rev:1120517},{rn:259,adr:4327,occ:17,rev:1120693},{rn:273,adr:4331,occ:18,rev:1182363},{rn:312,adr:4272,occ:20,rev:1332864},{rn:377,adr:4090,occ:24,rev:1541930},{rn:391,adr:4033,occ:25,rev:1576778}],
+    'Numu':[{rn:470,adr:6460,occ:34,rev:3036379},{rn:535,adr:6649,occ:39,rev:3557397},{rn:591,adr:6711,occ:43,rev:3966041},{rn:617,adr:6568,occ:45,rev:4052456},{rn:651,adr:6642,occ:48,rev:4324202},{rn:662,adr:6690,occ:49,rev:4428853},{rn:691,adr:6526,occ:51,rev:4509466},{rn:720,adr:6573,occ:53,rev:4732560},{rn:680,adr:6611,occ:50,rev:4495480},{rn:696,adr:6594,occ:51,rev:4589424},{rn:713,adr:6758,occ:52,rev:4818675}],
+    'Santa Fé':[{rn:243,adr:2579,occ:13,rev:626697},{rn:330,adr:2778,occ:17,rev:916740},{rn:1057,adr:2252,occ:56,rev:2380364},{rn:1097,adr:2269,occ:58,rev:2489093},{rn:1140,adr:2291,occ:60,rev:2611740},{rn:1190,adr:2307,occ:63,rev:2745604},{rn:1211,adr:2364,occ:64,rev:2862804},{rn:1321,adr:2407,occ:70,rev:3179647},{rn:1375,adr:2330,occ:73,rev:3203750},{rn:1405,adr:2433,occ:74,rev:3417972},{rn:1472,adr:2470,occ:78,rev:3635192}],
+    'Tropicana':[{rn:1095,adr:3929,occ:50,rev:4302288},{rn:1049,adr:3904,occ:48,rev:4094772},{rn:1096,adr:3922,occ:51,rev:4298512},{rn:1221,adr:3867,occ:56,rev:4720997},{rn:1182,adr:3885,occ:54,rev:4592070},{rn:1240,adr:3780,occ:57,rev:4687200},{rn:1322,adr:3693,occ:61,rev:4881485},{rn:1361,adr:3710,occ:63,rev:5049310},{rn:1427,adr:3904,occ:66,rev:5570295},{rn:1461,adr:3904,occ:67,rev:5703014},{rn:1504,adr:3675,occ:69,rev:5527200}],
+  },
+  Apr:{
+    'Amomoxtli':[{rn:297,adr:5903,occ:29,rev:1753322},{rn:313,adr:5991,occ:31,rev:1875189},{rn:323,adr:6023,occ:32,rev:1945435},{rn:352,adr:5951,occ:35,rev:2094752},{rn:369,adr:6123,occ:36,rev:2259553},{rn:379,adr:6210,occ:37,rev:2353590},{rn:357,adr:6275,occ:35,rev:2240175},{rn:393,adr:6283,occ:39,rev:2469219},{rn:394,adr:6301,occ:39,rev:2482594},{rn:410,adr:6343,occ:40,rev:2600630},{rn:426,adr:6013,occ:42,rev:2561679}],
+    'Anticavilla':[{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:35,adr:5110,occ:7,rev:178850},{rn:47,adr:5044,occ:10,rev:237068},{rn:47,adr:5016,occ:10,rev:235752},{rn:49,adr:4992,occ:10,rev:244606},{rn:49,adr:4991,occ:10,rev:244559},{rn:49,adr:4991,occ:10,rev:244559},{rn:56,adr:4941,occ:12,rev:276696}],
+    'Boca de Agua':[{rn:36,adr:6477,occ:5,rev:233157},{rn:48,adr:6760,occ:7,rev:324480},{rn:51,adr:6586,occ:8,rev:335886},{rn:61,adr:6948,occ:9,rev:423828},{rn:75,adr:7110,occ:11,rev:533250},{rn:79,adr:7327,occ:12,rev:578833},{rn:83,adr:7113,occ:13,rev:590379},{rn:96,adr:8900,occ:15,rev:854400},{rn:0,adr:0,occ:0,rev:0},{rn:98,adr:8891,occ:15,rev:871318},{rn:122,adr:6768,occ:18,rev:825696}],
+    'Casona':[{rn:585,adr:7464,occ:59,rev:4366346},{rn:261,adr:6850,occ:27,rev:1787894},{rn:278,adr:6945,occ:29,rev:1930674},{rn:278,adr:6945,occ:29,rev:1930674},{rn:369,adr:7207,occ:38,rev:2659383},{rn:378,adr:7376,occ:39,rev:2788211},{rn:397,adr:7283,occ:41,rev:2891351},{rn:425,adr:7238,occ:44,rev:3076150},{rn:443,adr:6854,occ:46,rev:3036322},{rn:514,adr:6836,occ:54,rev:3513766},{rn:563,adr:6815,occ:59,rev:3836811}],
+    'El Santuario':[{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:192,adr:4489,occ:5,rev:861888},{rn:186,adr:4374,occ:5,rev:813650},{rn:211,adr:4702,occ:5,rev:992122},{rn:219,adr:4759,occ:5,rev:1042221},{rn:289,adr:4740,occ:7,rev:1369860},{rn:410,adr:4501,occ:10,rev:1845410},{rn:514,adr:4629,occ:13,rev:2379311}],
+    'MDS':[{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:109,adr:4639,occ:7,rev:505651},{rn:116,adr:4639,occ:8,rev:538151},{rn:134,adr:4631,occ:9,rev:620554},{rn:146,adr:4542,occ:10,rev:663132},{rn:152,adr:4510,occ:10,rev:685520},{rn:165,adr:4531,occ:11,rev:747615},{rn:173,adr:4539,occ:12,rev:785276}],
+    'Numu':[{rn:319,adr:7142,occ:24,rev:2278339},{rn:358,adr:7343,occ:27,rev:2628919},{rn:401,adr:7364,occ:30,rev:2952932},{rn:435,adr:7327,occ:33,rev:3187245},{rn:0,adr:0,occ:0,rev:0},{rn:512,adr:7474,occ:39,rev:3826673},{rn:564,adr:7394,occ:43,rev:4170216},{rn:576,adr:7459,occ:44,rev:4296384},{rn:540,adr:7463,occ:41,rev:4030020},{rn:534,adr:7435,occ:40,rev:3970290},{rn:552,adr:7331,occ:42,rev:4046833}],
+    'Santa Fé':[{rn:119,adr:2779,occ:7,rev:330701},{rn:161,adr:2555,occ:9,rev:411355},{rn:292,adr:2668,occ:16,rev:779056},{rn:293,adr:2651,occ:16,rev:776743},{rn:310,adr:2649,occ:17,rev:821190},{rn:374,adr:2719,occ:20,rev:1016921},{rn:407,adr:2713,occ:22,rev:1104191},{rn:462,adr:2737,occ:25,rev:1264494},{rn:498,adr:2582,occ:27,rev:1285836},{rn:601,adr:2716,occ:33,rev:1632508},{rn:638,adr:2762,occ:35,rev:1761990}],
+    'Tropicana':[{rn:380,adr:3324,occ:18,rev:1263150},{rn:407,adr:3330,occ:19,rev:1355310},{rn:425,adr:3330,occ:20,rev:1415250},{rn:466,adr:3293,occ:22,rev:1534538},{rn:498,adr:3312,occ:24,rev:1649127},{rn:542,adr:3204,occ:26,rev:1736568},{rn:574,adr:3098,occ:27,rev:1777965},{rn:597,adr:3185,occ:28,rev:1901445},{rn:644,adr:3386,occ:31,rev:2180262},{rn:680,adr:3404,occ:32,rev:2314720},{rn:624,adr:3238,occ:30,rev:2020200}],
+  },
+  May:{
+    'Amomoxtli':[{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:135,adr:6244,occ:13,rev:842940},{rn:147,adr:6091,occ:14,rev:895377},{rn:175,adr:5988,occ:17,rev:1047900},{rn:182,adr:6012,occ:17,rev:1094184},{rn:257,adr:6044,occ:24,rev:1553308},{rn:271,adr:6064,occ:26,rev:1643255}],
+    'Anticavilla':[{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:5,adr:4129,occ:1,rev:20645},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:14,adr:5029,occ:3,rev:70406},{rn:14,adr:5029,occ:3,rev:70406},{rn:14,adr:5029,occ:3,rev:70406}],
+    'Boca de Agua':[{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:96,adr:8900,occ:14,rev:854400},{rn:36,adr:7323,occ:5,rev:263628},{rn:37,adr:5472,occ:5,rev:202464}],
+    'Casona':[{rn:0,adr:0,occ:0,rev:0},{rn:48,adr:7240,occ:5,rev:347529},{rn:73,adr:7103,occ:7,rev:518520},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:104,adr:8311,occ:10,rev:864306},{rn:119,adr:7458,occ:12,rev:887502},{rn:147,adr:7272,occ:15,rev:1068984},{rn:142,adr:6752,occ:14,rev:958784},{rn:157,adr:6766,occ:16,rev:1062243},{rn:177,adr:6857,occ:18,rev:1213756}],
+    'El Santuario':[{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:18,adr:4083,occ:0,rev:73494},{rn:28,adr:4960,occ:1,rev:138880},{rn:112,adr:6091,occ:3,rev:682201}],
+    'MDS':[{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:42,adr:4432,occ:3,rev:186144},{rn:47,adr:4583,occ:3,rev:215403}],
+    'Numu':[{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:251,adr:6659,occ:18,rev:1671447},{rn:268,adr:6591,occ:20,rev:1766388},{rn:294,adr:6555,occ:22,rev:1927170},{rn:321,adr:6477,occ:24,rev:2079117},{rn:390,adr:5996,occ:29,rev:2338440},{rn:366,adr:6003,occ:27,rev:2197233}],
+    'Santa Fé':[{rn:26,adr:2492,occ:1,rev:64792},{rn:26,adr:2492,occ:1,rev:64792},{rn:26,adr:2492,occ:1,rev:64792},{rn:29,adr:2479,occ:2,rev:71891},{rn:0,adr:0,occ:0,rev:0},{rn:417,adr:4089,occ:22,rev:1704905},{rn:65,adr:2450,occ:3,rev:159250},{rn:68,adr:2492,occ:4,rev:169456},{rn:92,adr:2577,occ:5,rev:237084},{rn:106,adr:2633,occ:6,rev:279056},{rn:122,adr:2710,occ:6,rev:330641}],
+    'Tropicana':[{rn:630,adr:4475,occ:29,rev:2818995},{rn:355,adr:4348,occ:16,rev:1543363},{rn:358,adr:4348,occ:16,rev:1556405},{rn:390,adr:4200,occ:18,rev:1637805},{rn:406,adr:4181,occ:19,rev:1697486},{rn:417,adr:3978,occ:19,rev:1658826},{rn:421,adr:3885,occ:19,rev:1635585},{rn:434,adr:3850,occ:20,rev:1670900},{rn:457,adr:4033,occ:21,rev:1843081},{rn:464,adr:4052,occ:21,rev:1879896},{rn:471,adr:3815,occ:22,rev:1796865}],
+  },
+  Jun:{
+    'Amomoxtli':[{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0}],
+    'Anticavilla':[{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0}],
+    'Boca de Agua':[{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:32,adr:7238,occ:5,rev:231616},{rn:16,adr:7288,occ:2,rev:116608},{rn:16,adr:7288,occ:2,rev:116608}],
+    'Casona':[{rn:0,adr:0,occ:0,rev:0},{rn:13,adr:13427,occ:1,rev:174550},{rn:13,adr:13427,occ:1,rev:174550},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:13,adr:13426,occ:1,rev:174538},{rn:13,adr:13426,occ:1,rev:174538},{rn:13,adr:13426,occ:1,rev:174538},{rn:18,adr:13923,occ:2,rev:250614},{rn:16,adr:14369,occ:2,rev:229906},{rn:16,adr:14369,occ:2,rev:229906}],
+    'El Santuario':[{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0}],
+    'MDS':[{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0}],
+    'Numu':[{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:117,adr:6508,occ:9,rev:761436},{rn:151,adr:6579,occ:11,rev:993429},{rn:0,adr:0,occ:0,rev:0}],
+    'Santa Fé':[{rn:13,adr:2369,occ:1,rev:30797},{rn:13,adr:2369,occ:1,rev:30797},{rn:13,adr:2369,occ:1,rev:30797},{rn:13,adr:2369,occ:1,rev:30797},{rn:0,adr:0,occ:0,rev:0},{rn:63,adr:2868,occ:3,rev:180653},{rn:20,adr:2272,occ:1,rev:45440},{rn:0,adr:0,occ:0,rev:0},{rn:0,adr:0,occ:0,rev:0},{rn:38,adr:2574,occ:2,rev:97800},{rn:38,adr:2574,occ:2,rev:97800}],
+    'Tropicana':[{rn:52,adr:3132,occ:2,rev:162886},{rn:52,adr:3132,occ:2,rev:162886},{rn:49,adr:3219,occ:2,rev:157731},{rn:56,adr:3145,occ:3,rev:176120},{rn:56,adr:3053,occ:3,rev:170940},{rn:63,adr:2790,occ:3,rev:175770},{rn:67,adr:2555,occ:3,rev:171185},{rn:64,adr:2433,occ:3,rev:155680},{rn:80,adr:2627,occ:4,rev:210160},{rn:87,adr:2572,occ:4,rev:223721},{rn:90,adr:2468,occ:4,rev:222075}],
+  },
+};
+
+
+/* ── PACE STATE ── */
+let curPaceMetric='rev';
+
+function setPaceMetric(m){
+  curPaceMetric=m;
+  ['rev','rn','adr','occ'].forEach(x=>{
+    document.getElementById('pace-metric-'+x)?.classList.toggle('active',x===m);
+  });
+  renderPace();
+}
+
+function fmtPaceVal(v,m){
+  if(v===0||v===null||v===undefined) return '<span style="color:#94a3b8">—</span>';
+  if(m==='rev') return '$'+Math.round(v/1000).toLocaleString()+'K';
+  if(m==='adr') return '$'+Math.round(v).toLocaleString();
+  if(m==='occ') return v+'%';
+  return Math.round(v).toLocaleString();
+}
+
+function paceWoW(curr,prev,m){
+  if(!prev||prev===0||!curr||curr===0) return '';
+  const delta=curr-prev;
+  const pct=(delta/prev)*100;
+  const pos=delta>=0;
+  const color=pos?'#059669':'#e11d48';
+  if(m==='rev'){
+    const kd=Math.round(Math.abs(delta)/1000);
+    return '<span style="font-size:10px;color:'+color+'">'+(pos?'↑':'↓')+'$'+kd+'K</span>';
+  }
+  if(m==='occ'){
+    return '<span style="font-size:10px;color:'+color+'">'+(pos?'↑':'↓')+Math.abs(delta).toFixed(1)+'pp</span>';
+  }
+  return '<span style="font-size:10px;color:'+color+'">'+(pos?'↑':'↓')+Math.abs(pct).toFixed(1)+'%</span>';
+}
+
+const MONTH_KEYS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const MONTH_LABELS={Jan:'Enero',Feb:'Febrero',Mar:'Marzo',Apr:'Abril',May:'Mayo',Jun:'Junio',Jul:'Julio',Aug:'Agosto',Sep:'Septiembre',Oct:'Octubre',Nov:'Noviembre',Dec:'Diciembre'};
+
+function renderPace(){
+  const el=document.getElementById('pace-table');
+  if(!el) return;
+
+  // OTB Pace requiere un solo hotel — usa el hotel bar global
+  if(curHotel==='all'){
+    el.innerHTML=`<tr><td style="padding:24px 16px;text-align:center;color:#64748b;font-size:12px;font-family:IBM Plex Sans,sans-serif">
+      Selecciona un hotel específico en la barra superior para ver el OTB Pace.
+    </td></tr>`;
+    document.getElementById('pace-charts').innerHTML='';
+    return;
+  }
+
+  const hotels=[curHotel].filter(h=>HOTELS_ALL_LIST.includes(h));
+  const months=[curPaceMonth].filter(m=>MONTH_KEYS.includes(m));
+  const m=curPaceMetric;
+
+  // VERTICAL layout: rows = Semana × Mes, columns = Hotels
+  // Header: Semana | Mes | Hotel1 | Hotel2 | ...
+  const sepStyle='border-left:2px solid var(--border)';
+
+  let html='<thead><tr style="background:var(--card2);position:sticky;top:0;z-index:3">';
+  html+='<th style="min-width:72px;font-size:10px;font-weight:600">Semana</th>';
+  html+='<th style="min-width:68px;font-size:10px;color:#64748b">Mes</th>';
+  hotels.forEach((h,hi)=>{
+    html+='<th style="min-width:100px;font-size:10px;text-align:right;'+(hi>0?sepStyle:'')+'">';
+    html+='<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:'+H_COLORS[h]+';margin-right:5px;vertical-align:middle"></span>'+h+'</th>';
+  });
+  html+='</tr></thead><tbody>';
+
+  months.forEach((mo,moIdx)=>{
+    if(!PACE_RAW[mo]) return;
+    const moLabel=MONTH_LABELS[mo]||mo;
+    const isFirstMo=moIdx===0;
+
+    PACE_WEEKS.forEach((week,wi)=>{
+      const rowBg=wi%2===0?'':'background:var(--card2)';
+      html+='<tr style="'+rowBg+'">';
+
+      // Semana cell
+      html+='<td style="font-size:11px;font-weight:500;white-space:nowrap">'+week+'</td>';
+
+      // Mes cell — only show label on first week of each month block
+      html+='<td style="font-size:10px;color:#64748b;white-space:nowrap">'+(wi===0?moLabel:'')+'</td>';
+
+      hotels.forEach((h,hi)=>{
+        const series=PACE_RAW[mo]?.[h];
+        const s=series?.[wi];
+        const val=s?s[m]:0;
+        const prev=series&&wi>0?series[wi-1][m]:null;
+        const wow=prev!==null?paceWoW(val,prev,m):'';
+        const isLast=wi===PACE_WEEKS.length-1;
+        const latestStyle=isLast?'font-weight:600;':'';
+        html+='<td style="text-align:right;'+latestStyle+(hi>0?sepStyle:'')+'">';
+        html+=fmtPaceVal(val,m);
+        if(wow) html+='<br>'+wow;
+        html+='</td>';
+      });
+
+      html+='</tr>';
+    });
+
+    // Spacer row between months
+    if(moIdx < months.length-1){
+      html+='<tr style="height:6px;background:var(--bg)"><td colspan="'+(2+hotels.length)+'"></td></tr>';
+    }
+  });
+
+  html+='</tbody>';
+  el.innerHTML=html;
+
+  // Render trend charts
+  renderPaceCharts(months, hotels, m);
+}
+
+function drawPaceChart(canvas, serOcc, serAdr, color, hoverIdx){
+  const ctx=canvas.getContext('2d');
+  const dpr=window.devicePixelRatio||1;
+  const W=canvas.width/dpr, H=canvas.height/dpr;
+  const padL=52, padR=64, padT=20, padB=32;
+  const chartW=W-padL-padR, chartH=H-padT-padB;
+  const n=serOcc.length;
+  if(n<2){ctx.restore&&ctx.restore();return;}
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.save(); ctx.scale(dpr,dpr);
+
+  // ── Scales ──────────────────────────────────────────────
+  // Occ: left axis 0–100%
+  const yOcc=v=>padT+chartH*(1-v/100);
+
+  // ADR: right axis, tight range around data
+  const adrVals=serAdr.filter(v=>v>0);
+  const adrMin=adrVals.length?Math.floor(Math.min(...adrVals)*0.92/100)*100:0;
+  const adrMax=adrVals.length?Math.ceil(Math.max(...adrVals)*1.08/100)*100:10000;
+  const yAdr=v=>padT+chartH*(1-(v-adrMin)/(adrMax-adrMin));
+  const xPos=i=>padL+(n===1?chartW/2:(i/(n-1))*chartW);
+
+  // ── Background grid ─────────────────────────────────────
+  ctx.strokeStyle='rgba(100,116,139,0.1)'; ctx.lineWidth=1; ctx.setLineDash([]);
+  [0,25,50,75,100].forEach(v=>{
+    const y=yOcc(v);
+    ctx.beginPath(); ctx.moveTo(padL,y); ctx.lineTo(padL+chartW,y); ctx.stroke();
+  });
+  // Vertical tick lines
+  serOcc.forEach((_,i)=>{
+    const x=xPos(i);
+    ctx.strokeStyle='rgba(100,116,139,0.07)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(x,padT); ctx.lineTo(x,padT+chartH); ctx.stroke();
+  });
+
+  // ── Left axis — Occ % ───────────────────────────────────
+  ctx.font=`10px IBM Plex Mono,monospace`; ctx.textAlign='right';
+  [0,25,50,75,100].forEach(v=>{
+    ctx.fillStyle='#10b981';
+    ctx.fillText(v+'%', padL-8, yOcc(v)+3.5);
+    // axis tick
+    ctx.strokeStyle='rgba(16,185,129,0.3)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(padL-4,yOcc(v)); ctx.lineTo(padL,yOcc(v)); ctx.stroke();
+  });
+  // Axis label
+  ctx.save();
+  ctx.translate(14, padT+chartH/2);
+  ctx.rotate(-Math.PI/2);
+  ctx.fillStyle='#10b981'; ctx.font='bold 10px IBM Plex Sans,sans-serif'; ctx.textAlign='center';
+  ctx.fillText('Occ %', 0, 0);
+  ctx.restore();
+
+  // ── Right axis — ADR ────────────────────────────────────
+  const adrStep=(adrMax-adrMin)/4;
+  ctx.textAlign='left';
+  [0,1,2,3,4].forEach(i=>{
+    const v=Math.round(adrMin+adrStep*i);
+    const y=yAdr(v);
+    ctx.fillStyle='#d97706';
+    ctx.fillText('$'+v.toLocaleString(), padL+chartW+8, y+3.5);
+    ctx.strokeStyle='rgba(217,119,6,0.3)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(padL+chartW,y); ctx.lineTo(padL+chartW+4,y); ctx.stroke();
+  });
+  // Axis label
+  ctx.save();
+  ctx.translate(W-10, padT+chartH/2);
+  ctx.rotate(Math.PI/2);
+  ctx.fillStyle='#d97706'; ctx.font='bold 10px IBM Plex Sans,sans-serif'; ctx.textAlign='center';
+  ctx.fillText('ADR', 0, 0);
+  ctx.restore();
+
+  // ── Occ % area + line ───────────────────────────────────
+  const ptsOcc=serOcc.map((v,i)=>({x:xPos(i),y:yOcc(v),v}));
+  // Filled area
+  ctx.globalAlpha=0.12; ctx.fillStyle='#10b981';
+  ctx.beginPath(); ctx.moveTo(ptsOcc[0].x, padT+chartH);
+  ptsOcc.forEach(p=>ctx.lineTo(p.x,p.y));
+  ctx.lineTo(ptsOcc[n-1].x, padT+chartH); ctx.closePath(); ctx.fill();
+  ctx.globalAlpha=1;
+  // Line
+  ctx.strokeStyle='#10b981'; ctx.lineWidth=2.5; ctx.setLineDash([]);
+  ctx.beginPath(); ptsOcc.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y)); ctx.stroke();
+
+  // ── ADR line ────────────────────────────────────────────
+  const ptsAdr=serAdr.map((v,i)=>({x:xPos(i),y:v>0?yAdr(v):null,v}));
+  ctx.strokeStyle='#d97706'; ctx.lineWidth=2.5; ctx.setLineDash([6,3]);
+  ctx.beginPath(); let started=false;
+  ptsAdr.forEach(p=>{
+    if(p.y===null){started=false;return;}
+    started?ctx.lineTo(p.x,p.y):(ctx.moveTo(p.x,p.y),started=true);
+  });
+  ctx.stroke(); ctx.setLineDash([]);
+
+  // ── Dots ────────────────────────────────────────────────
+  ptsOcc.forEach((p,i)=>{
+    if(!p.v) return;
+    const r=hoverIdx===i?6:3.5;
+    ctx.fillStyle='#10b981';
+    ctx.beginPath(); ctx.arc(p.x,p.y,r,0,Math.PI*2); ctx.fill();
+    if(hoverIdx===i){ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(p.x,p.y,r,0,Math.PI*2);ctx.stroke();}
+  });
+  ptsAdr.forEach((p,i)=>{
+    if(p.y===null||!p.v) return;
+    const r=hoverIdx===i?6:3.5;
+    ctx.fillStyle='#d97706';
+    ctx.beginPath(); ctx.arc(p.x,p.y,r,0,Math.PI*2); ctx.fill();
+    if(hoverIdx===i){ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(p.x,p.y,r,0,Math.PI*2);ctx.stroke();}
+  });
+
+  // ── Week labels ─────────────────────────────────────────
+  ctx.fillStyle='#64748b'; ctx.font='9px IBM Plex Mono,monospace'; ctx.textAlign='center';
+  serOcc.forEach((_,i)=>{
+    const w=PACE_WEEKS[i]||'';
+    ctx.fillText(w, xPos(i), padT+chartH+18);
+  });
+
+  // ── Hover tooltip ───────────────────────────────────────
+  if(hoverIdx>=0&&hoverIdx<n){
+    const x=xPos(hoverIdx);
+    // Crosshair
+    ctx.strokeStyle='rgba(148,163,184,0.4)'; ctx.lineWidth=1; ctx.setLineDash([4,3]);
+    ctx.beginPath(); ctx.moveTo(x,padT); ctx.lineTo(x,padT+chartH); ctx.stroke();
+    ctx.setLineDash([]);
+
+    const oc=serOcc[hoverIdx], ad=serAdr[hoverIdx];
+    const week=PACE_WEEKS[hoverIdx]||'';
+    const lines=[
+      {t:week, c:'#94a3b8'},
+      {t:oc+'% Occ', c:'#10b981'},
+      {t:ad?'$'+Math.round(ad).toLocaleString()+' ADR':'— ADR', c:'#d97706'},
+    ];
+    const boxW=108, lineH=16, boxH=lines.length*lineH+14;
+    let bx=x+12; if(bx+boxW>W-padR+20) bx=x-boxW-12;
+    const by=Math.max(padT+4, Math.min(ptsOcc[hoverIdx].y-boxH/2, padT+chartH-boxH));
+
+    ctx.shadowColor='rgba(0,0,0,0.25)'; ctx.shadowBlur=10;
+    ctx.fillStyle='#1e293b';
+    ctx.beginPath(); ctx.roundRect(bx,by,boxW,boxH,6); ctx.fill();
+    ctx.shadowBlur=0;
+    ctx.strokeStyle='rgba(255,255,255,0.1)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.roundRect(bx,by,boxW,boxH,6); ctx.stroke();
+
+    ctx.font='bold 10px IBM Plex Sans,sans-serif'; ctx.textAlign='left';
+    lines.forEach((l,li)=>{
+      ctx.fillStyle=l.c;
+      ctx.fillText(l.t, bx+10, by+14+li*lineH);
+    });
+  }
+
+  ctx.restore();
+}
+
+function renderPaceCharts(months, hotels, m){
+  const el=document.getElementById('pace-charts');
+  if(!el) return;
+  el.innerHTML='';
+  if(!hotels.length) return;
+
+  const h=hotels[0];
+  const col=H_COLORS[h]||'#94a3b8';
+
+  // Aggregate Occ and ADR across selected months
+  const aggOcc=PACE_WEEKS.map((_,wi)=>{
+    let t=0,c=0;
+    months.forEach(mo=>{
+      if(!PACE_RAW[mo]||!PACE_RAW[mo][h]) return;
+      const v=PACE_RAW[mo][h][wi].occ; if(v>0){t+=v;c++;}
+    });
+    return c>0?Math.round(t/c):0;
+  });
+  const aggAdr=PACE_WEEKS.map((_,wi)=>{
+    let t=0,c=0;
+    months.forEach(mo=>{
+      if(!PACE_RAW[mo]||!PACE_RAW[mo][h]) return;
+      const v=PACE_RAW[mo][h][wi].adr; if(v>0){t+=v;c++;}
+    });
+    return c>0?Math.round(t/c):0;
+  });
+
+  // Card full width
+  const card=document.createElement('div');
+  card.className='card';
+  card.style.cssText='padding:18px 18px 10px;';
+
+  // Header + legend
+  const hdr=document.createElement('div');
+  hdr.style.cssText='display:flex;align-items:center;gap:16px;margin-bottom:14px;flex-wrap:wrap';
+  hdr.innerHTML=`
+    <span style="font-family:Playfair Display,serif;font-size:14px;font-weight:700;color:#1e2535">Evolución OTB — <span style="color:${col}">${h}</span></span>
+    <span style="margin-left:auto;display:flex;gap:14px;align-items:center">
+      <span style="display:flex;align-items:center;gap:5px;font-size:10px;font-family:IBM Plex Mono,monospace;color:#10b981">
+        <span style="display:inline-block;width:22px;height:2.5px;background:#10b981;border-radius:1px"></span>Ocupación %
+      </span>
+      <span style="display:flex;align-items:center;gap:5px;font-size:10px;font-family:IBM Plex Mono,monospace;color:#d97706">
+        <svg width="22" height="6" style="flex-shrink:0"><line x1="0" y1="3" x2="22" y2="3" stroke="#d97706" stroke-width="2.5" stroke-dasharray="6,3"/></svg>ADR
+      </span>
+    </span>`;
+  card.appendChild(hdr);
+
+  // Canvas — full width, tall
+  const canvas=document.createElement('canvas');
+  const dpr=window.devicePixelRatio||1;
+  // Responsive: read container width after appending
+  card.appendChild(canvas);
+  el.appendChild(card);
+
+  function sizeAndDraw(hoverIdx=-1){
+    const CW=card.clientWidth-36;
+    const CH=260;
+    canvas.width=CW*dpr; canvas.height=CH*dpr;
+    canvas.style.width=CW+'px'; canvas.style.height=CH+'px';
+    canvas.style.display='block';
+    drawPaceChart(canvas, aggOcc, aggAdr, col, hoverIdx);
+  }
+
+  // Initial draw after layout
+  requestAnimationFrame(()=>sizeAndDraw());
+
+  // Hover
+  canvas.style.cursor='crosshair';
+  canvas.addEventListener('mousemove',e=>{
+    const rect=canvas.getBoundingClientRect();
+    const CW=rect.width;
+    const padL=52,padR=64;
+    const chartW=CW-padL-padR;
+    const n=aggOcc.length;
+    const mouseX=e.clientX-rect.left;
+    let closest=-1,minDist=Infinity;
+    for(let i=0;i<n;i++){
+      const px=padL+(n===1?chartW/2:(i/(n-1))*chartW);
+      const d=Math.abs(mouseX-px);
+      if(d<minDist){minDist=d;closest=i;}
+    }
+    sizeAndDraw(minDist<(chartW/(n-1||1))*0.65?closest:-1);
+  });
+  canvas.addEventListener('mouseleave',()=>sizeAndDraw(-1));
+
+  // Redraw on resize
+  window.addEventListener('resize',()=>sizeAndDraw(),{passive:true});
+}
+
+let curPUMetric='rev';
+let activePUHotels=new Set(HOTELS_PU);
+
+function setPUMetric(m){
+  curPUMetric=m;
+  document.querySelectorAll('.pu-metric-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('pum-'+m).classList.add('active');
+  renderPickup();
+}
+
+function togglePUHotel(h){
+  if(activePUHotels.has(h)) activePUHotels.delete(h);
+  else activePUHotels.add(h);
+  const id='puh-'+h.replace(/[\s']/g,'_');
+  document.getElementById(id)?.classList.toggle('active', activePUHotels.has(h));
+  renderPickup();
+}
+
+function fmtPU(v,metric){
+  if(metric==='rev') return(v>=0?'':'-')+'$'+Math.abs(Math.round(v/1000))+'K';
+  if(metric==='adr') return'$'+v.toLocaleString();
+  return v.toLocaleString();
+}
+
+function renderPickup(){
+  // activePUHotels ya está sincronizado desde el hotel bar global (setHotel / setHotelFilter)
+  const el=document.getElementById('pu-weekly-table');if(!el)return;
+  const data=PU_RAW[curPUMetric];
+  const weeks=PU_WEEKS;
+  const nw=weeks.length;
+  const hoteles=HOTELS_PU.filter(h=>activePUHotels.has(h));
+
+  const thead=`<thead><tr>
+    <th>Hotel</th>
+    ${weeks.map(w=>`<th>${w.label}<br><span style="color:var(--dim);font-size:9px">${w.id}</span></th>`).reverse().join('')}
+  </tr></thead>`;
+
+  const rowsHTML=hoteles.map(h=>{
+    const vals=data[h]||new Array(nw).fill(0);
+    const col=H_COLORS[h]||'#94a3b8';
+    const cells=vals.map((v,i)=>{
+      const isCur=i===nw-1;
+      const cls=v>0?'pu-cell-pos':v<0?'pu-cell-neg':'';
+      return`<td class="${cls}${isCur?' pu-cell-cur':''}">${v===0?'—':fmtPU(v,curPUMetric)}</td>`;
+    }).reverse().join('');
+    return`<tr>
+      <td><span style="display:inline-flex;align-items:center;gap:6px">
+        <span style="width:8px;height:8px;border-radius:50%;background:${col};flex-shrink:0"></span>${h}
+      </span></td>
+      ${cells}
+    </tr>`;
+  }).join('');
+
+  el.innerHTML=`${thead}<tbody>${rowsHTML}</tbody>`;
+  renderTrends();
+}
+
+function renderTrends(){
+  const grid=document.getElementById('pu-trend-grid');if(!grid)return;
+  const data=PU_RAW[curPUMetric];
+  const weeks=PU_WEEKS;
+  const metricLabel={'rev':'Revenue','rn':'Room Nights','adr':'ADR'}[curPUMetric];
+  const hoteles=HOTELS_PU.filter(h=>activePUHotels.has(h));
+
+  // tooltip div (shared)
+  if(!document.getElementById('pu-tooltip')){
+    const tt=document.createElement('div');
+    tt.id='pu-tooltip';
+    tt.style.cssText='position:fixed;background:#1e2535;color:#fff;font-size:11px;font-family:IBM Plex Mono,monospace;padding:7px 11px;border-radius:7px;pointer-events:none;opacity:0;transition:opacity .15s;z-index:9999;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.25)';
+    document.body.appendChild(tt);
+  }
+  const tt=document.getElementById('pu-tooltip');
+
+  grid.innerHTML=hoteles.map(h=>{
+    const vals=data[h]||[];
+    const col=H_COLORS[h]||'#94a3b8';
+    const mx=Math.max(...vals.map(Math.abs),1);
+    const W=800,H=110,pad=20;
+    const pts=vals.map((v,i)=>{
+      const x=pad+(i/(vals.length-1))*(W-pad*2);
+      const y=H/2-(v/mx)*(H/2-8);
+      return{x,y,v,w:weeks[i]};
+    });
+    const polyline=pts.map(p=>`${p.x},${p.y}`).join(' ');
+    const areaPath=`M${pts[0].x},${H/2} `+pts.map(p=>`L${p.x},${p.y}`).join(' ')+` L${pts[pts.length-1].x},${H/2} Z`;
+    const last=pts[pts.length-1];
+    const lastVal=vals[vals.length-1];
+    const prevVal=vals[vals.length-2];
+    const wowDelta=lastVal-prevVal;
+    const wowPct=(prevVal!==0?((wowDelta/Math.abs(prevVal))*100):0);
+    const lastColor=lastVal>=0?'#059669':'#e11d48';
+    const trend=wowDelta>=0?'↑':'↓';
+    const trendCol=wowDelta>=0?'#059669':'#e11d48';
+    const wowLabel=(wowDelta>=0?'+':'')+fmtPU(wowDelta,curPUMetric)+' vs W ant.';
+    const zeroLine=`<line x1="${pad}" y1="${H/2}" x2="${W-pad}" y2="${H/2}" stroke="#e2e5ea" stroke-width="1" stroke-dasharray="3,3"/>`;
+    const labels=weeks.map((w,i)=>{
+      const x=pad+(i/(vals.length-1))*(W-pad*2);
+      return`<text x="${x}" y="${H+16}" text-anchor="middle" font-size="9" fill="#94a3b8">${w.id}</text>`;
+    }).join('');
+
+    // invisible hit areas for tooltip
+    const hitAreas=pts.map((p,i)=>`<circle cx="${p.x}" cy="${p.y}" r="16" fill="transparent"
+      data-label="${weeks[i].label}" data-wid="${weeks[i].id}" data-val="${fmtPU(p.v,curPUMetric)}" data-hotel="${h}"
+      class="pu-hit"/>`).join('');
+
+    // visible dots on all points
+    const dots=pts.map((p,i)=>{
+      const c=p.v>0?col:p.v<0?'#e11d48':'#94a3b8';
+      return`<circle cx="${p.x}" cy="${p.y}" r="${i===pts.length-1?4:3}" fill="${c}" stroke="#fff" stroke-width="1.5"/>`;
+    }).join('');
+
+    return`<div class="trend-card">
+      <div class="trend-card-title">
+        <span style="width:9px;height:9px;border-radius:50%;background:${col};display:inline-block"></span>
+        ${h}
+        <span style="margin-left:auto;font-size:11px;color:${trendCol};font-weight:700">${trend} ${wowLabel}</span>
+      </div>
+      <div class="trend-card-sub">${metricLabel} · pickup incremental semanal</div>
+      <svg class="trend-svg" viewBox="0 0 ${W} ${H+22}" style="cursor:crosshair">
+        <defs>
+          <linearGradient id="grad-${h.replace(/[\s']/g,'')}" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="${col}" stop-opacity="0.2"/>
+            <stop offset="100%" stop-color="${col}" stop-opacity="0.02"/>
+          </linearGradient>
+        </defs>
+        ${zeroLine}
+        <path d="${areaPath}" fill="url(#grad-${h.replace(/[\s']/g,'')})" />
+        <polyline points="${polyline}" fill="none" stroke="${col}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+        ${labels}${dots}${hitAreas}
+      </svg>
+    </div>`;
+  }).join('');
+
+  // attach tooltip events after render
+  document.querySelectorAll('.pu-hit').forEach(el=>{
+    el.addEventListener('mouseenter',e=>{
+      const d=e.target.dataset;
+      tt.innerHTML=`<span style="opacity:.6">${d.hotel}</span><br><b>${d.label}</b> <span style="opacity:.5">${d.wid}</span><br><span style="font-size:13px;font-weight:700">${d.val}</span>`;
+      tt.style.opacity='1';
+    });
+    el.addEventListener('mousemove',e=>{
+      tt.style.left=(e.clientX+14)+'px';
+      tt.style.top=(e.clientY-10)+'px';
+    });
+    el.addEventListener('mouseleave',()=>{tt.style.opacity='0';});
+  });
+}
+
+function renderAll(){
+  renderKPIs();
+  document.getElementById('kpi-strip').style.display=(curView==='tabla'||curView==='pickup'||curView==='exec'||curView==='pace')?'none':'grid';
+  if(curView==='overview'){renderRev();renderOcc();renderHM();renderADRChart('adr-chart-ov');renderRevPARChart('revpar-chart-ov');renderPaceBar();}
+  else if(curView==='pickup'){renderPickup();}
+  else if(curView==='tabla'){renderTabla();}
+  else if(curView==='tabla2'){renderTabla2();}
+  else if(curView==='exec'){renderExec();}
+  else if(curView==='pace'){renderPace();}
+}
+
+function setView(v,navBtn,tabBtn){
+  curView=v;
+  document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
+  document.getElementById('view-'+v).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.vtab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('kpi-strip').style.display=(v==='tabla'||v==='tabla2'||v==='pickup'||v==='exec'||v==='pace')?'none':'grid';
+  const hotelBar=document.querySelector('.hotel-bar');
+  if(hotelBar) hotelBar.style.display='';
+  // Intercambiar barra de mes: pace usa su propia barra de un solo mes
+  const globalMB=document.getElementById('global-month-bar');
+  const paceMB=document.getElementById('pace-month-bar');
+  if(globalMB) globalMB.style.display=v==='pace'?'none':'';
+  if(paceMB)   paceMB.style.display=v==='pace'?'':'none';
+  const idx={exec:0,overview:1,pickup:2,tabla:3,tabla2:4,pace:5};
+  document.querySelectorAll('.nav-btn')[idx[v]]?.classList.add('active');
+  document.querySelectorAll('.vtab')[idx[v]]?.classList.add('active');
+  const t={overview:'Overview General',pickup:'Pickup Semanal',tabla:'Tabla Detalle',tabla2:'Tabla Detalle 2',exec:'Resumen Semanal',pace:'OTB Pace'};
+  document.getElementById('tb-title').textContent=t[v];
+  renderAll();
+}
+
+let curPaceMonth='Jan';
+function setPaceMonth(m){
+  curPaceMonth=m;
+  MONTH_KEYS.forEach(mo=>{
+    const btn=document.getElementById('pm-'+mo);
+    if(btn) btn.classList.toggle('active', mo===m);
+  });
+  renderPace();
+}
+
+/* ── EXEC METRIC STATE ── */
+let curExecMetric='rev';
+let activeExecHotels=new Set(HOTELS_ALL_LIST);
+
+function execHotelFilter(action){
+  if(action==='all'){
+    activeExecHotels=new Set(HOTELS_ALL_LIST);
+    document.querySelectorAll('#exec-hotel-filter .pu-week-btn').forEach(b=>b.classList.add('active'));
+    const et=document.getElementById('exh-todos'); if(et) et.classList.add('active');
+    const en=document.getElementById('exh-ninguno'); if(en) en.classList.remove('active');
+  } else if(action==='none'){
+    activeExecHotels=new Set();
+    document.querySelectorAll('#exec-hotel-filter .pu-week-btn').forEach(b=>b.classList.remove('active'));
+    const et=document.getElementById('exh-todos'); if(et) et.classList.remove('active');
+    const en=document.getElementById('exh-ninguno'); if(en) en.classList.add('active');
+  } else {
+    if(activeExecHotels.has(action)) activeExecHotels.delete(action);
+    else activeExecHotels.add(action);
+    const et=document.getElementById('exh-todos'); if(et) et.classList.remove('active');
+    const en=document.getElementById('exh-ninguno'); if(en) en.classList.remove('active');
+    document.querySelectorAll('#exec-hotel-filter .pu-week-btn').forEach(b=>{
+      const hn=b.dataset.hotel;
+      b.classList.toggle('active', activeExecHotels.has(hn));
+    });
+  }
+  renderExec();
+}
+
+// Sync exec hotels with global hotel bar
+function syncExecHotels(){
+  if(curHotel==='all') activeExecHotels=new Set(HOTELS_ALL_LIST);
+  else activeExecHotels=new Set([curHotel]);
+}
+
+function initExecHotelFilter(){
+  const el=document.getElementById('exec-hotel-filter');
+  if(!el||el.children.length>0) return;
+  el.innerHTML=HOTELS_ALL_LIST.map(h=>{
+    const col=H_COLORS[h]||'#94a3b8';
+    return`<button class="pu-week-btn active" data-hotel="${h}" onclick="execHotelFilter('${h.replace(/'/g,"\\'")}')">
+      <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${col};margin-right:4px;vertical-align:middle"></span>${h}
+    </button>`;
+  }).join('');
+}
+
+function setExecMetric(m){
+  curExecMetric=m;
+  ['rev','rn','adr'].forEach(x=>{
+    const b=document.getElementById('epum-'+x);
+    if(b) b.classList.toggle('active',x===m);
+  });
+  renderExecPU();
+}
+
+/* ── RENDER RESUMEN EJECUTIVO ── */
+function renderExec(){
+  syncExecHotels();
+  initExecHotelFilter();
+  renderExecJunta();
+  renderExecPU();
+  renderExecSparks();
+}
+
+function renderExecKPIs(){
+  const el=document.getElementById('exec-kpis');
+  if(!el) return;
+  const filtered=RAW.filter(r=>activeMos.has(r.mo));
+  const sum=(field)=>filtered.reduce((a,b)=>a+(b[field]||0),0);
+  const totLY=sum('lyRev'), totOTB=sum('otbRev'), totBDGT=sum('bdgtRev'), totFCST=sum('fcstRev');
+  const totLYRN=sum('lyRN'), totOTBRN=sum('otbRN');
+  const totLYADR=totLYRN?totLY/totLYRN:0, totOTBADR=totOTBRN?totOTB/totOTBRN:0;
+  const vsLY=totLY?(((totOTB-totLY)/totLY)*100):0;
+  const achBdgt=totBDGT?((totOTB/totBDGT)*100):0;
+  // pickup last week total
+  const lastIdx=PU_WEEKS.length-1;
+  const prevIdx=lastIdx-1;
+  const puHotels=HOTELS_PU;
+  const puRevLast=puHotels.reduce((a,h)=>{const v=PU_RAW.rev[h];return a+(v&&v[lastIdx]!=null?v[lastIdx]:0);},0);
+  const puRevPrev=puHotels.reduce((a,h)=>{const v=PU_RAW.rev[h];return a+(v&&v[prevIdx]!=null?v[prevIdx]:0);},0);
+  const puWoW=puRevPrev?(((puRevLast-puRevPrev)/Math.abs(puRevPrev))*100):0;
+
+  const kpis=[
+    {label:'OTB Revenue',val:fmtM(totOTB),sub:'Acumulado período',col:'#0284c7',icon:'💰'},
+    {label:'vs LY',val:(vsLY>=0?'+':'')+vsLY.toFixed(1)+'%',sub:'OTB 2026 vs 2025',col:vsLY>=0?'#059669':'#e11d48',icon:vsLY>=0?'↑':'↓'},
+    {label:'Alcance Bdgt',val:achBdgt.toFixed(1)+'%',sub:'OTB / Budget',col:achBdgt>=100?'#059669':achBdgt>=80?'#d97706':'#e11d48',icon:'🎯'},
+    {label:'Pickup '+PU_WEEKS[lastIdx].id,val:fmtM(puRevLast),sub:'Promedio diario',col:'#a78bfa',icon:'📈'},
+    {label:'WoW Pickup',val:(puWoW>=0?'+':'')+puWoW.toFixed(1)+'%',sub:'vs semana anterior',col:puWoW>=0?'#059669':'#e11d48',icon:puWoW>=0?'↑':'↓'},
+  ];
+  el.innerHTML=kpis.map(k=>`
+    <div style="background:#fff;border:1.5px solid #e8ecf0;border-radius:12px;padding:16px 18px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:12px;right:14px;font-size:20px;opacity:.15">${k.icon}</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#94a3b8;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">${k.label}</div>
+      <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:${k.col};line-height:1">${k.val}</div>
+      <div style="font-size:10px;color:#94a3b8;margin-top:6px">${k.sub}</div>
+    </div>`).join('');
+}
+
+function renderExecJunta(){
+  const el=document.getElementById('exec-junta-tbl');
+  if(!el) return;
+  const sep='border-left:2px solid #e2e8f0;';
+  const hotels=HOTELS_ALL_LIST.filter(h=>activeExecHotels.has(h));
+  const rows=hotels.map(h=>{
+    const d=RAW.filter(r=>activeMos.has(r.mo)&&r.h===h);
+    const s=(f)=>d.reduce((a,b)=>a+(b[f]||0),0);
+    const otbRN=s('otbRN'),otbRev=s('otbRev'),otbADR=otbRN?otbRev/otbRN:0,otbOcc=d.length?d.reduce((a,b)=>a+(b.otbOcc||0),0)/d.length:0;
+    const lyRN=s('lyRN'),lyRev=s('lyRev'),lyADR=lyRN?lyRev/lyRN:0,lyOcc=d.length?d.reduce((a,b)=>a+(b.lyOcc||0),0)/d.length:0;
+    const bdgtRN=s('bdgtRN'),bdgtRev=s('bdgtRev'),bdgtADR=bdgtRN?bdgtRev/bdgtRN:0,bdgtOcc=d.length?d.reduce((a,b)=>a+(b.bdgtOcc||0),0)/d.length:0;
+    const fcstRN=s('fcstRN'),fcstRev=s('fcstRev'),fcstADR=fcstRN?fcstRev/fcstRN:0,fcstOcc=d.length?d.reduce((a,b)=>a+(b.fcstOcc||0),0)/d.length:0;
+    const vsLY=lyRev?(((otbRev-lyRev)/lyRev)*100):0;
+    const achBdgt=bdgtRev?((otbRev/bdgtRev)*100):0;
+    return{h,col:H_COLORS[h]||'#94a3b8',lyRev,lyADR,lyOcc,otbRev,otbADR,otbOcc,bdgtRev,bdgtADR,bdgtOcc,fcstRev,fcstADR,fcstOcc,vsLY,achBdgt};
+  });
+  const tot={};
+  ['lyRev','otbRev','bdgtRev','fcstRev'].forEach(f=>{tot[f]=RAW.filter(r=>activeMos.has(r.mo)&&activeExecHotels.has(r.h)).reduce((a,b)=>a+(b[f]||0),0)});
+  const totLYRN=RAW.filter(r=>activeMos.has(r.mo)&&activeExecHotels.has(r.h)).reduce((a,b)=>a+(b.lyRN||0),0);
+  const totOTBRN=RAW.filter(r=>activeMos.has(r.mo)&&activeExecHotels.has(r.h)).reduce((a,b)=>a+(b.otbRN||0),0);
+  tot.lyADR=totLYRN?tot.lyRev/totLYRN:0;
+  tot.otbADR=totOTBRN?tot.otbRev/totOTBRN:0;
+  const totVsLY=tot.lyRev?(((tot.otbRev-tot.lyRev)/tot.lyRev)*100):0;
+  const totAch=tot.bdgtRev?((tot.otbRev/tot.bdgtRev)*100):0;
+
+  el.innerHTML=`
+  <thead>
+    <tr style="border-bottom:none">
+      <th style="min-width:120px"></th>
+      <th colspan="3" style="text-align:center;color:#94a3b8;background:#f8f9fa;padding-bottom:4px">LY 2025</th>
+      <th colspan="4" style="text-align:center;color:#0284c7;background:#eff8ff;padding-bottom:4px;${sep}">OTB 2026</th>
+      <th colspan="4" style="text-align:center;color:#475569;background:#f8f9fa;padding-bottom:4px;${sep}">BDGT</th>
+      <th colspan="3" style="text-align:center;color:#d97706;background:#fffbeb;padding-bottom:4px;${sep}">FCST</th>
+    </tr>
+    <tr>
+      <th>Hotel</th>
+      <th>Rev</th><th>ADR</th><th>Occ</th>
+      <th style="${sep}">Rev</th><th>ADR</th><th>Occ</th><th style="font-size:10px;color:#64748b">vs LY</th>
+      <th style="${sep}">Rev</th><th>ADR</th><th>Occ</th><th style="font-size:10px;color:#64748b">OTB/BDGT</th>
+      <th style="${sep}">Rev</th><th>ADR</th><th>Occ</th>
+    </tr>
+  </thead>
+  <tbody>
+    ${rows.map(r=>{
+      const p=r.vsLY>=0;
+      const achP=r.achBdgt>=100;
+      return`<tr>
+        <td><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:${r.col};flex-shrink:0"></span>${r.h}</span></td>
+        <td>${fmtM(r.lyRev)}</td><td>${fmtA(r.lyADR)}</td><td>${r.lyOcc.toFixed(0)}%</td>
+        <td style="color:#0284c7;${sep}">${fmtM(r.otbRev)}</td><td style="color:#0284c7">${fmtA(r.otbADR)}</td><td style="color:#0284c7">${r.otbOcc.toFixed(0)}%</td>
+        <td><span style="font-size:10px;font-weight:600;color:${p?'#059669':'#e11d48'}">${p?'+':''}${r.vsLY.toFixed(1)}%</span></td>
+        <td style="${sep}">${fmtM(r.bdgtRev)}</td><td>${fmtA(r.bdgtADR)}</td><td>${r.bdgtOcc.toFixed(0)}%</td>
+        <td><span style="font-size:10px;font-weight:600;color:${achP?'#059669':'#e11d48'}">${r.bdgtRev?r.achBdgt.toFixed(1)+'%':'—'}</span></td>
+        <td style="color:#d97706;${sep}">${fmtM(r.fcstRev)}</td><td style="color:#d97706">${fmtA(r.fcstADR)}</td><td style="color:#d97706">${r.fcstOcc.toFixed(0)}%</td>
+      </tr>`;
+    }).join('')}
+  </tbody>`;
+}
+
+function renderExecPU(){
+  const el=document.getElementById('exec-pu-table');
+  if(!el) return;
+  const data=PU_RAW[curExecMetric];
+  const weeks=[...PU_WEEKS].reverse(); // más reciente primero
+  const weeksOrig=PU_WEEKS;
+  const hoteles=HOTELS_PU.filter(h=>activeExecHotels.has(h));
+  const isCur=0; // primer columna = más reciente
+  // Header: hotel | WoW Δ | semanas (reciente→antigua)
+  let hdr=`<thead><tr><th style="min-width:140px">Hotel</th><th style="border-left:2px solid #e2e8f0;color:#475569;font-weight:700;white-space:nowrap">WoW Δ</th>`;
+  weeks.forEach((w,i)=>{
+    const style=i===0?'background:#eff8ff;color:#0284c7;font-weight:700':'';
+    hdr+=`<th style="${style}">${w.id}</th>`;
+  });
+  hdr+=`</tr></thead>`;
+  // Body
+  let body=`<tbody>`;
+  hoteles.forEach(h=>{
+    const valsOrig=data[h]||[];
+    const vals=[...valsOrig].reverse();
+    const col=H_COLORS[h]||'#94a3b8';
+    const last=valsOrig[valsOrig.length-1], prev=valsOrig[valsOrig.length-2];
+    const wow=last-prev;
+    const wowP=wow>=0;
+    const wowStr=(wowP?'+':'')+fmtPU(wow,curExecMetric);
+    body+=`<tr>
+      <td><span style="display:inline-flex;align-items:center;gap:5px">
+        <span style="width:7px;height:7px;border-radius:50%;background:${col};flex-shrink:0"></span>${h}
+      </span></td>
+      <td style="border-left:2px solid #e2e8f0;font-weight:700;color:${wowP?'#059669':'#e11d48'};white-space:nowrap">${wowP?'↑':'↓'} ${wowStr}</td>`;
+    vals.forEach((v,i)=>{
+      const isL=i===0;
+      const c=v>0?'#059669':v<0?'#e11d48':'#94a3b8';
+      body+=`<td style="${isL?'background:#eff8ff;font-weight:700;':''}color:${c}">${fmtPU(v,curExecMetric)}</td>`;
+    });
+    body+=`</tr>`;
+  });
+  // Total row
+  const totWow=(()=>{
+    const last=hoteles.reduce((a,h)=>{const v=PU_RAW[curExecMetric][h];return a+(v?v[weeksOrig.length-1]||0:0);},0);
+    const prev=hoteles.reduce((a,h)=>{const v=PU_RAW[curExecMetric][h];return a+(v?v[weeksOrig.length-2]||0:0);},0);
+    return last-prev;
+  })();
+  const totWowP=totWow>=0;
+  body+=`<tr class="total-row"><td>TOTAL</td>`;
+  body+=`<td style="border-left:2px solid #e2e8f0;font-weight:700;color:${totWowP?'#059669':'#e11d48'};white-space:nowrap">${totWowP?'↑':'↓'} ${totWowP?'+':''}${fmtPU(totWow,curExecMetric)}</td>`;
+  weeks.forEach((w,wi)=>{
+    const origIdx=weeksOrig.indexOf(w);
+    const tot=hoteles.reduce((a,h)=>{const v=PU_RAW[curExecMetric][h];return a+(v&&v[origIdx]!=null?v[origIdx]:0);},0);
+    const isL=wi===0;
+    const c=tot>0?'#059669':tot<0?'#e11d48':'#94a3b8';
+    body+=`<td style="${isL?'background:#eff8ff;':''};color:${c}">${fmtPU(tot,curExecMetric)}</td>`;
+  });
+  body+=`</tr></tbody>`;
+  el.innerHTML=hdr+body;
+}
+
+function renderExecSparks(){
+  const grid=document.getElementById('exec-spark-grid');
+  if(!grid) return;
+  const data=PU_RAW.rev;
+  const rnData=PU_RAW.rn;
+  const adrData=PU_RAW.adr;
+  const weeks=PU_WEEKS;
+  const hoteles=HOTELS_PU.filter(h=>activeExecHotels.has(h));
+
+  // shared tooltip
+  if(!document.getElementById('exec-spark-tt')){
+    const tt=document.createElement('div');
+    tt.id='exec-spark-tt';
+    tt.style.cssText='position:fixed;background:#1e2535;color:#fff;font-size:11px;font-family:IBM Plex Mono,monospace;padding:8px 12px;border-radius:8px;pointer-events:none;opacity:0;transition:opacity .15s;z-index:9999;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.3);line-height:1.7';
+    document.body.appendChild(tt);
+  }
+  const tt=document.getElementById('exec-spark-tt');
+
+  grid.innerHTML=hoteles.map(h=>{
+    const vals=data[h]||[];
+    const rnVals=rnData[h]||[];
+    const adrVals=adrData[h]||[];
+    const col=H_COLORS[h]||'#94a3b8';
+    const W=500,H=80,pad=16;
+    const mx=Math.max(...vals.map(Math.abs),1);
+    const pts=vals.map((v,i)=>({
+      x:pad+(i/(vals.length-1))*(W-pad*2),
+      y:H/2-(v/mx)*(H/2-6),v
+    }));
+    const polyline=pts.map(p=>`${p.x},${p.y}`).join(' ');
+    const area=`M${pts[0].x},${H/2} `+pts.map(p=>`L${p.x},${p.y}`).join(' ')+` L${pts[pts.length-1].x},${H/2} Z`;
+
+    // RN wow for display
+    const lastRN=rnVals[rnVals.length-1]||0;
+    const prevRN=rnVals[rnVals.length-2]||0;
+    const wowRN=lastRN-prevRN;
+    const wowRNP=wowRN>=0;
+
+    const dots=pts.map((p,i)=>{
+      const c=p.v>0?col:p.v<0?'#e11d48':'#94a3b8';
+      const r=i===pts.length-1?5:3;
+      const rev=fmtM(vals[i]||0);
+      const rn=rnVals[i]||0;
+      const adr=fmtA(adrVals[i]||0);
+      const wk=weeks[i]?weeks[i].id:'';
+      return`<circle cx="${p.x}" cy="${p.y}" r="${r}" fill="${c}" stroke="#fff" stroke-width="1.5"
+        class="exec-spark-dot"
+        data-week="${wk}" data-rev="${rev}" data-rn="${rn}" data-adr="${adr}"/>`;
+    }).join('');
+
+    const lastN=Math.min(3,vals.length);
+    const barW=32,barGap=10,barMaxH=28;
+    const barMx=Math.max(...vals.slice(-lastN).map(Math.abs),1);
+    const bars=vals.slice(-lastN).map((v,i)=>{
+      const bh=Math.max(2,(Math.abs(v)/barMx)*barMaxH);
+      const bx=W-pad-(lastN-1-i)*(barW+barGap)-barW;
+      const by=H-4-bh;
+      const bc=i===lastN-1?col:(v>0?col+'88':'#e11d4888');
+      return`<rect x="${bx}" y="${by}" width="${barW}" height="${bh}" rx="3" fill="${bc}"/>
+        <text x="${bx+barW/2}" y="${H-2}" text-anchor="middle" font-size="8" fill="#94a3b8">${weeks[vals.length-lastN+i].id}</text>`;
+    }).join('');
+
+    return`<div class="card" style="padding:14px 16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div style="display:flex;align-items:center;gap:7px">
+          <span style="width:9px;height:9px;border-radius:50%;background:${col};flex-shrink:0"></span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;color:#1e2535">${h}</span>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:11px;font-weight:700;color:${wowRNP?'#059669':'#e11d48'}">${wowRNP?'↑':'↓'} ${wowRNP?'+':''}${wowRN} RN vs W ant.</div>
+        </div>
+      </div>
+      <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:70px;cursor:crosshair">
+        <defs>
+          <linearGradient id="eg-${h.replace(/\s/g,'')}" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="${col}" stop-opacity=".18"/>
+            <stop offset="100%" stop-color="${col}" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <line x1="${pad}" y1="${H/2}" x2="${W-pad}" y2="${H/2}" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3"/>
+        <path d="${area}" fill="url(#eg-${h.replace(/\s/g,'')})" />
+        <polyline points="${polyline}" fill="none" stroke="${col}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+        ${dots}
+      </svg>
+    </div>`;
+  }).join('');
+
+  // attach tooltip events
+  grid.querySelectorAll('.exec-spark-dot').forEach(dot=>{
+    dot.addEventListener('mouseenter',e=>{
+      tt.innerHTML=`<div style="color:#94a3b8;font-size:9px;letter-spacing:.08em;margin-bottom:3px">${e.target.dataset.week}</div>`+
+        `<div>Rev &nbsp;<span style="color:#60a5fa;font-weight:700">${e.target.dataset.rev}</span></div>`+
+        `<div>RN &nbsp;&nbsp;<span style="color:#34d399;font-weight:700">${e.target.dataset.rn}</span></div>`+
+        `<div>ADR &nbsp;<span style="color:#fbbf24;font-weight:700">${e.target.dataset.adr}</span></div>`;
+      tt.style.opacity='1';
+    });
+    dot.addEventListener('mousemove',e=>{
+      tt.style.left=(e.clientX+14)+'px';
+      tt.style.top=(e.clientY-10)+'px';
+    });
+    dot.addEventListener('mouseleave',()=>{ tt.style.opacity='0'; });
+  });
+}
+
+function setHotel(h,btn){
+  curHotel=h;
+  document.querySelectorAll('.hotel-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  // sync hotel bar
+  document.querySelectorAll('.ho-btn').forEach(b=>b.classList.remove('active'));
+  const hbtn=document.getElementById('hf-'+h);
+  if(hbtn) hbtn.classList.add('active');
+  const col=H_COLORS[h]||'#d97706';
+  document.getElementById('tb-dot').style.background=col;
+  document.getElementById('tb-hotel').textContent=h==='all'?'Todas las propiedades · 9 hoteles':h+' · Revenue 2025→2026';
+  // sync pickup hotel filter
+  if(h==='all') activePUHotels=new Set(HOTELS_PU);
+  else activePUHotels=new Set([h]);
+  syncPUHotelButtons();
+  renderAll()
+}
+
+function setHotelFilter(h){
+  curHotel=h;
+  // sync hotel bar
+  document.querySelectorAll('.ho-btn').forEach(b=>b.classList.remove('active'));
+  const hbtn=document.getElementById('hf-'+h);
+  if(hbtn) hbtn.classList.add('active');
+  // sync sidebar
+  document.querySelectorAll('.hotel-btn').forEach(b=>b.classList.remove('active'));
+  const sbIdx={'all':0,'Amomoxtli':1,'Anticavilla':2,'Boca de Agua':3,'Casona':4,'El Santuario':5,'MDS':6,'Numu':7,'Santa Fé':8,'Tropicana':9};
+  const sbBtns=document.querySelectorAll('.hotel-btn');
+  if(sbBtns[sbIdx[h]!==undefined?sbIdx[h]:0]) sbBtns[sbIdx[h]]?.classList.add('active');
+  const col=H_COLORS[h]||'#d97706';
+  document.getElementById('tb-dot').style.background=col;
+  document.getElementById('tb-hotel').textContent=h==='all'?'Todas las propiedades · 9 hoteles':h+' · Revenue 2025→2026';
+  // sync pickup hotel filter
+  if(h==='all') activePUHotels=new Set(HOTELS_PU);
+  else activePUHotels=new Set([h]);
+  syncPUHotelButtons();
+  renderAll()
+}
+
+function syncPUHotelButtons(){
+  // filtro interno eliminado — el hotel bar global controla activePUHotels
+}
+
+document.getElementById('sb-date').textContent=new Date().toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'});
+loadData();
+</script>
+</body>
+</html>
